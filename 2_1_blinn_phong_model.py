@@ -1,7 +1,7 @@
 import taichi as ti
 import numpy as np
 import argparse
-from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect
+from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
 
 PI = 3.14159265
@@ -82,10 +82,23 @@ if __name__ == "__main__":
     samples_per_pixel = args.samples_per_pixel
     scene = Hittable_list()
 
-    # Ground
-    scene.add(xy_rect(_x0=0, _x1=0.4, _y0=-0.5, _y1=0.5, _k=0, material=1, color=ti.Vector([0.8, 0.3, 0.3])))
+    # Ground    
+    scene.add(xz_rect(_x0=-0.5, _x1=0.5, _z0=-0.5, _z1=0.5, _k=0.5, material=1, color=ti.Vector([0.2, 0.3, 0.3])))
+    scene.add(xz_rect(_x0=-0.5, _x1=0.5, _z0=-0.5, _z1=0.5, _k=-0.5, material=1, color=ti.Vector([0.2, 0.3, 0.3])))
+    
+    scene.add(yz_rect(_y0=-0.5, _y1=0.5, _z0=-0.5, _z1=0.5, _k=0.5, material=1, color=ti.Vector([0.8, 0.5, 0.3])))
+    scene.add(yz_rect(_y0=-0.5, _y1=0.5, _z0=-0.5, _z1=0.5, _k=-0.5, material=1, color=ti.Vector([0.8, 0.5, 0.3])))
+
+    scene.add(xy_rect(_x0=-0.5, _x1=0.5, _y0=-0.5, _y1=0.5, _k=0.5, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+    scene.add(xy_rect(_x0=-0.5, _x1=0.5, _y0=-0.5, _y1=0.5, _k=-0.5, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+
     # Diffuse ball
     #scene.add(Sphere(center=ti.Vector([0, 0, -1.5]), radius=0.3, material=1, color=ti.Vector([0.8, 0.3, 0.3])))
+
+    #scene.add(Sphere(center=ti.Vector([0, 0, -0.5]), radius=0.5, material=1, color=ti.Vector([0.5, 0.3, 0.9])))
+
+
+    #scene.add(Sphere(center=ti.Vector([0,9, 3.0, -0.5]), radius=1.3, material=1, color=ti.Vector([0.8, 0.3, 0.3])))
 
     camera = Camera()
     gui = ti.GUI("Ray Tracing", res=(image_width, image_height))

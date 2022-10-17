@@ -119,8 +119,80 @@ class xy_rect:
                 hit_point = ray.at(t)
                 hit_point_normal = ti.Vector([0.0, 0.0, -1.0])
                 frontface = True
-            
-        return is_hit, t, hit_point, hit_point_normal, frontface, self.material, self.color
+        root = t
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
+
+@ti.data_oriented
+class xz_rect:
+    def __init__(self, _x0, _x1, _z0, _z1, _k, material, color):
+        self.x0 = _x0
+        self.x1 = _x1
+        self.z0 = _z0
+        self.z1 = _z1
+        self.k = _k
+        self.material = material
+        self.color = color
+
+
+    #return the hit information
+    @ti.func
+    def hit(self, ray, t_min=0.001, t_max=10e8):
+        is_hit = True
+        frontface = True
+        hit_point =  ti.Vector([0.0, 0.0, 0.0])
+        hit_point_normal = ti.Vector([0.0, 0.0, 0.0])
+
+        t = (self.k - ray.origin[1]) / ray.direction[1]
+
+        if t <0.001 or t>10e8:
+            is_hit = False
+        else: 
+            x = ray.origin[0] + t * ray.direction[0]
+            z = ray.origin[2] + t * ray.direction[2]
+            if x < self.x0 or x> self.x1 or z<self.z0 or z > self.z1:
+                is_hit = False
+            else:
+                hit_point = ray.at(t)
+                hit_point_normal = ti.Vector([0.0, 1.0, 0.0])
+                frontface = True
+        root = t
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
+
+@ti.data_oriented
+class yz_rect:
+    def __init__(self, _y0, _y1, _z0, _z1, _k, material, color):
+        self.y0 = _y0
+        self.y1 = _y1
+        self.z0 = _z0
+        self.z1 = _z1
+        self.k = _k
+        self.material = material
+        self.color = color
+
+
+    #return the hit information
+    @ti.func
+    def hit(self, ray, t_min=0.001, t_max=10e8):
+        is_hit = True
+        frontface = True
+        hit_point =  ti.Vector([0.0, 0.0, 0.0])
+        hit_point_normal = ti.Vector([0.0, 0.0, 0.0])
+
+        t = (self.k - ray.origin[0]) / ray.direction[0]
+
+        if t <0.001 or t>10e8:
+            is_hit = False
+        else: 
+            y = ray.origin[1] + t * ray.direction[1]
+            z = ray.origin[2] + t * ray.direction[2]
+            if y < self.y0 or y> self.y1 or z<self.z0 or z > self.z1:
+                is_hit = False
+            else:
+                hit_point = ray.at(t)
+                hit_point_normal = ti.Vector([0.0, 1.0, 0.0])
+                frontface = True
+        root = t    
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
 
 @ti.data_oriented
 class Hittable_list:
@@ -142,7 +214,7 @@ class Hittable_list:
         material = 1
         for index in ti.static(range(len(self.objects))):
             is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp =  self.objects[index].hit(ray, t_min, closest_t)
-            if is_hit_tmp:
+            if is_hit_tmp and closest_t > root_tmp:
                 closest_t = root_tmp
                 is_hit = is_hit_tmp
                 hit_point = hit_point_tmp
@@ -193,7 +265,7 @@ class Camera:
 
     @ti.kernel
     def reset(self):
-        self.lookfrom[None] = [0.0, 0.0, -5.0]
+        self.lookfrom[None] = [3.0, 3.0, -5.0]
         self.lookat[None] = [0.0, 0.0, -1.0]
         self.vup[None] = [0.0, 1.0, 0.0]
         theta = self.fov * (PI / 180.0)
