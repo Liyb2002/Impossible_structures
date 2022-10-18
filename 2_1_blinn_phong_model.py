@@ -13,7 +13,7 @@ image_height = int(image_width / aspect_ratio)
 canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
 light_source = ti.Vector([0, 5.4 - 3.0, -1])
 
-possible_intersects = ti.Vector.field(2, dtype=ti.f32, shape=(20))
+possible_intersects = ti.Vector.field(2, dtype=ti.f32, shape=(25))
 # Rendering parameters
 max_depth = 10
 
@@ -21,19 +21,22 @@ x_start = 500
 y_start = 500
 
 @ti.kernel
-def render():
+def get_impossible_intersection():
     for i, j in canvas:
         if i==x_start and j==y_start:
             u = (i) / image_width
             v = (j) / image_height
             ray = camera.get_ray(u, v)
-            for k in range(20):
-                x = ray.origin[0] + ray.direction[0] * k
-                y = ray.origin[1] + ray.direction[1] * k
+            for k in range(5,25):
+                x = ray.origin[0] + ray.direction[0] * (k*0.25)
+                y = ray.origin[1] + ray.direction[1] * (k*0.25)
                 pos = ti.Vector([x, y])
-                possible_intersects[i] += pos
+                possible_intersects[k] += pos
 
 
+@ti.kernel
+def render():
+    for i, j in canvas:
         if i>x_start and i<x_start+50 and j>y_start and j<y_start+50:
             canvas[i, j] = [1, 1, 1]
 
@@ -122,6 +125,11 @@ if __name__ == "__main__":
     gui = ti.GUI("Ray Tracing", res=(image_width, image_height))
     canvas.fill(0)
     cnt = 0
+
+    get_impossible_intersection()
+    for i in range(5, 25):
+        print(possible_intersects[i])
+
     while gui.running:
         render()
         cnt += 1
