@@ -1,6 +1,8 @@
 import taichi as ti
 import numpy as np
 import argparse
+import random
+
 from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
 
@@ -13,7 +15,7 @@ image_height = int(image_width / aspect_ratio)
 canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
 light_source = ti.Vector([0, 5.4 - 3.0, -1])
 
-possible_intersects = ti.Vector.field(2, dtype=ti.f32, shape=(25))
+possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
 # Rendering parameters
 max_depth = 10
 
@@ -30,23 +32,20 @@ def get_impossible_intersection():
             for k in range(5,25):
                 x = ray.origin[0] + ray.direction[0] * (k*0.25)
                 y = ray.origin[1] + ray.direction[1] * (k*0.25)
-                pos = ti.Vector([x, y])
+                z = ray.origin[2] + ray.direction[2] * (k*0.25)
+                pos = ti.Vector([x, y,z])
                 possible_intersects[k] += pos
 
 
 @ti.kernel
 def render():
     for i, j in canvas:
-        if i>x_start and i<x_start+50 and j>y_start and j<y_start+50:
-            canvas[i, j] = [1, 1, 1]
-
-        else:
-            u = (i) / image_width
-            v = (j) / image_height
-            color = ti.Vector([0.0, 0.0, 0.0])
-            ray = camera.get_ray(u, v)
-            color += ray_color(ray)
-            canvas[i, j] += color
+        u = (i) / image_width
+        v = (j) / image_height
+        color = ti.Vector([0.0, 0.0, 0.0])
+        ray = camera.get_ray(u, v)
+        color += ray_color(ray)
+        canvas[i, j] += color
 
 @ti.func
 def to_light_source(hit_point, light_source):
@@ -75,6 +74,17 @@ def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
 
     return diffuse_weight * diffuse_color
 
+def create_rect(start_x, start_y, start_z, x_len, y_len, z_len):
+    scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+    scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+    
+    scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
+    scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y+y_len, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
+
+    scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
+    scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
+
+
 # Blinn–Phong reflection model
 @ti.func
 def ray_color(ray):
@@ -101,34 +111,31 @@ if __name__ == "__main__":
     samples_per_pixel = args.samples_per_pixel
     scene = Hittable_list()
 
-    print("image_width", image_width, "image_height", image_height)
-
-    # Ground    
-    scene.add(xz_rect(_x0=-0.5, _x1=0.5, _z0=-0.5, _z1=0.5, _k=0.5, material=1, color=ti.Vector([0.2, 0.3, 0.3])))
-    scene.add(xz_rect(_x0=-0.5, _x1=0.5, _z0=-0.5, _z1=0.5, _k=-0.5, material=1, color=ti.Vector([0.2, 0.3, 0.3])))
-    
-    scene.add(yz_rect(_y0=-0.5, _y1=0.5, _z0=-0.5, _z1=0.5, _k=0.5, material=1, color=ti.Vector([0.8, 0.5, 0.3])))
-    scene.add(yz_rect(_y0=-0.5, _y1=0.5, _z0=-0.5, _z1=0.5, _k=-0.5, material=1, color=ti.Vector([0.8, 0.5, 0.3])))
-
-    scene.add(xy_rect(_x0=-0.5, _x1=0.5, _y0=-0.5, _y1=0.5, _k=0.5, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
-    scene.add(xy_rect(_x0=-0.5, _x1=0.5, _y0=-0.5, _y1=0.5, _k=-0.5, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
-
-    # Diffuse ball
-    #scene.add(Sphere(center=ti.Vector([0, 0, -1.5]), radius=0.3, material=1, color=ti.Vector([0.8, 0.3, 0.3])))
-
-    #scene.add(Sphere(center=ti.Vector([0, 0, -0.5]), radius=0.5, material=1, color=ti.Vector([0.5, 0.3, 0.9])))
-
-
-    #scene.add(Sphere(center=ti.Vector([0,9, 3.0, -0.5]), radius=1.3, material=1, color=ti.Vector([0.8, 0.3, 0.3])))
-
     camera = Camera()
     gui = ti.GUI("Ray Tracing", res=(image_width, image_height))
     canvas.fill(0)
     cnt = 0
 
     get_impossible_intersection()
-    for i in range(5, 25):
-        print(possible_intersects[i])
+    foreground_index = random.randint(5, 10)
+    foreground_x = possible_intersects[foreground_index][0]
+    foreground_y = possible_intersects[foreground_index][1]
+    foreground_z = possible_intersects[foreground_index][2]
+
+
+    background_index = random.randint(foreground_index, 15)
+    background_x = possible_intersects[background_index][0]
+    background_y = possible_intersects[background_index][1]
+    background_z = possible_intersects[background_index][2]
+
+    #render foreground
+    create_rect(foreground_x, foreground_y, foreground_z, 0.5, 0.1, 0.1)
+    create_rect(background_x, background_y, background_z, 0.1, 0.5, 0.1)
+
+    #render background
+    #scene.add(xy_rect(_x0=background_x, _x1=background_x + 0.1, _y0=background_y, _y1=background_y + 0.5, _k=background_z, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+    #scene.add(xy_rect(_x0=background_x, _x1=background_x + 0.1, _y0=background_y, _y1=background_y + 0.5, _k=background_z + 0.1, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
+
 
     while gui.running:
         render()
