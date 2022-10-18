@@ -117,26 +117,28 @@ if __name__ == "__main__":
     cnt = 0
 
     get_impossible_intersection()
-    foreground_index = random.randint(5, 10)
+    foreground_index = random.randint(8, 12)
     foreground_x = possible_intersects[foreground_index][0]
     foreground_y = possible_intersects[foreground_index][1]
     foreground_z = possible_intersects[foreground_index][2]
 
 
-    background_index = random.randint(foreground_index, 15)
+    background_index = random.randint(foreground_index + 5, 24)
     background_x = possible_intersects[background_index][0]
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
 
     portion = background_index/foreground_index
 
-    #render foreground
+    #type 1
+    print("foreground_x", foreground_x)
+    print("background_x", background_x)
     create_rect(foreground_x, foreground_y, foreground_z, 0.5, 0.1, 0.1)
     create_rect(background_x - 0.1*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
+    
+    create_rect(background_x - 0.1*portion, background_y + 0.5, background_z, 0.5*portion, 0.1*portion, 0.1*portion)
+    create_rect(background_x + 0.3*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
 
-    #render background
-    #scene.add(xy_rect(_x0=background_x, _x1=background_x + 0.1, _y0=background_y, _y1=background_y + 0.5, _k=background_z, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
-    #scene.add(xy_rect(_x0=background_x, _x1=background_x + 0.1, _y0=background_y, _y1=background_y + 0.5, _k=background_z + 0.1, material=1, color=ti.Vector([0.3, 0.3, 0.8])))
 
 
     while gui.running:
