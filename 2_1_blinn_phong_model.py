@@ -19,8 +19,8 @@ possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
 # Rendering parameters
 max_depth = 10
 
-x_start = 500
-y_start = 500
+x_start = 200
+y_start = 400
 
 @ti.kernel
 def get_impossible_intersection():
@@ -84,6 +84,21 @@ def create_rect(start_x, start_y, start_z, x_len, y_len, z_len):
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
 
+def create_intersect(type):
+    if type == 1:
+        create_rect(foreground_x, foreground_y, foreground_z, 0.5, 0.1, 0.1)
+        create_rect(background_x - 0.1*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
+    
+        create_rect(background_x - 0.1*portion, background_y + 0.5, background_z, 0.5*portion, 0.1*portion, 0.1*portion)
+        create_rect(background_x + 0.3*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
+
+    if type == 2:
+        create_rect(foreground_x, foreground_y, foreground_z, 0.5, 0.1, 0.1)
+        create_rect(background_x - 0.1*portion, background_y - 0.5 *portion, background_z, 0.1*portion, 1*portion, 0.1*portion)
+    
+    if type == 3:
+        create_rect(foreground_x - 0.1, foreground_y, foreground_z, 0.5, 0.1, 0.1)
+        create_rect(background_x - 0.1*portion, background_y - 0.5 *portion, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
 
 # Blinn–Phong reflection model
 @ti.func
@@ -130,14 +145,9 @@ if __name__ == "__main__":
 
     portion = background_index/foreground_index
 
-    #type 1
-    print("foreground_x", foreground_x)
-    print("background_x", background_x)
-    create_rect(foreground_x, foreground_y, foreground_z, 0.5, 0.1, 0.1)
-    create_rect(background_x - 0.1*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
-    
-    create_rect(background_x - 0.1*portion, background_y + 0.5, background_z, 0.5*portion, 0.1*portion, 0.1*portion)
-    create_rect(background_x + 0.3*portion, background_y, background_z, 0.1*portion, 0.5*portion, 0.1*portion)
+    #types
+    #create_intersect(1)
+    create_intersect(3)
 
 
 
