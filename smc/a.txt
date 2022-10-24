@@ -3,48 +3,72 @@ class structure:
     self.data = np.array([[0,0,0], [0,1,0],[0,2,0],[0,3,0], [0,4,0]])
     self.available_contacts = np.array([[0,4,0]])
     self.directions = np.array([1])
+    self.next_possible = np.array([])
   
   def cost_func(self, pos):
     return pos[0] + pos[1] + pos[2] + random.random()
   
   def add_vertex(self,data, next_vertex):
-    data = np.append(data, next_vertex, axis=0)
+    data = np.vstack([data, next_vertex])
     return data
 
   def remove_possible(self, next_possible, next_index):
     next_possible = np.delete(next_possible, next_index, axis=0)
     return next_possible
   
+  #define direction:
+  #x=-1 -> 0, x=1 -> 1, y=-1 -> 2, y=1 -> 3, z=-1 -> 4, z=1 -> 5,
   def get_next_possible(self, available_contact, direction):
-    result = np.array([0,0,0])
+    result = np.array([0,0,0,0])
 
-    if direction == 0:
-      result = np.vstack([result, available_contact + np.array([0,1,0])])
-      result = np.vstack([result, available_contact + np.array([0,-1,0])])
-      result = np.vstack([result, available_contact + np.array([0,0,1])])
-      result = np.vstack([result, available_contact + np.array([0,0,-1])])
+    available_contact = np.append(available_contact, 0)
+    print("available_contact", available_contact)
+    if direction == 0 or direction == 1:
+      result = np.vstack([result, available_contact + np.array([0,1,0,3])])
+      result = np.vstack([result, available_contact + np.array([0,-1,0,2])])
+      result = np.vstack([result, available_contact + np.array([0,0,1,5])])
+      result = np.vstack([result, available_contact + np.array([0,0,-1,4])])
       result = np.delete(result, 0, axis =0)
       return result
   
-    if direction == 1:
-      result = np.vstack([result, available_contact + np.array([1,0,0])])
-      result = np.vstack([result, available_contact + np.array([-1,0,0])])
-      result = np.vstack([result, available_contact + np.array([0,0,1])])
-      result = np.vstack([result, available_contact + np.array([0,0,-1])])
+    if direction == 2 or direction == 3:
+      result = np.vstack([result, available_contact + np.array([1,0,0,1])])
+      result = np.vstack([result, available_contact + np.array([-1,0,0,1])])
+      result = np.vstack([result, available_contact + np.array([0,0,1,5])])
+      result = np.vstack([result, available_contact + np.array([0,0,-1,4])])
       result = np.delete(result, 0, axis =0)
       return result
 
-    if direction == 2:
-      result = np.vstack([result, available_contact + np.array([1,0,0])])
-      result = np.vstack([result, available_contact + np.array([-1,0,0])])
-      result = np.vstack([result, available_contact + np.array([0,1,0])])
-      result = np.vstack([result, available_contact + np.array([0,-1,0])])
+    if direction == 4 or direction == 5:
+      result = np.vstack([result, available_contact + np.array([1,0,0,1])])
+      result = np.vstack([result, available_contact + np.array([-1,0,0,0])])
+      result = np.vstack([result, available_contact + np.array([0,1,0,3])])
+      result = np.vstack([result, available_contact + np.array([0,-1,0,2])])
       result = np.delete(result, 0, axis =0)
       return result
     
   def get_last_direction(self,direction):
     count =direction[1]*1 + direction[2]*2
     return count
+  
+  def get_vertex_forward(self, new_vertex_clean, direction):
+    if direction == 0:
+      return new_vertex_clean + np.array([-1,0,0])
+    
+    if direction == 1:
+      return new_vertex_clean + np.array([1,0,0])
+    
+    if direction == 2:
+      return new_vertex_clean + np.array([0,-1,0])
+    
+    if direction == 3:
+      return new_vertex_clean + np.array([0,1,0])
+
+    if direction == 4:
+      return new_vertex_clean + np.array([0,0,-1])
+
+    if direction == 5:
+      return new_vertex_clean + np.array([0,0,1])
 
   def process(self):
     #step 1: for all available contacts, assume they will make a turn
@@ -55,13 +79,13 @@ class structure:
     for i in range(1, len(self.available_contacts)):
       available_contact = self.available_contacts[i]
       direction = self.directions[i]
-      next_possibles = np.append( next_possibles, get_next_possible(available_contact, direction))
+      next_possibles = np.append( next_possibles, self.get_next_possible(available_contact, direction))
   
     print("next_possibles", next_possibles)
     #step2: create a 1d array that stores cost for each possible point
     costs = np.array([])
     for next_possible in next_possibles:
-      costs = np.append(costs, cost_func(next_possible))
+      costs = np.append(costs, self.cost_func(next_possible))
   
     print("costs", costs)
   
@@ -72,28 +96,22 @@ class structure:
     print("next_vertex", next_vertex)
 
     #step4 add next_vertex to data
-    prev_index = int(next_index/4)
-    print("prev_index", prev_index)
-    new_direction = next_vertex - self.available_contacts[prev_index]
+    new_direction = next_vertex[0][3]
     print("new_direction", new_direction)
-  
-    data = self.add_vertex(self.data, next_vertex)
+    new_vertex_clean = np.array([next_vertex[0][0], next_vertex[0][1], next_vertex[0][2]])
+    print("new_vertex_clean", new_vertex_clean)
+    self.data = self.add_vertex(self.data, new_vertex_clean)
+
     for i in range(4):
-      next_vertex = next_vertex + new_direction
-      self.data = self.add_vertex(data, next_vertex)
+      new_vertex_clean = self.get_vertex_forward(new_vertex_clean, new_direction)
+      self.data = self.add_vertex(self.data, new_vertex_clean)
+    
     print("data", self.data)
 
     #step5 update available_contacts and directions
     print("next_vertex", next_vertex)
     print("new_direction", new_direction)
-    new_direction_num = self.get_last_direction(new_direction[0])
-    print("new_direction_num", new_direction_num)
-    self.directions = np.append(directions, new_direction_num)
-    available_contacts = np.vstack([self.available_contacts, next_vertex])
+    self.directions = np.append(self.directions, np.array([new_direction]))
+    available_contacts = np.vstack([self.available_contacts, new_vertex_clean])
     print("directions", self.directions)
     print("available_contacts", self.available_contacts)
-
-
-a = structure()
-
-a.process()
