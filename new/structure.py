@@ -5,7 +5,7 @@ class Structure:
     def __init__(self, seed, seed_next_possible):
         self.data = seed
         self.next_possibles = seed_next_possible
-        print("initialized data: \n", self.data)
+        #print("initialized data: \n", self.data)
 
   
     def cost_func(self, pos):
@@ -55,7 +55,7 @@ class Structure:
     
     def generate(self, steps):
         for i in range(steps):
-            print("step ", i+1)
+            #print("step ", i+1)
             self.process()
 
 
@@ -88,7 +88,7 @@ class Structure:
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, new_direction)
             self.add_vertex(new_vertex_clean)
 
-        print("data: \n", self.data)
+        #print("data: \n", self.data)
 
         #step5 update next_possible
         self.remove_possible(next_index)
