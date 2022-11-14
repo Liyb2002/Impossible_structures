@@ -104,7 +104,7 @@ class xy_rect:
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([0.0, 0.0, 1.0])
+        hit_point_normal = ti.Vector([0.0, 0.0, -1.0])
 
         t = (self.k - ray.origin[2]) / ray.direction[2]
 
@@ -139,7 +139,7 @@ class xz_rect:
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([0.0, -1.0, 0.0])
+        hit_point_normal = ti.Vector([0.0, 1.0, 0.0])
 
         t = (self.k - ray.origin[1]) / ray.direction[1]
 
@@ -174,7 +174,7 @@ class yz_rect:
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([-1.0, 0.0, 0.0])
+        hit_point_normal = ti.Vector([1.0, 0.0, 0.0])
 
         t = (self.k - ray.origin[0]) / ray.direction[0]
 
@@ -262,7 +262,7 @@ class Camera:
 
     @ti.kernel
     def reset(self):
-        self.lookfrom[None] = [4.0, 4.0, -6.0]
+        self.lookfrom[None] = [4.0, 4.0, 6.0]
         self.lookat[None] = [0.0, 0.0, -1.0]
         self.vup[None] = [0.0, 1.0, 0.0]
         theta = self.fov * (PI / 180.0)

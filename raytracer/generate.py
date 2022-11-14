@@ -2,6 +2,8 @@ import taichi as ti
 import numpy as np
 import argparse
 import random
+import structure
+import gen_seed
 
 from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
@@ -125,6 +127,9 @@ if __name__ == "__main__":
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
 
+    print("foreground_x: ", foreground_x, "foreground_y: ", foreground_y, "foreground_z: ", foreground_z)
+    print("background_x: ", background_x, "background_y: ", background_y, "background_z: ", background_z)
+
     portion = background_index/foreground_index
     create_rect(foreground_x, foreground_y, foreground_z, -0.5, -0.5, -0.5)
     #types
@@ -132,7 +137,24 @@ if __name__ == "__main__":
     intersect_type = random.randint(1,8)
     #create_intersect(intersect_type, True)
 
-    a = np.array([(0,0,0), (0,1,0), (0,2,0),(0,3,0)])
+    f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
+    f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
+    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1)
+    f_struct.generate(0)
+
+    b_seed = gen_seed.get_seed_2(np.array([background_x, background_y, background_z]),portion)
+    b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
+    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion)
+    b_struct.generate(0)
+
+    for i in f_struct.rect:
+        i.info()
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z)
+    
+    for i in b_struct.rect:
+        i.info()
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z)
+
 
     while gui.running:
         render()
