@@ -10,7 +10,7 @@ class Structure:
 
         self.rect.append(block_to_rect(self.data, portion))
         self.data = np.array([[0.0,0.0,0.0]])
-        
+
         self.next_possibles = seed_next_possible
         #print("initialized data: \n", self.data)
 
