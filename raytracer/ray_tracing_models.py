@@ -139,7 +139,7 @@ class xz_rect:
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([0.0, 1.0, 0.0])
+        hit_point_normal = ti.Vector([0.0, -1.0, 0.0])
 
         t = (self.k - ray.origin[1]) / ray.direction[1]
 
@@ -174,7 +174,7 @@ class yz_rect:
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([1.0, 0.0, 0.0])
+        hit_point_normal = ti.Vector([-1.0, 0.0, 0.0])
 
         t = (self.k - ray.origin[0]) / ray.direction[0]
 
