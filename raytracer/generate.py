@@ -150,10 +150,10 @@ if __name__ == "__main__":
         f_struct.generate(4)
         b_struct.cleanUp()
         b_struct.generate(4)
-        (score, parallel_pts) = structure.parallel_score(f_struct.history, b_struct.history)
+        (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
         print("score: ", score)
 
-        if(score > 0):
+        if(score > 4):
             print("good score: ", score)
         break
     

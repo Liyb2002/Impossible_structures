@@ -1,5 +1,3 @@
-import numpy as np
-import random
 
 import numpy as np
 import random
@@ -23,6 +21,8 @@ class Structure:
         self.history = self.seed
         self.data = np.array([[0.0,0.0,0.0]])
         self.data = np.append(self.data, self.seed, axis = 0)
+        self.rect = []
+        self.rect.append(block_to_rect(self.data, self.portion))
         self.data = np.array([[0.0,0.0,0.0]])
         self.next_possibles = self.seed_next_possible
 
