@@ -1,8 +1,12 @@
 import numpy as np
 import random
 
+import numpy as np
+import random
+
 class Structure:
     def __init__(self, seed, seed_next_possible, portion):
+        self.history = seed
         self.data = np.array([[0.0,0.0,0.0]])
         self.data = np.append(self.data, seed, axis = 0)
         self.rect = []
@@ -19,7 +23,11 @@ class Structure:
         return random.random()
   
     def add_vertex(self, next_vertex):
-        self.data = np.vstack([self.data, next_vertex])
+        x = round(next_vertex[0],1)
+        y = round(next_vertex[1],1)
+        z = round(next_vertex[2],1)
+
+        self.data = np.vstack([self.data, np.array([x,y,z])])
 
     def remove_possible(self, next_index):
         self.next_possibles = np.delete(self.next_possibles, next_index, axis=0)
@@ -64,6 +72,7 @@ class Structure:
         for i in range(steps):
             #print("step ", i+1)
             self.process()
+            self.history = np.append(self.history, self.data[1:], axis=0)
             self.rect.append(block_to_rect(self.data, self.portion))
             self.data = np.array([[0,0,0]])
 
@@ -109,6 +118,22 @@ class Structure:
         self.next_possibles = np.append(self.next_possibles,new_next_possibles, axis=0)
         #print("next_possibles, add new", self.next_possibles)
 
+
+class rect:
+    def __init__(self, startPos, scale): 
+        self.start_x = round(startPos[0],2)
+        self.start_y = round(startPos[1],2)
+        self.start_z = round(startPos[2],2)
+        
+        self.scale_x = round(scale[0],2)
+        self.scale_y = round(scale[1],2)
+        self.scale_z = round(scale[2],2)
+    
+    def info(self):
+        print("start_x:",self.start_x,"start_y:",self.start_y,"start_z:",self.start_z)
+        print("scale_x:",self.scale_x,"scale_y:",self.scale_y,"scale_z:",self.scale_z)
+        print(" ")
+    
 def block_to_rect(buffer, portion):
     start = buffer[1]
     end = buffer[-1]
@@ -126,18 +151,16 @@ def block_to_rect(buffer, portion):
     tempt = rect(startPos, scale)
     return tempt
 
-class rect:
-    def __init__(self, startPos, scale): 
-        self.start_x = round(startPos[0],2)
-        self.start_y = round(startPos[1],2)
-        self.start_z = round(startPos[2],2)
-        
-        self.scale_x = round(scale[0],2)
-        self.scale_y = round(scale[1],2)
-        self.scale_z = round(scale[2],2)
+
+def parallel_score(history_a, history_b):
+    score = 0
+    parallel_pts = []
     
-    def info(self):
-        print("start_x:",self.start_x,"start_y:",self.start_y,"start_z:",self.start_z)
-        print("scale_x:",self.scale_x,"scale_y:",self.scale_y,"scale_z:",self.scale_z)
-        print(" ")
-    
+    for i in history_a:
+        for j in history_b:
+            if(i[0] == j[0] and i[1] == j[1]):
+                parallel_pts.append((i[0],i[1]))
+                score += 5
+            elif(i[0] == j[0] or i[1] == j[1]):
+                score += 1
+    return score, parallel_pts

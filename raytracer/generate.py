@@ -76,7 +76,7 @@ def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
 
 def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
-    scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, material=1, color=ti.Vector([r, g, b])))
+    # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, material=1, color=ti.Vector([r, g, b])))
     
     scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
     scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y+y_len, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
@@ -127,8 +127,8 @@ if __name__ == "__main__":
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
 
-    print("foreground_x: ", foreground_x, "foreground_y: ", foreground_y, "foreground_z: ", foreground_z)
-    print("background_x: ", background_x, "background_y: ", background_y, "background_z: ", background_z)
+    # print("foreground_x: ", foreground_x, "foreground_y: ", foreground_y, "foreground_z: ", foreground_z)
+    # print("background_x: ", background_x, "background_y: ", background_y, "background_z: ", background_z)
 
     portion = background_index/foreground_index
     #types
@@ -139,21 +139,34 @@ if __name__ == "__main__":
     f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
     f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
     f_struct = structure.Structure(f_seed, f_seed_next_possible, 1)
-    f_struct.generate(3)
+    
 
     b_seed = gen_seed.get_seed_2(np.array([background_x, background_y, background_z]),portion)
     b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
     b_struct = structure.Structure(b_seed, b_seed_next_possible, portion)
-    b_struct.generate(3)
 
-    for i in f_struct.rect:
-        i.info()
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    while True:
+        f_struct.generate(4)
+        b_struct.generate(4)
+        (score, parallel_pts) = structure.parallel_score(f_struct.history, b_struct.history)
+        print("score: ", score)
+
+        if(len(parallel_pts) > 0):
+            print("good score: ", score)
+            break
     
-    for i in b_struct.rect:
-        i.info()
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
 
+    # for i in f_struct.rect:
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    
+    # for i in b_struct.rect:
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
+
+    connecting_component = parallel_pts[0]
+    print("parallel_pts: ", connecting_component)
+    print("foreground_z", foreground_z, "background_z", background_z)
+    create_rect(connecting_component[0], connecting_component[1], background_z, 0.1, 0.1, foreground_z - background_z, 0.5, 0.7, 0.3)
+    
 
     while gui.running:
         render()
