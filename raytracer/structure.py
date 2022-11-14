@@ -6,26 +6,34 @@ import random
 
 class Structure:
     def __init__(self, seed, seed_next_possible, portion):
-        self.history = seed
-        self.data = np.array([[0.0,0.0,0.0]])
-        self.data = np.append(self.data, seed, axis = 0)
+        self.history = None
+        self.data = None
         self.rect = []
+        self.next_possibles = None
+        
         self.portion = portion
+        self.seed = seed
+        self.seed_next_possible = seed_next_possible
+        
+        self.cleanUp()
 
-        self.rect.append(block_to_rect(self.data, portion))
-        self.data = np.array([[0.0,0.0,0.0]])
-
-        self.next_possibles = seed_next_possible
         #print("initialized data: \n", self.data)
+
+    def cleanUp(self):
+        self.history = self.seed
+        self.data = np.array([[0.0,0.0,0.0]])
+        self.data = np.append(self.data, self.seed, axis = 0)
+        self.data = np.array([[0.0,0.0,0.0]])
+        self.next_possibles = self.seed_next_possible
 
   
     def cost_func(self, pos):
         return random.random()
   
     def add_vertex(self, next_vertex):
-        x = round(next_vertex[0],1)
-        y = round(next_vertex[1],1)
-        z = round(next_vertex[2],1)
+        x = next_vertex[0]
+        y = next_vertex[1]
+        z = next_vertex[2]
 
         self.data = np.vstack([self.data, np.array([x,y,z])])
 
@@ -145,6 +153,15 @@ def block_to_rect(buffer, portion):
     y_scale = max(abs(start[1] - end[1]), 0.1 * portion)
     z_scale = max(abs(start[2] - end[2]), 0.1 * portion)
     
+    if(x_scale > 0.1 * portion):
+        x_scale += 0.1 * portion
+        
+    if(y_scale > 0.1 * portion):
+        y_scale += 0.1 * portion
+        
+    if(z_scale > 0.1 * portion):
+        z_scale += 0.1 * portion
+
     startPos = np.array([x_start,y_start,z_start])
     scale = np.array([x_scale,y_scale,z_scale])
     

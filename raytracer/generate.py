@@ -75,13 +75,13 @@ def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
     return diffuse_weight * diffuse_color
 
 def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
-    scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
-    # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, material=1, color=ti.Vector([r, g, b])))
+    # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
+    scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, material=1, color=ti.Vector([r, g, b])))
     
-    scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
+    # scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
     scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y+y_len, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
 
-    scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
+    # scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
 
 # Blinn–Phong reflection model
@@ -146,26 +146,28 @@ if __name__ == "__main__":
     b_struct = structure.Structure(b_seed, b_seed_next_possible, portion)
 
     while True:
+        f_struct.cleanUp()
         f_struct.generate(4)
+        b_struct.cleanUp()
         b_struct.generate(4)
         (score, parallel_pts) = structure.parallel_score(f_struct.history, b_struct.history)
         print("score: ", score)
 
-        if(len(parallel_pts) > 0):
+        if(score > 0):
             print("good score: ", score)
-            break
+        break
     
 
-    # for i in f_struct.rect:
-    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    for i in f_struct.rect:
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
-    # for i in b_struct.rect:
-    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
+    for i in b_struct.rect:
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
 
-    connecting_component = parallel_pts[0]
-    print("parallel_pts: ", connecting_component)
-    print("foreground_z", foreground_z, "background_z", background_z)
-    create_rect(connecting_component[0], connecting_component[1], background_z, 0.1, 0.1, foreground_z - background_z, 0.5, 0.7, 0.3)
+    # connecting_component = parallel_pts[0]
+    # print("parallel_pts: ", connecting_component)
+    # print("foreground_z", foreground_z, "background_z", background_z)
+    # create_rect(connecting_component[0], connecting_component[1], background_z, 0.1, 0.1, foreground_z - background_z, 0.5, 0.7, 0.3)
     
 
     while gui.running:
