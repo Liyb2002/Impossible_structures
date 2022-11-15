@@ -116,13 +116,13 @@ if __name__ == "__main__":
     cnt = 0
 
     get_impossible_intersection()
-    foreground_index = random.randint(8, 12)
+    foreground_index = 8
     foreground_x = possible_intersects[foreground_index][0]
     foreground_y = possible_intersects[foreground_index][1]
     foreground_z = possible_intersects[foreground_index][2]
 
 
-    background_index = random.randint(foreground_index + 5, 24)
+    background_index = 20
     background_x = possible_intersects[background_index][0]
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
@@ -158,8 +158,8 @@ if __name__ == "__main__":
             break
     
 
-    # for i in f_struct.rect:
-    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    for i in f_struct.rect:
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
