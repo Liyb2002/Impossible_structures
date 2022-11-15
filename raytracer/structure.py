@@ -28,7 +28,7 @@ class Structure:
         new_vertex_clean = np.array([start[0], start[1], start[2]])
         self.add_vertex(new_vertex_clean)
         
-        span = 4 + int(random.random() * 2 % 2)
+        span = 4 + int(random.random() * 3 % 3)
         for i in range(span):
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, direction)
             self.add_vertex(new_vertex_clean)
@@ -51,7 +51,7 @@ class Structure:
         y_dist = abs(self.destination[1] - new_vertex_clean[1])
         y_start = min(self.destination[1], new_vertex_clean[1])
         startPos2 = np.array([self.destination[0], y_start, new_vertex_clean[2]])
-        scale2 = np.array([0.1*self.portion,y_dist+0.1*self.portion, 0.1*self.portion])
+        scale2 = np.array([0.1,y_dist+0.1*self.portion, 0.1*self.portion])
         rect2 = rect(startPos2, scale2)
         
         self.rect.append(rect1)

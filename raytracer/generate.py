@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
 
     portion = background_index/foreground_index
-    connecting_component = np.array([foreground_x+0.2, foreground_y-0.2])
+    connecting_component = np.array([foreground_x+0.3, foreground_y-0.5])
 
 
     f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
