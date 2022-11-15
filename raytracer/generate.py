@@ -122,40 +122,29 @@ if __name__ == "__main__":
     foreground_z = possible_intersects[foreground_index][2]
 
 
-    background_index = 20
+    background_index = 12
     background_x = possible_intersects[background_index][0]
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
 
-    # print("foreground_x: ", foreground_x, "foreground_y: ", foreground_y, "foreground_z: ", foreground_z)
-    # print("background_x: ", background_x, "background_y: ", background_y, "background_z: ", background_z)
 
     portion = background_index/foreground_index
-    #types
-    #create_intersect(1)
-    intersect_type = random.randint(1,8)
-    #create_intersect(intersect_type, True)
+    connecting_component = np.array([foreground_x+0.2, foreground_y-0.2])
+
 
     f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
     f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
-    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1)
+    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, connecting_component)
     
 
     b_seed = gen_seed.get_seed_2(np.array([background_x, background_y, background_z]),portion)
     b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
-    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion)
+    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,connecting_component)
 
-    while True:
-        f_struct.cleanUp()
-        f_struct.generate(8)
-        b_struct.cleanUp()
-        b_struct.generate(8)
-        (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
-        print("score: ", score)
-
-        if(len(parallel_pts) > 0):
-            print("good score: ", score)
-            break
+    f_struct.generate(0)
+    b_struct.generate(0)
+    
+    # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
     
 
     for i in f_struct.rect:
@@ -164,7 +153,6 @@ if __name__ == "__main__":
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
 
-    connecting_component = parallel_pts[0]
     create_rect(connecting_component[0], connecting_component[1], background_z, 0.1, 0.1, foreground_z - background_z, 0.5, 0.7, 0.3)
     print("connecting_component: ", connecting_component[0], connecting_component[1], background_z, foreground_z - background_z)
 
