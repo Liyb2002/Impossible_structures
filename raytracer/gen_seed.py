@@ -14,9 +14,14 @@ def get_seed_2(pos, portion):
         seed = np.vstack([seed, tempt])
     return seed
 
+def get_next_possible_1(pos):
+    tempt1 = np.array([pos[0]+0.07,pos[1]+0.07,pos[2],1])
+    tempt2 = np.array([pos[0]-0.07,pos[1]-0.07,pos[2],0])
+    
+    return np.vstack([tempt1, tempt2])
 
 def get_next_possible(pos):
-    tempt1 = np.array([pos[0],pos[1]+0.07,pos[2],2])
-    tempt2 = np.array([pos[0],pos[1]-0.07,pos[2],3])
+    tempt1 = np.array([pos[0],pos[1]+0.07,pos[2],3])
+    tempt2 = np.array([pos[0],pos[1]-0.07,pos[2],2])
     
     return np.vstack([tempt1, tempt2])

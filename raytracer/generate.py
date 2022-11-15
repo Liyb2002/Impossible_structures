@@ -135,7 +135,9 @@ if __name__ == "__main__":
     connecting_component_x = connecting_comp.offset()
     connecting_component_y = connecting_comp.offset()
 
-    cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, foreground_z, background_z)
+    print("connecting_component_x", connecting_component_x)
+    print("connecting_component_y", connecting_component_y)
+    cc = connecting_comp.connecting_structure(foreground_x+connecting_component_x, foreground_y+connecting_component_y, foreground_z, background_z)
     i = cc.get_object()
 
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
@@ -154,6 +156,12 @@ if __name__ == "__main__":
     b_struct.generate(0)
 
     eye = np.array([5.0,5.0,5.0])
+    pos = cc.get_center()
+    occluded = metrics.occlude(f_struct, pos, eye)
+    if(occluded):
+        print("occluded")
+    else:
+        print("not occluded")
     
     # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
     
@@ -162,7 +170,7 @@ if __name__ == "__main__":
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
     for i in b_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
     while gui.running:
         render()
