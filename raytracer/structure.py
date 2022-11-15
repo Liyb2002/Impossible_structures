@@ -1,7 +1,3 @@
-
-import numpy as np
-import random
-
 import numpy as np
 import random
 
@@ -222,3 +218,14 @@ def parallel_score(history_a, history_b):
             elif(i[0] == j[0] or i[1] == j[1]):
                 score += 1
     return score, parallel_pts
+
+
+def check_close(struct_a, struct_b):
+    for i in struct_a.rect:
+        for j in struct_b.rect:
+            dist_x = abs(i.center_x() - j.center_x())
+            dist_y = abs(i.center_y() - j.center_y())
+            
+            if dist_x < 0.2 or dist_y <0.2:
+                return True
+    return False
