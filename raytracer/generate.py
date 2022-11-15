@@ -2,8 +2,10 @@ import taichi as ti
 import numpy as np
 import argparse
 import random
+
 import structure
 import gen_seed
+import connecting_comp
 
 from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
@@ -129,7 +131,11 @@ if __name__ == "__main__":
 
 
     portion = background_index/foreground_index
-    connecting_component = np.array([foreground_x+0.3, foreground_y-0.5])
+
+    connecting_component_x = connecting_comp.offset()
+    connecting_component_y = connecting_comp.offset()
+
+    connecting_component = np.array([foreground_x+connecting_component_x, foreground_y-connecting_component_y])
 
 
     f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
@@ -153,7 +159,7 @@ if __name__ == "__main__":
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
 
-    create_rect(connecting_component[0], connecting_component[1], background_z, 0.1, 0.1, foreground_z - background_z, 0.5, 0.7, 0.3)
+    create_rect(connecting_component[0], connecting_component[1], background_z, 0.07, 0.07, foreground_z - background_z, 0.5, 0.7, 0.3)
     print("connecting_component: ", connecting_component[0], connecting_component[1], background_z, foreground_z - background_z)
 
     while gui.running:

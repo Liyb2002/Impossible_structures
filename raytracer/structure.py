@@ -41,13 +41,13 @@ class Structure:
         x_dist = abs(self.destination[0] - new_vertex_clean[0])
         x_start = min(self.destination[0], new_vertex_clean[0])
         startPos = np.array([x_start, new_vertex_clean[1], new_vertex_clean[2]])
-        scale = np.array([x_dist+0.1*self.portion, 0.1*self.portion, 0.1*self.portion])
+        scale = np.array([x_dist+0.07*self.portion, 0.07*self.portion, 0.07*self.portion])
         rect1 = rect(startPos, scale)
         
         y_dist = abs(self.destination[1] - new_vertex_clean[1])
         y_start = min(self.destination[1], new_vertex_clean[1])
         startPos2 = np.array([self.destination[0], y_start, new_vertex_clean[2]])
-        scale2 = np.array([0.1,y_dist+0.1*self.portion, 0.1*self.portion])
+        scale2 = np.array([0.07,y_dist+0.07*self.portion, 0.07*self.portion])
         rect2 = rect(startPos2, scale2)
         
         self.rect.append(rect1)
@@ -84,14 +84,14 @@ class Structure:
 
         available_contact = np.append(available_contact, 0)
         if direction == 0 or direction == 1:
-            result = np.vstack([result, available_contact + np.array([0.0,0.1,0.0,3])])
-            result = np.vstack([result, available_contact + np.array([0.0,-0.1,0.0,2])])
+            result = np.vstack([result, available_contact + np.array([0.0,0.07,0.0,3])])
+            result = np.vstack([result, available_contact + np.array([0.0,-0.07,0.0,2])])
             result = np.delete(result, 0, axis =0)
             return result
 
         if direction == 2 or direction == 3:
-            result = np.vstack([result, available_contact + np.array([0.1,0.0,0.0,1])])
-            result = np.vstack([result, available_contact + np.array([-0.1,0.0,0.0,1])])
+            result = np.vstack([result, available_contact + np.array([0.07,0.0,0.0,1])])
+            result = np.vstack([result, available_contact + np.array([-0.07,0.0,0.0,1])])
             result = np.delete(result, 0, axis =0)
             return result
 
@@ -102,16 +102,16 @@ class Structure:
   
     def get_vertex_forward(self, new_vertex_clean, direction):
         if direction == 0:
-            return new_vertex_clean + np.array([-0.1,0.0,0.0])
+            return new_vertex_clean + np.array([-0.07,0.0,0.0])
 
         if direction == 1:
-            return new_vertex_clean + np.array([0.1,0.0,0.0])
+            return new_vertex_clean + np.array([0.07,0.0,0.0])
 
         if direction == 2:
-            return new_vertex_clean + np.array([0.0,-0.1,0.0])
+            return new_vertex_clean + np.array([0.0,-0.07,0.0])
 
         if direction == 3:
-            return new_vertex_clean + np.array([0.0,0.1,0.0])
+            return new_vertex_clean + np.array([0.0,0.07,0.0])
     
     def generate(self, steps):
         for i in range(steps):
@@ -186,18 +186,18 @@ def block_to_rect(buffer, portion):
     y_start = min(start[1],end[1])    
     z_start = min(start[2],end[2])
     
-    x_scale = max(abs(start[0] - end[0]), 0.1 * portion)
-    y_scale = max(abs(start[1] - end[1]), 0.1 * portion)
-    z_scale = max(abs(start[2] - end[2]), 0.1 * portion)
+    x_scale = max(abs(start[0] - end[0]), 0.07 * portion)
+    y_scale = max(abs(start[1] - end[1]), 0.07 * portion)
+    z_scale = max(abs(start[2] - end[2]), 0.07 * portion)
     
-    if(x_scale > 0.1 * portion):
-        x_scale += 0.1 * portion
+    if(x_scale > 0.07 * portion):
+        x_scale += 0.07 * portion
         
-    if(y_scale > 0.1 * portion):
-        y_scale += 0.1 * portion
+    if(y_scale > 0.07 * portion):
+        y_scale += 0.07 * portion
         
-    if(z_scale > 0.1 * portion):
-        z_scale += 0.1 * portion
+    if(z_scale > 0.07 * portion):
+        z_scale += 0.07 * portion
 
     startPos = np.array([x_start,y_start,z_start])
     scale = np.array([x_scale,y_scale,z_scale])
