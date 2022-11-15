@@ -6,6 +6,7 @@ import random
 import structure
 import gen_seed
 import connecting_comp
+import metrics
 
 from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
@@ -129,26 +130,30 @@ if __name__ == "__main__":
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
 
-
     portion = background_index/foreground_index
 
     connecting_component_x = connecting_comp.offset()
     connecting_component_y = connecting_comp.offset()
 
-    connecting_component = np.array([foreground_x+connecting_component_x, foreground_y-connecting_component_y])
+    cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, foreground_z, background_z)
+    i = cc.get_object()
+
+    create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
 
     f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
     f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
-    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, connecting_component)
+    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, cc.xy_pos())
     
 
     b_seed = gen_seed.get_seed_2(np.array([background_x, background_y, background_z]),portion)
     b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
-    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,connecting_component)
+    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,cc.xy_pos())
 
     f_struct.generate(0)
     b_struct.generate(0)
+
+    eye = np.array([5.0,5.0,5.0])
     
     # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
     
@@ -158,9 +163,6 @@ if __name__ == "__main__":
     
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.5, 0.7, 0.3)
-
-    create_rect(connecting_component[0], connecting_component[1], background_z, 0.07, 0.07, foreground_z - background_z, 0.5, 0.7, 0.3)
-    print("connecting_component: ", connecting_component[0], connecting_component[1], background_z, foreground_z - background_z)
 
     while gui.running:
         render()
