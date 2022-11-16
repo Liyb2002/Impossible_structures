@@ -21,10 +21,13 @@ canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
 light_source = ti.Vector([0, 5.4 - 3.0, -1])
 
 possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
+max_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
+min_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
+
 # Rendering parameters
 max_depth = 10
 
-x_start = 500
+x_start = 400
 y_start = 400
 
 @ti.kernel
@@ -32,12 +35,25 @@ def get_impossible_intersection():
     u = (x_start) / image_width
     v = (y_start) / image_height
     ray = camera.get_ray(u, v)
+    ray_max = camera.get_ray(1, 1)
+    ray_min = camera.get_ray(0, 0)
+
     for k in range(5,25):
         x = ray.origin[0] + ray.direction[0] * (k*0.25)
         y = ray.origin[1] + ray.direction[1] * (k*0.25)
         z = ray.origin[2] + ray.direction[2] * (k*0.25)
         pos = ti.Vector([x, y,z])
         possible_intersects[k] += pos
+
+        x_max = ray_max.origin[0] + ray_max.direction[0] * (k*0.25)
+        y_max = ray_max.origin[1] + ray_max.direction[1] * (k*0.25)
+        pos_max = ti.Vector([x_max, y_max])
+        max_screen[k] += pos_max
+
+        x_min = ray_min.origin[0] + ray_min.direction[0] * (k*0.25)
+        y_min = ray_min.origin[1] + ray_min.direction[1] * (k*0.25)
+        pos_min = ti.Vector([x_min, y_min])
+        min_screen[k] += pos_min
 
 
 @ti.kernel
@@ -123,12 +139,24 @@ if __name__ == "__main__":
     foreground_x = possible_intersects[foreground_index][0]
     foreground_y = possible_intersects[foreground_index][1]
     foreground_z = possible_intersects[foreground_index][2]
+    foreground_max_x = max_screen[foreground_index][0]
+    foreground_max_y = max_screen[foreground_index][1]
+    foreground_min_x = min_screen[foreground_index][0]
+    foreground_min_y = min_screen[foreground_index][1]
+    print(foreground_max_x, foreground_max_y, foreground_min_x, foreground_min_y)
+    print(foreground_x, foreground_y, foreground_z)
 
 
     background_index = 12
     background_x = possible_intersects[background_index][0]
     background_y = possible_intersects[background_index][1]
     background_z = possible_intersects[background_index][2]
+    background_max_x = max_screen[background_index][0]
+    background_max_y = max_screen[background_index][1]
+    background_min_x = min_screen[background_index][0]
+    background_min_y = min_screen[background_index][1]
+    print(background_max_x, background_max_y, background_min_x, background_min_y)
+    print(background_x, background_y, background_z)
 
     portion = background_index/foreground_index
 

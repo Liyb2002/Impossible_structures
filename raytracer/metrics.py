@@ -13,7 +13,7 @@ def occlude(front_structure,position, eye):
     y = eye[1] + t*ray[1]
     
     for i in front_structure.history:
-        if x== i[0] and y == i[1]:
+        if round(x,1)== round(i[0],1) and round(y,1) == round(i[1],1):
             return True
     
     return False

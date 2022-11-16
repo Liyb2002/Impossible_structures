@@ -14,7 +14,7 @@ class Structure:
         
         self.cleanUp()
         self.destination = destination
-        self.preprocess()
+        # self.preprocess()
 
         #print("initialized data: \n", self.data)
     
@@ -24,7 +24,7 @@ class Structure:
         new_vertex_clean = np.array([start[0], start[1], start[2]])
         self.add_vertex(new_vertex_clean)
         
-        span = 4 + int(random.random() * 3 % 3)
+        span = 4 + int(random.random() * 6 % 6)
         for i in range(span):
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, direction)
             self.add_vertex(new_vertex_clean)
@@ -147,7 +147,7 @@ class Structure:
         #print("new_vertex_clean", new_vertex_clean)
         self.add_vertex(new_vertex_clean)
         
-        span = 2 + int(random.random() * 5 % 5)
+        span = 3 + int(random.random() * 6 % 6)
         for i in range(span):
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, new_direction)
             self.add_vertex(new_vertex_clean)
