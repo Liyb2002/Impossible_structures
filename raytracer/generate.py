@@ -10,7 +10,7 @@ import metrics
 import intersection
 import particle
 
-from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect
+from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect, blinn_phong
 ti.init(arch=ti.gpu)
 
 PI = 3.14159265
@@ -20,7 +20,6 @@ aspect_ratio = 1.0
 image_width = 800
 image_height = int(image_width / aspect_ratio)
 canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
-light_source = ti.Vector([0, 5.4 - 3.0, -1])
 
 # Rendering parameters
 max_depth = 10
@@ -35,22 +34,6 @@ def render():
         color += ray_color(ray)
         canvas[i, j] += color
 
-@ti.func
-def to_light_source(hit_point, light_source):
-    return light_source - hit_point
-
-
-@ti.func
-def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
-
-    hit_point_to_source = to_light_source(hit_point, light_source)
-    # Diffuse light
-    diffuse_color = color * ti.max(
-        hit_point_to_source.dot(hit_point_normal) / (
-                hit_point_to_source.norm() * hit_point_normal.norm()),
-        0.0)
-
-    return diffuse_color
 
 def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
@@ -62,7 +45,6 @@ def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     # scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, material=1, color=ti.Vector([0.3, 0.3, 0.9])))
 
-# Blinn–Phong reflection model
 @ti.func
 def ray_color(ray):
     color_buffer = ti.Vector([1.0, 1.0, 1.0])
