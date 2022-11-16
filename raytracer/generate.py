@@ -72,24 +72,20 @@ if __name__ == "__main__":
     canvas.fill(0)
     cnt = 0
 
-    particle = particle.Particle()
+    result_particle = particle.Particle()
 
-    cc = particle.connecting_comp
+    cc = result_particle.connecting_comp
     i = cc.get_object()
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
-    f_struct = particle.foreground_structure
+    f_struct = result_particle.foreground_structure
     for i in f_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
-    b_struct = particle.background_structure
+    b_struct = result_particle.background_structure
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.2, 0.3)
 
-    print("particle.is_off_screen", particle.is_off_screen())
-    print("parallel socre", particle.parallel_score())
-    print("occulusion", particle.occulusion_score())
-    print("too close", particle.too_close_score())
 
     while gui.running:
         render()

@@ -54,26 +54,47 @@ class Particle:
         background_out_of_screen = metrics.out_of_screen(self.background_structure, background_max_screen, background_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen):
-            return True
+            return -100
                   
-        return False
+        return 0
 
     def parallel_score(self):
         (score, parallel_pts) = metrics.parallel_score(np.round(self.foreground_structure.history,1), np.round(self.background_structure.history,1))
         return score, parallel_pts
     
     def occulusion_score(self):
+        score = 0
         eye = np.array([5.0,5.0,5.0])
+    
         pos = self.connecting_comp.get_center()
-        occluded = metrics.occlude(self.foreground_structure, pos, eye)
+        if (metrics.occlude(self.foreground_structure, pos, eye)):
+            score -= 100
 
-        if occluded:
-            return 1
+        cc_fore = np.array([pos[0], pos[1], self.foreground_intersection[2]])
+        cc_back = np.array([pos[0], pos[1], self.background_intersection[2]])
+
+        checkpts = []
+        checkpts.append(cc_fore)
+        checkpts.append(cc_back)
+
+        for i in checkpts:
+            occluded = metrics.occlude(self.foreground_structure, i, eye)
+            if occluded:
+                score -= 20        
         
-        return 0
+        return score
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
-            return 1
+            return -100
         
         return 0
+    
+    def total_score(self):
+        score = 0
+        score += self.is_off_screen()
+        score += self.too_close_score()
+        score += self.occulusion_score()
+        (para_score, parallel_pts) = self.parallel_score()
+        score += para_score
+        return score
