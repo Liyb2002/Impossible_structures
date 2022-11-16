@@ -17,3 +17,17 @@ def occlude(front_structure,position, eye):
             return True
     
     return False
+
+def out_of_screen(structure, max_coordinate, min_coordinate):
+    max_x = max_coordinate[0]
+    max_y = max_coordinate[1]
+    min_x = min_coordinate[0]
+    min_y = min_coordinate[1]
+    
+    for i in structure.rect:
+        if(i.start_x < min_x or i.start_y < min_y):
+            return True
+        if(i.start_x+i.scale_x > max_x or i.start_y+i.scale_y > max_y):
+            return True
+    
+    return False

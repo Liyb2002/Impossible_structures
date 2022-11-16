@@ -14,7 +14,7 @@ class Structure:
         
         self.cleanUp()
         self.destination = destination
-        # self.preprocess()
+        self.preprocess()
 
         #print("initialized data: \n", self.data)
     

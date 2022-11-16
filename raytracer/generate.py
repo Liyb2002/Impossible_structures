@@ -98,7 +98,7 @@ if __name__ == "__main__":
     portion = background_index/foreground_index
 
     connecting_component_x = connecting_comp.offset()
-    connecting_component_y = connecting_comp.offset()
+    connecting_component_y = connecting_comp.offset()+2.0
     cc = connecting_comp.connecting_structure(foreground[0]+connecting_component_x, foreground[1]+connecting_component_y, foreground[2], background[2])
     i = cc.get_object()
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
@@ -108,7 +108,6 @@ if __name__ == "__main__":
     f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
     f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, cc.xy_pos())
     
-
     b_seed = gen_seed.get_seed_2(background,portion)
     b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
     b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,cc.xy_pos())
@@ -123,7 +122,15 @@ if __name__ == "__main__":
         print("occluded")
     else:
         print("not occluded")
-    
+
+    #off screen
+    foreground_max_screen = intersections.get_max_screen(foreground_index)
+    background_max_screen = intersections.get_max_screen(background_index)
+    foreground_min_screen = intersections.get_min_screen(foreground_index)
+    background_min_screen = intersections.get_min_screen(background_index)
+
+    foreground_out_of_screen = metrics.out_of_screen(f_struct, foreground_max_screen, foreground_min_screen)
+    print("foreground out of screen: ", foreground_out_of_screen)
     # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
 
     for i in f_struct.rect:
