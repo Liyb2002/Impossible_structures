@@ -8,6 +8,7 @@ import gen_seed
 import connecting_comp
 import metrics
 import intersection
+import particle
 
 from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
@@ -89,55 +90,38 @@ if __name__ == "__main__":
     canvas.fill(0)
     cnt = 0
 
-    foreground_index = 8
-    background_index = 12
-    intersections = intersection.Scene()
-    foreground = intersections.get_possible_intersects(foreground_index)
-    background = intersections.get_possible_intersects(background_index)
+    particle = particle.Particle()
 
-    portion = background_index/foreground_index
-
-    connecting_component_x = connecting_comp.offset()
-    connecting_component_y = connecting_comp.offset()+2.0
-    cc = connecting_comp.connecting_structure(foreground[0]+connecting_component_x, foreground[1]+connecting_component_y, foreground[2], background[2])
+    cc = particle.connecting_comp
     i = cc.get_object()
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
-
-    f_seed = gen_seed.get_seed(foreground)
-    f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
-    f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, cc.xy_pos())
-    
-    b_seed = gen_seed.get_seed_2(background,portion)
-    b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
-    b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,cc.xy_pos())
-
-    f_struct.generate(0)
-    b_struct.generate(0)
-
-    eye = np.array([5.0,5.0,5.0])
-    pos = cc.get_center()
-    occluded = metrics.occlude(f_struct, pos, eye)
-    if(occluded):
-        print("occluded")
-    else:
-        print("not occluded")
-
-    #off screen
-    foreground_max_screen = intersections.get_max_screen(foreground_index)
-    background_max_screen = intersections.get_max_screen(background_index)
-    foreground_min_screen = intersections.get_min_screen(foreground_index)
-    background_min_screen = intersections.get_min_screen(background_index)
-
-    foreground_out_of_screen = metrics.out_of_screen(f_struct, foreground_max_screen, foreground_min_screen)
-    print("foreground out of screen: ", foreground_out_of_screen)
-    # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
-
+    f_struct = particle.foreground_structure
     for i in f_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
+    b_struct = particle.background_structure
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.2, 0.3)
+
+    # eye = np.array([5.0,5.0,5.0])
+    # pos = cc.get_center()
+    # occluded = metrics.occlude(f_struct, pos, eye)
+    # if(occluded):
+    #     print("occluded")
+    # else:
+    #     print("not occluded")
+
+    # #off screen
+    # foreground_max_screen = intersections.get_max_screen(foreground_index)
+    # background_max_screen = intersections.get_max_screen(background_index)
+    # foreground_min_screen = intersections.get_min_screen(foreground_index)
+    # background_min_screen = intersections.get_min_screen(background_index)
+
+    # foreground_out_of_screen = metrics.out_of_screen(f_struct, foreground_max_screen, foreground_min_screen)
+    # print("foreground out of screen: ", foreground_out_of_screen)
+    # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
+
 
     while gui.running:
         render()
