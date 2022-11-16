@@ -31,3 +31,25 @@ def out_of_screen(structure, max_coordinate, min_coordinate):
             return True
     
     return False
+
+def too_close(structure):
+    horizontal = []
+    vertical = []
+
+    for i in structure.rect:
+        if(i.scale_x > i.scale_y):
+            horizontal.append(i)
+        else:
+            vertical.append(i)
+    
+    for i in horizontal:
+        for j in horizontal:
+            if(i.start_y != j.start_y and abs(i.start_y - j.start_y)<0.2):
+                return True
+    
+    for i in vertical:
+        for j in vertical:
+            if(i.start_x != j.start_x and abs(i.start_x - j.start_x)<0.2):
+                return True
+    
+    return False

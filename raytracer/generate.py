@@ -89,6 +89,7 @@ if __name__ == "__main__":
     print("particle.is_off_screen", particle.is_off_screen())
     print("parallel socre", particle.parallel_score())
     print("occulusion", particle.occulusion_score())
+    print("too close", particle.too_close_score())
 
     while gui.running:
         render()

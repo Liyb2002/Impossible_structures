@@ -21,7 +21,7 @@ class Structure:
     
 
     def to_dest(self):
-        next_vertex = self.next_possibles[-1]
+        next_vertex = self.next_possibles[rand_index(self.next_possibles)]
         x_dist = abs(self.destination[0] - next_vertex[0])
         x_start = min(self.destination[0], next_vertex[0])
         startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
@@ -213,3 +213,6 @@ def check_close(struct_a, struct_b):
             if dist_x < 0.2 or dist_y <0.2:
                 return True
     return False
+
+def rand_index(input_array):
+    return int(random.random()* len(input_array) % len(input_array))

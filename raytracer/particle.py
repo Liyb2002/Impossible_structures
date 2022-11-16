@@ -71,3 +71,9 @@ class Particle:
             return 1
         
         return 0
+
+    def too_close_score(self):
+        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
+            return 1
+        
+        return 0
