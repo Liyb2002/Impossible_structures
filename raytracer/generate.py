@@ -7,6 +7,7 @@ import structure
 import gen_seed
 import connecting_comp
 import metrics
+import intersection
 
 from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
@@ -20,41 +21,8 @@ image_height = int(image_width / aspect_ratio)
 canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
 light_source = ti.Vector([0, 5.4 - 3.0, -1])
 
-possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
-max_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
-min_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
-
 # Rendering parameters
 max_depth = 10
-
-x_start = 400
-y_start = 400
-
-@ti.kernel
-def get_impossible_intersection():
-    u = (x_start) / image_width
-    v = (y_start) / image_height
-    ray = camera.get_ray(u, v)
-    ray_max = camera.get_ray(1, 1)
-    ray_min = camera.get_ray(0, 0)
-
-    for k in range(5,25):
-        x = ray.origin[0] + ray.direction[0] * (k*0.25)
-        y = ray.origin[1] + ray.direction[1] * (k*0.25)
-        z = ray.origin[2] + ray.direction[2] * (k*0.25)
-        pos = ti.Vector([x, y,z])
-        possible_intersects[k] += pos
-
-        x_max = ray_max.origin[0] + ray_max.direction[0] * (k*0.25)
-        y_max = ray_max.origin[1] + ray_max.direction[1] * (k*0.25)
-        pos_max = ti.Vector([x_max, y_max])
-        max_screen[k] += pos_max
-
-        x_min = ray_min.origin[0] + ray_min.direction[0] * (k*0.25)
-        y_min = ray_min.origin[1] + ray_min.direction[1] * (k*0.25)
-        pos_min = ti.Vector([x_min, y_min])
-        min_screen[k] += pos_min
-
 
 @ti.kernel
 def render():
@@ -73,25 +41,15 @@ def to_light_source(hit_point, light_source):
 
 @ti.func
 def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
-    # Compute the local color use Blinn-Phong model
+
     hit_point_to_source = to_light_source(hit_point, light_source)
     # Diffuse light
     diffuse_color = color * ti.max(
         hit_point_to_source.dot(hit_point_normal) / (
                 hit_point_to_source.norm() * hit_point_normal.norm()),
         0.0)
-    diffuse_weight = 1.0
-    if material != 1:
-        # Specular light
-        H = (-(ray_direction.normalized()) + hit_point_to_source.normalized()).normalized()
-        N_dot_H = ti.max(H.dot(hit_point_normal.normalized()), 0.0)
-        intensity = ti.pow(N_dot_H, 10)
 
-    # Fuzz metal ball
-    if material == 4:
-        diffuse_weight = 0.5
-
-    return diffuse_weight * diffuse_color
+    return diffuse_color
 
 def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
@@ -111,10 +69,7 @@ def ray_color(ray):
     curr_direction = ray.direction
     is_hit, hit_point, hit_point_normal, front_face, material, color = scene.hit(Ray(curr_origin, curr_direction))
     if is_hit:
-        if material == 0:
-            color_buffer = color
-        else:
-            color_buffer = blinn_phong(curr_direction, hit_point, hit_point_normal, color, material)
+        color_buffer = blinn_phong(curr_direction, hit_point, hit_point_normal, color, material)
     return color_buffer
 
 if __name__ == "__main__":
@@ -134,49 +89,27 @@ if __name__ == "__main__":
     canvas.fill(0)
     cnt = 0
 
-    get_impossible_intersection()
     foreground_index = 8
-    foreground_x = possible_intersects[foreground_index][0]
-    foreground_y = possible_intersects[foreground_index][1]
-    foreground_z = possible_intersects[foreground_index][2]
-    foreground_max_x = max_screen[foreground_index][0]
-    foreground_max_y = max_screen[foreground_index][1]
-    foreground_min_x = min_screen[foreground_index][0]
-    foreground_min_y = min_screen[foreground_index][1]
-    print(foreground_max_x, foreground_max_y, foreground_min_x, foreground_min_y)
-    print(foreground_x, foreground_y, foreground_z)
-
-
     background_index = 12
-    background_x = possible_intersects[background_index][0]
-    background_y = possible_intersects[background_index][1]
-    background_z = possible_intersects[background_index][2]
-    background_max_x = max_screen[background_index][0]
-    background_max_y = max_screen[background_index][1]
-    background_min_x = min_screen[background_index][0]
-    background_min_y = min_screen[background_index][1]
-    print(background_max_x, background_max_y, background_min_x, background_min_y)
-    print(background_x, background_y, background_z)
+    intersections = intersection.Scene()
+    foreground = intersections.get_possible_intersects(foreground_index)
+    background = intersections.get_possible_intersects(background_index)
 
     portion = background_index/foreground_index
 
     connecting_component_x = connecting_comp.offset()
     connecting_component_y = connecting_comp.offset()
-
-    print("connecting_component_x", connecting_component_x)
-    print("connecting_component_y", connecting_component_y)
-    cc = connecting_comp.connecting_structure(foreground_x+connecting_component_x, foreground_y+connecting_component_y, foreground_z, background_z)
+    cc = connecting_comp.connecting_structure(foreground[0]+connecting_component_x, foreground[1]+connecting_component_y, foreground[2], background[2])
     i = cc.get_object()
-
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
 
-    f_seed = gen_seed.get_seed(np.array([foreground_x, foreground_y, foreground_z]))
+    f_seed = gen_seed.get_seed(foreground)
     f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
     f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, cc.xy_pos())
     
 
-    b_seed = gen_seed.get_seed_2(np.array([background_x, background_y, background_z]),portion)
+    b_seed = gen_seed.get_seed_2(background,portion)
     b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
     b_struct = structure.Structure(b_seed, b_seed_next_possible, portion,cc.xy_pos())
 
@@ -192,13 +125,12 @@ if __name__ == "__main__":
         print("not occluded")
     
     # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
-    
 
     for i in f_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
     
     for i in b_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.2, 0.3)
 
     while gui.running:
         render()
