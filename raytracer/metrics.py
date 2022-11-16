@@ -1,5 +1,18 @@
 import numpy as np
 
+def parallel_score(history_a, history_b):
+    score = 0
+    parallel_pts = []
+    
+    for i in history_a:
+        for j in history_b:
+            if(i[0] == j[0] and i[1] == j[1]):
+                parallel_pts.append((i[0],i[1]))
+                score += 5
+            elif(i[0] == j[0] or i[1] == j[1]):
+                score += 1
+    return score, parallel_pts
+
 def occlude(front_structure,position, eye):
     ray = eye - position
     ray = ray / np.linalg.norm(ray)

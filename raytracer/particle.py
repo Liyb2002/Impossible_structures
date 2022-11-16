@@ -59,7 +59,7 @@ class Particle:
         return False
 
     def parallel_score(self):
-        (score, parallel_pts) = structure.parallel_score(np.round(self.foreground_structure.history,1), np.round(self.background_structure.history,1))
+        (score, parallel_pts) = metrics.parallel_score(np.round(self.foreground_structure.history,1), np.round(self.background_structure.history,1))
         return score, parallel_pts
     
     def occulusion_score(self):
