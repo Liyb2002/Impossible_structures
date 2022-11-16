@@ -104,24 +104,9 @@ if __name__ == "__main__":
     for i in b_struct.rect:
         create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.2, 0.3)
 
-    # eye = np.array([5.0,5.0,5.0])
-    # pos = cc.get_center()
-    # occluded = metrics.occlude(f_struct, pos, eye)
-    # if(occluded):
-    #     print("occluded")
-    # else:
-    #     print("not occluded")
-
-    # #off screen
-    # foreground_max_screen = intersections.get_max_screen(foreground_index)
-    # background_max_screen = intersections.get_max_screen(background_index)
-    # foreground_min_screen = intersections.get_min_screen(foreground_index)
-    # background_min_screen = intersections.get_min_screen(background_index)
-
-    # foreground_out_of_screen = metrics.out_of_screen(f_struct, foreground_max_screen, foreground_min_screen)
-    # print("foreground out of screen: ", foreground_out_of_screen)
-    # (score, parallel_pts) = structure.parallel_score(np.round(f_struct.history,1), np.round(b_struct.history,1))
-
+    print("particle.is_off_screen", particle.is_off_screen())
+    print("parallel socre", particle.parallel_score())
+    print("occulusion", particle.occulusion_score())
 
     while gui.running:
         render()

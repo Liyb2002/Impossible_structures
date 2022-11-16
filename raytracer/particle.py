@@ -1,7 +1,10 @@
+import numpy as np
+
 import intersection
 import structure
 import connecting_comp
 import gen_seed
+import metrics
 
 class Particle:
     def __init__(self):
@@ -11,9 +14,9 @@ class Particle:
 
         self.foreground_index = 8
         self.background_index = 12
-        intersections = intersection.Scene()
-        self.foreground_intersection = intersections.get_possible_intersects(self.foreground_index)
-        self.background_intersection = intersections.get_possible_intersects(self.background_index)
+        self.intersections = intersection.Scene()
+        self.foreground_intersection = self.intersections.get_possible_intersects(self.foreground_index)
+        self.background_intersection = self.intersections.get_possible_intersects(self.background_index)
 
         self.portion = self.background_index/self.foreground_index
 
@@ -39,3 +42,32 @@ class Particle:
         
         self.connecting_comp = cc
     
+    def is_off_screen(self):
+
+        #check off screen
+        foreground_max_screen = self.intersections.get_max_screen(self.foreground_index)
+        background_max_screen = self.intersections.get_max_screen(self.background_index)
+        foreground_min_screen = self.intersections.get_min_screen(self.foreground_index)
+        background_min_screen = self.intersections.get_min_screen(self.background_index)
+
+        foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, foreground_max_screen, foreground_min_screen)
+        background_out_of_screen = metrics.out_of_screen(self.background_structure, background_max_screen, background_min_screen)
+
+        if(foreground_out_of_screen or background_out_of_screen):
+            return True
+                  
+        return False
+
+    def parallel_score(self):
+        (score, parallel_pts) = structure.parallel_score(np.round(self.foreground_structure.history,1), np.round(self.background_structure.history,1))
+        return score, parallel_pts
+    
+    def occulusion_score(self):
+        eye = np.array([5.0,5.0,5.0])
+        pos = self.connecting_comp.get_center()
+        occluded = metrics.occlude(self.foreground_structure, pos, eye)
+
+        if occluded:
+            return 1
+        
+        return 0
