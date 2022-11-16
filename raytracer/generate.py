@@ -9,7 +9,7 @@ import connecting_comp
 import metrics
 import intersection
 
-from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
+from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect
 ti.init(arch=ti.gpu)
 
 PI = 3.14159265

@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import random
 
-from ray_tracing_models import Ray, Camera, Hittable_list, Sphere, PI, xy_rect, xz_rect, yz_rect
+from ray_tracing_models import Ray, Camera
 ti.init(arch=ti.gpu)
 
 @ti.data_oriented

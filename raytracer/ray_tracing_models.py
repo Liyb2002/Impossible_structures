@@ -44,47 +44,10 @@ class Ray:
     def __init__(self, origin, direction):
         self.origin = origin
         self.direction = direction
+    
+    @ti.func
     def at(self, t):
         return self.origin + t * self.direction
-
-@ti.data_oriented
-class Sphere:
-    def __init__(self, center, radius, material, color):
-        self.center = center
-        self.radius = radius
-        self.material = material
-        self.color = color
-
-    @ti.func
-    def hit(self, ray, t_min=0.001, t_max=10e8):
-        oc = ray.origin - self.center
-        a = ray.direction.dot(ray.direction)
-        b = 2.0 * oc.dot(ray.direction)
-        c = oc.dot(oc) - self.radius * self.radius
-        discriminant = b * b - 4 * a * c
-        is_hit = False
-        front_face = False
-        root = 0.0
-        hit_point =  ti.Vector([0.0, 0.0, 0.0])
-        hit_point_normal = ti.Vector([0.0, 0.0, 0.0])
-        if discriminant > 0:
-            sqrtd = ti.sqrt(discriminant)
-            root = (-b - sqrtd) / (2 * a)
-            if root < t_min or root > t_max:
-                root = (-b + sqrtd) / (2 * a)
-                if root >= t_min and root <= t_max:
-                    is_hit = True
-            else:
-                is_hit = True
-        if is_hit:
-            hit_point = ray.at(root)
-            hit_point_normal = (hit_point - self.center) / self.radius
-            # Check which side does the ray hit, we set the hit point normals always point outward from the surface
-            if ray.direction.dot(hit_point_normal) < 0:
-                front_face = True
-            else:
-                hit_point_normal = -hit_point_normal
-        return is_hit, root, hit_point, hit_point_normal, front_face, self.material, self.color
 
 @ti.data_oriented
 class xy_rect:
@@ -279,4 +242,5 @@ class Camera:
 
     @ti.func
     def get_ray(self, u, v):
-        return Ray(self.cam_origin[None], self.cam_lower_left_corner[None] + u * self.cam_horizontal[None] + v * self.cam_vertical[None] - self.cam_origin[None])
+        r = Ray(self.cam_origin[None], self.cam_lower_left_corner[None] + u * self.cam_horizontal[None] + v * self.cam_vertical[None] - self.cam_origin[None])
+        return r
