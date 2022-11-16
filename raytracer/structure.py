@@ -14,39 +14,23 @@ class Structure:
         
         self.cleanUp()
         self.destination = destination
-        self.preprocess()
+        self.generate(1)
+        self.to_dest()
 
         #print("initialized data: \n", self.data)
     
-    def preprocess(self):
-        start = self.seed_next_possible[0]
-        direction = start[-1]
-        new_vertex_clean = np.array([start[0], start[1], start[2]])
-        self.add_vertex(new_vertex_clean)
-        
-        span = 4 + int(random.random() * 6 % 6)
-        for i in range(span):
-            new_vertex_clean = self.get_vertex_forward(new_vertex_clean, direction)
-            self.add_vertex(new_vertex_clean)
-        
-        self.remove_possible(0)
-        self.history = np.append(self.history, self.data[1:], axis=0)
-        self.rect.append(block_to_rect(self.data, self.portion))
-        self.data = np.array([[0,0,0]])
-        
-        self.to_dest(new_vertex_clean)
 
-
-    def to_dest(self, new_vertex_clean):
-        x_dist = abs(self.destination[0] - new_vertex_clean[0])
-        x_start = min(self.destination[0], new_vertex_clean[0])
-        startPos = np.array([x_start, new_vertex_clean[1], new_vertex_clean[2]])
+    def to_dest(self):
+        next_vertex = self.next_possibles[-1]
+        x_dist = abs(self.destination[0] - next_vertex[0])
+        x_start = min(self.destination[0], next_vertex[0])
+        startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
         scale = np.array([x_dist+0.07*self.portion, 0.07*self.portion, 0.07*self.portion])
         rect1 = rect(startPos, scale)
         
-        y_dist = abs(self.destination[1] - new_vertex_clean[1])
-        y_start = min(self.destination[1], new_vertex_clean[1])
-        startPos2 = np.array([self.destination[0], y_start, new_vertex_clean[2]])
+        y_dist = abs(self.destination[1] - next_vertex[1])
+        y_start = min(self.destination[1], next_vertex[1])
+        startPos2 = np.array([self.destination[0], y_start, next_vertex[2]])
         scale2 = np.array([0.07,y_dist+0.07*self.portion, 0.07*self.portion])
         rect2 = rect(startPos2, scale2)
         
