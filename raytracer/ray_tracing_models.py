@@ -9,7 +9,7 @@ def to_light_source(hit_point, light_source):
 
 
 @ti.func
-def blinn_phong(ray_direction, hit_point, hit_point_normal, color, material):
+def diffuse(ray_direction, hit_point, hit_point_normal, color, material):
 
     hit_point_to_source = to_light_source(hit_point, light_source)
     # Diffuse light
@@ -164,28 +164,6 @@ class Hittable_list:
                 material = material_tmp
                 color = color_tmp
         return is_hit, hit_point, hit_point_normal, front_face, material, color
-
-    @ti.func
-    def hit_shadow(self, ray, t_min=0.001, t_max=10e8):
-        is_hit_source = False
-        is_hit_source_temp = False
-        hitted_dielectric_num = 0
-        is_hitted_non_dielectric = False
-        # Compute the t_max to light source
-        is_hit_tmp, root_light_source, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp = \
-        self.objects[0].hit(ray, t_min)
-        for index in ti.static(range(len(self.objects))):
-            is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp =  self.objects[index].hit(ray, t_min, root_light_source)
-            if is_hit_tmp:
-                if material_tmp != 3 and material_tmp != 0:
-                    is_hitted_non_dielectric = True
-                if material_tmp == 3:
-                    hitted_dielectric_num += 1
-                if material_tmp == 0:
-                    is_hit_source_temp = True
-        if is_hit_source_temp and (not is_hitted_non_dielectric) and hitted_dielectric_num == 0:
-            is_hit_source = True
-        return is_hit_source, hitted_dielectric_num, is_hitted_non_dielectric
 
 
 @ti.data_oriented

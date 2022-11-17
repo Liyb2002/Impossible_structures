@@ -10,7 +10,7 @@ import metrics
 import intersection
 import particle
 
-from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect, blinn_phong
+from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect, diffuse
 ti.init(arch=ti.gpu)
 
 PI = 3.14159265
@@ -53,7 +53,7 @@ def ray_color(ray, camera_pos):
     curr_direction = ray
     is_hit, hit_point, hit_point_normal, front_face, material, color = scene.hit(curr_origin, curr_direction)
     if is_hit:
-        color_buffer = blinn_phong(curr_direction, hit_point, hit_point_normal, color, material)
+        color_buffer = diffuse(curr_direction, hit_point, hit_point_normal, color, material)
     return color_buffer
 
 if __name__ == "__main__":
