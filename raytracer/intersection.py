@@ -27,24 +27,26 @@ class Scene:
     def get_impossible_intersection(self):
         u = (self.x_start) / self.image_width
         v = (self.y_start) / self.image_height
+        camera_pos = self.camera.get_camera_origin()
         ray = self.camera.get_ray(u, v)
+
         ray_max = self.camera.get_ray(1, 1)
         ray_min = self.camera.get_ray(0, 0)
 
         for k in range(5,25):
-            x = ray.origin[0] + ray.direction[0] * (k*0.25)
-            y = ray.origin[1] + ray.direction[1] * (k*0.25)
-            z = ray.origin[2] + ray.direction[2] * (k*0.25)
+            x = camera_pos[0] + ray[0] * (k*0.25)
+            y = camera_pos[1] + ray[1] * (k*0.25)
+            z = camera_pos[2] + ray[2] * (k*0.25)
             pos = ti.Vector([x, y,z])
             self.possible_intersects[k] += pos
 
-            x_max = ray_max.origin[0] + ray_max.direction[0] * (k*0.25)
-            y_max = ray_max.origin[1] + ray_max.direction[1] * (k*0.25)
+            x_max = camera_pos[0] + ray_max[0] * (k*0.25)
+            y_max = camera_pos[1] + ray_max[1] * (k*0.25)
             pos_max = ti.Vector([x_max, y_max])
             self.max_screen[k] += pos_max
 
-            x_min = ray_min.origin[0] + ray_min.direction[0] * (k*0.25)
-            y_min = ray_min.origin[1] + ray_min.direction[1] * (k*0.25)
+            x_min = camera_pos[0] + ray_min[0] * (k*0.25)
+            y_min = camera_pos[1] + ray_min[1] * (k*0.25)
             pos_min = ti.Vector([x_min, y_min])
             self.min_screen[k] += pos_min
 

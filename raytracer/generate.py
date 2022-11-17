@@ -31,7 +31,8 @@ def render():
         v = (j) / image_height
         color = ti.Vector([0.0, 0.0, 0.0])
         ray = camera.get_ray(u, v)
-        color += ray_color(ray)
+        camera_pos = camera.get_camera_origin()
+        color += ray_color(ray, camera_pos)
         canvas[i, j] += color
 
 
@@ -46,11 +47,11 @@ def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, material=1, color=ti.Vector([0.3, 0.3, 0.9])))
 
 @ti.func
-def ray_color(ray):
+def ray_color(ray, camera_pos):
     color_buffer = ti.Vector([1.0, 1.0, 1.0])
-    curr_origin = ray.origin
-    curr_direction = ray.direction
-    is_hit, hit_point, hit_point_normal, front_face, material, color = scene.hit(Ray(curr_origin, curr_direction))
+    curr_origin = camera_pos
+    curr_direction = ray
+    is_hit, hit_point, hit_point_normal, front_face, material, color = scene.hit(curr_origin, curr_direction)
     if is_hit:
         color_buffer = blinn_phong(curr_direction, hit_point, hit_point_normal, color, material)
     return color_buffer

@@ -44,23 +44,23 @@ class xy_rect:
 
     #return the hit information
     @ti.func
-    def hit(self, ray, t_min=0.001, t_max=10e8):
+    def hit(self, camera_pos, ray, t_min=0.001, t_max=10e8):
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
         hit_point_normal = ti.Vector([0.0, 0.0, -1.0])
 
-        t = (self.k - ray.origin[2]) / ray.direction[2]
+        t = (self.k - camera_pos[2]) / ray[2]
 
         if t <0.001 or t>10e8:
             is_hit = False
         else: 
-            x = ray.origin[0] + t * ray.direction[0]
-            y = ray.origin[1] + t * ray.direction[1]
+            x = camera_pos[0] + t * ray[0]
+            y = camera_pos[1] + t * ray[1]
             if x < self.x0 or x> self.x1 or y<self.y0 or y > self.y1:
                 is_hit = False
             else:
-                hit_point = ray.at(t)
+                hit_point = camera_pos + t * ray
                 frontface = True
         root = t
         return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
@@ -79,23 +79,23 @@ class xz_rect:
 
     #return the hit information
     @ti.func
-    def hit(self, ray, t_min=0.001, t_max=10e8):
+    def hit(self, camera_pos, ray, t_min=0.001, t_max=10e8):
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
         hit_point_normal = ti.Vector([0.0, -1.0, 0.0])
 
-        t = (self.k - ray.origin[1]) / ray.direction[1]
+        t = (self.k - camera_pos[1]) / ray[1]
 
         if t <0.001 or t>10e8:
             is_hit = False
         else: 
-            x = ray.origin[0] + t * ray.direction[0]
-            z = ray.origin[2] + t * ray.direction[2]
+            x = camera_pos[0] + t * ray[0]
+            z = camera_pos[2] + t * ray[2]
             if x < self.x0 or x> self.x1 or z<self.z0 or z > self.z1:
                 is_hit = False
             else:
-                hit_point = ray.at(t)
+                hit_point = camera_pos + t * ray
                 frontface = True
         root = t
         return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
@@ -114,23 +114,23 @@ class yz_rect:
 
     #return the hit information
     @ti.func
-    def hit(self, ray, t_min=0.001, t_max=10e8):
+    def hit(self, camera_pos, ray, t_min=0.001, t_max=10e8):
         is_hit = True
         frontface = True
         hit_point =  ti.Vector([0.0, 0.0, 0.0])
         hit_point_normal = ti.Vector([-1.0, 0.0, 0.0])
 
-        t = (self.k - ray.origin[0]) / ray.direction[0]
+        t = (self.k - camera_pos[0]) / ray[0]
 
         if t <0.001 or t>10e8:
             is_hit = False
         else: 
-            y = ray.origin[1] + t * ray.direction[1]
-            z = ray.origin[2] + t * ray.direction[2]
+            y = camera_pos[1] + t * ray[1]
+            z = camera_pos[2] + t * ray[2]
             if y < self.y0 or y> self.y1 or z<self.z0 or z > self.z1:
                 is_hit = False
             else:
-                hit_point = ray.at(t)
+                hit_point = camera_pos + t * ray
                 frontface = True
         root = t    
         return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
@@ -145,7 +145,7 @@ class Hittable_list:
         self.objects = []
 
     @ti.func
-    def hit(self, ray, t_min=0.001, t_max=10e8):
+    def hit(self, camera_pos, ray, t_min=0.001, t_max=10e8):
         closest_t = t_max
         is_hit = False
         front_face = False
@@ -154,7 +154,7 @@ class Hittable_list:
         color = ti.Vector([0.0, 0.0, 0.0])
         material = 1
         for index in ti.static(range(len(self.objects))):
-            is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp =  self.objects[index].hit(ray, t_min, closest_t)
+            is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp =  self.objects[index].hit(camera_pos, ray, t_min, closest_t)
             if is_hit_tmp and closest_t > root_tmp:
                 closest_t = root_tmp
                 is_hit = is_hit_tmp
@@ -223,5 +223,9 @@ class Camera:
 
     @ti.func
     def get_ray(self, u, v):
-        r = Ray(self.cam_origin[None], self.cam_lower_left_corner[None] + u * self.cam_horizontal[None] + v * self.cam_vertical[None] - self.cam_origin[None])
+        r = self.cam_lower_left_corner[None] + u * self.cam_horizontal[None] + v * self.cam_vertical[None] - self.cam_origin[None]
         return r
+    
+    @ti.func
+    def get_camera_origin(self):
+        return self.cam_origin[None]
