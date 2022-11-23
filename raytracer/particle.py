@@ -11,6 +11,8 @@ class Particle:
         self.foreground_structure = None
         self.background_structure = None
         self.connecting_comp = None
+        self.f_seed = None
+        self.b_seed = None
 
         self.foreground_index = 8
         self.background_index = 12
@@ -22,15 +24,18 @@ class Particle:
 
         self.generate_connecting_comp()
         self.generate_structures()
+        
 
     def generate_structures(self):
 
         f_seed = gen_seed.get_seed(self.foreground_intersection)
+        self.f_seed = f_seed
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.connecting_comp.xy_pos())
         self.foreground_structure = f_struct
     
         b_seed = gen_seed.get_seed_2(self.background_intersection,self.portion)
+        self.b_seed = b_seed
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion,self.connecting_comp.xy_pos())
         self.background_structure = b_struct
@@ -74,6 +79,7 @@ class Particle:
         checkpts.append(cc_center)
         checkpts.append(cc_fore)
         checkpts.append(cc_back)
+        checkpts.append(self.background_intersection)
 
         count = metrics.occlusion_score(self.foreground_structure,checkpts, eye)
 
