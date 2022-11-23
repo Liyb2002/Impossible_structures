@@ -66,23 +66,20 @@ class Particle:
         score = 0
         eye = np.array([5.0,5.0,5.0])
     
-        pos = self.connecting_comp.get_center()
-        if (metrics.occlude(self.foreground_structure, pos, eye)):
-            score -= 100
-
-        cc_fore = np.array([pos[0], pos[1], self.foreground_intersection[2]])
-        cc_back = np.array([pos[0], pos[1], self.background_intersection[2]])
+        cc_center = self.connecting_comp.get_center()
+        cc_fore = np.array([cc_center[0], cc_center[1], self.foreground_intersection[2]])
+        cc_back = np.array([cc_center[0], cc_center[1], self.background_intersection[2]])
 
         checkpts = []
+        checkpts.append(cc_center)
         checkpts.append(cc_fore)
         checkpts.append(cc_back)
 
-        for i in checkpts:
-            occluded = metrics.occlude(self.foreground_structure, i, eye)
-            if occluded:
-                score -= 20        
-        
-        return score
+        count = metrics.occlusion_score(self.foreground_structure,checkpts, eye)
+
+        print("occulusion points", count)
+
+        return count * -20
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):

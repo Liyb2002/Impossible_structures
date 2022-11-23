@@ -31,6 +31,14 @@ def occlude(front_structure,position, eye):
     
     return False
 
+def occlusion_score(front_structure, points, eye):
+    count = 0
+    for i in points:
+        if (occlude(front_structure, i, eye)):
+            count += 1
+    
+    return count
+
 def out_of_screen(structure, max_coordinate, min_coordinate):
     max_x = max_coordinate[0]
     max_y = max_coordinate[1]

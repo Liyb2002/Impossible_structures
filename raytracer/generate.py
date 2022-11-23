@@ -73,7 +73,18 @@ if __name__ == "__main__":
     canvas.fill(0)
     cnt = 0
 
-    result_particle = particle.Particle()
+    max_score = -1000
+    result_particle = None
+    for i in range(10):
+        tempt_particle = particle.Particle()
+        tempt_score = tempt_particle.total_score()
+        print("score", tempt_score)
+
+        if tempt_score > max_score:
+            max_score = tempt_score
+            result_particle = tempt_particle
+
+    print("best score", result_particle.total_score())
 
     cc = result_particle.connecting_comp
     i = cc.get_object()

@@ -14,7 +14,7 @@ class Structure:
         
         self.cleanUp()
         self.destination = destination
-        self.generate(1)
+        self.generate(3)
         self.to_dest()
 
         #print("initialized data: \n", self.data)
