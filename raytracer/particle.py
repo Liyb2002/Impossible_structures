@@ -82,7 +82,7 @@ class Particle:
         cc_score = metrics.occlusion_score_wDist(self.foreground_structure,cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
 
         # print("critical_count: ", critical_count, "cc_score: ", cc_score)
-        return (critical_count * -20) + (seed_count * -50) + cc_score
+        return (critical_count * -20) + (seed_count * -20) + cc_score
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
@@ -91,10 +91,36 @@ class Particle:
         return 0
     
     def total_score(self):
-        score = 0
+        score = 200
         score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
         # (para_score, parallel_pts) = self.parallel_score()
         # score += para_score
         return score
+
+
+
+def resample(particle_list, score_list):
+    num_particles = len(particle_list)
+    num_favorable = int(num_particles / 10)
+    new_particle_list = []
+
+    sorted_index = sorted(range(len(score_list)), key=lambda k: score_list[k])
+    sorted_index.reverse()
+
+    considered_total = 0
+
+    for i in range(num_favorable):
+        best_index = sorted_index[i]
+        considered_total += score_list[best_index]
+
+    for i in range(num_favorable):
+        best_index = sorted_index[i]
+        cur_score = score_list[best_index]
+        num_copies = int(cur_score/considered_total * num_particles)
+
+        for j in range(num_copies):
+            new_particle_list.append(particle_list[best_index])
+    
+    return new_particle_list

@@ -91,16 +91,23 @@ if __name__ == "__main__":
     portion = background_index/ foreground_index
     
     result_particle = None
-    for i in range(300):
+
+    num_particles = 300
+    particle_list = []
+    score_list = []
+
+    for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
         tempt_score = tempt_particle.total_score()
+        particle_list.append(tempt_particle)
+        score_list.append(tempt_score)
         print("particle: ", i, "has score: ", tempt_score)
 
-        if tempt_score > max_score:
-            max_score = tempt_score
-            result_particle = tempt_particle
+    particle_list = particle.resample(particle_list, score_list)
 
-    print("best score", result_particle.total_score())
+    for i in range(len(particle_list)):
+        print("new particle: ", i, "has score: ", particle_list[i].total_score())
+
 
     cc = result_particle.connecting_comp
     i = cc.get_object()
