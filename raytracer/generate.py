@@ -75,16 +75,17 @@ if __name__ == "__main__":
 
     max_score = -1000
     result_particle = None
-    for i in range(30):
-        tempt_particle = particle.Particle()
-        tempt_score = tempt_particle.total_score()
-        print("tempt_score: ", i, "is", tempt_score)
+    for i in range(300):
+        result_particle = particle.Particle()
+        print("particle: ", i)
+    #     tempt_score = tempt_particle.total_score()
+    #     print("tempt_score: ", i, "is", tempt_score)
 
-        if tempt_score > max_score:
-            max_score = tempt_score
-            result_particle = tempt_particle
+    #     if tempt_score > max_score:
+    #         max_score = tempt_score
+    #         result_particle = tempt_particle
 
-    print("best score", result_particle.total_score())
+    # print("best score", result_particle.total_score())
 
     cc = result_particle.connecting_comp
     i = cc.get_object()

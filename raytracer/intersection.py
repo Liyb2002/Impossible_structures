@@ -4,7 +4,6 @@ import argparse
 import random
 
 from ray_tracing_models import Ray, Camera
-ti.init(arch=ti.gpu)
 
 @ti.data_oriented
 class Scene:
@@ -19,7 +18,7 @@ class Scene:
         self.image_width = 800
 
         self.camera = Camera()
-        self.get_impossible_intersection()
+        # self.get_impossible_intersection()
         
 
     

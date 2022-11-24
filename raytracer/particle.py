@@ -17,13 +17,13 @@ class Particle:
         self.foreground_index = 8
         self.background_index = 12
         self.intersections = intersection.Scene()
-        self.foreground_intersection = self.intersections.get_possible_intersects(self.foreground_index)
-        self.background_intersection = self.intersections.get_possible_intersects(self.background_index)
+        # self.foreground_intersection = self.intersections.get_possible_intersects(self.foreground_index)
+        # self.background_intersection = self.intersections.get_possible_intersects(self.background_index)
 
         self.portion = self.background_index/self.foreground_index
 
-        self.generate_connecting_comp()
-        self.generate_structures()
+        # self.generate_connecting_comp()
+        # self.generate_structures()
         
 
     def generate_structures(self):

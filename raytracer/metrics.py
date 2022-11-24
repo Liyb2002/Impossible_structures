@@ -50,7 +50,6 @@ def occlusion_score_wDist(front_structure, points, eye, axis, start, end):
     for i in points:
         if (occlude(front_structure, i, eye)):
             dist = min(abs(start - i[axis]), abs(end-i[axis]))
-            print("dist", dist)
             score += dist * -5 
     
     return score
