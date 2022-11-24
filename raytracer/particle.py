@@ -7,23 +7,24 @@ import gen_seed
 import metrics
 
 class Particle:
-    def __init__(self):
+    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion):
         self.foreground_structure = None
         self.background_structure = None
         self.connecting_comp = None
         self.f_seed = None
         self.b_seed = None
 
-        self.foreground_index = 8
-        self.background_index = 12
-        self.intersections = intersection.Scene()
-        # self.foreground_intersection = self.intersections.get_possible_intersects(self.foreground_index)
-        # self.background_intersection = self.intersections.get_possible_intersects(self.background_index)
+        self.foreground_intersection = foreground_intersection
+        self.background_intersection = background_intersection
 
-        self.portion = self.background_index/self.foreground_index
+        self.foreground_max_screen = foreground_max_screen
+        self.background_max_screen = background_max_screen
+        self.foreground_min_screen = foreground_min_screen
+        self.background_min_screen = background_min_screen
 
-        # self.generate_connecting_comp()
-        # self.generate_structures()
+        self.portion = portion
+        self.generate_connecting_comp()
+        self.generate_structures()
         
 
     def generate_structures(self):
@@ -49,14 +50,8 @@ class Particle:
     
     def is_off_screen(self):
 
-        #check off screen
-        foreground_max_screen = self.intersections.get_max_screen(self.foreground_index)
-        background_max_screen = self.intersections.get_max_screen(self.background_index)
-        foreground_min_screen = self.intersections.get_min_screen(self.foreground_index)
-        background_min_screen = self.intersections.get_min_screen(self.background_index)
-
-        foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, foreground_max_screen, foreground_min_screen)
-        background_out_of_screen = metrics.out_of_screen(self.background_structure, background_max_screen, background_min_screen)
+        foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, self.foreground_max_screen, self.foreground_min_screen)
+        background_out_of_screen = metrics.out_of_screen(self.background_structure, self.background_max_screen, self.background_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen):
             return -100

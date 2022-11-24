@@ -75,11 +75,27 @@ if __name__ == "__main__":
 
     max_score = -1000
     result_particle = None
+
+    foreground_index = 8
+    background_index = 12
+    basic_scene = intersection.Scene()
+    foreground_max_screen = basic_scene.get_max_screen(foreground_index)
+    background_max_screen = basic_scene.get_max_screen(background_index)
+    foreground_min_screen = basic_scene.get_min_screen(foreground_index)
+    background_min_screen = basic_scene.get_min_screen(background_index)
+
+    foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
+    background_intersection = basic_scene.get_possible_intersects(background_index)
+
+
+    portion = background_index/ foreground_index
+
+
     for i in range(300):
-        result_particle = particle.Particle()
+        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
         print("particle: ", i)
-    #     tempt_score = tempt_particle.total_score()
-    #     print("tempt_score: ", i, "is", tempt_score)
+        tempt_score = tempt_particle.total_score()
+        print("tempt_score: ", i, "is", tempt_score)
 
     #     if tempt_score > max_score:
     #         max_score = tempt_score
