@@ -89,19 +89,18 @@ if __name__ == "__main__":
 
 
     portion = background_index/ foreground_index
-
-
+    
+    result_particle = None
     for i in range(300):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
-        print("particle: ", i)
         tempt_score = tempt_particle.total_score()
-        print("tempt_score: ", i, "is", tempt_score)
+        print("particle: ", i, "has score: ", tempt_score)
 
-    #     if tempt_score > max_score:
-    #         max_score = tempt_score
-    #         result_particle = tempt_particle
+        if tempt_score > max_score:
+            max_score = tempt_score
+            result_particle = tempt_particle
 
-    # print("best score", result_particle.total_score())
+    print("best score", result_particle.total_score())
 
     cc = result_particle.connecting_comp
     i = cc.get_object()

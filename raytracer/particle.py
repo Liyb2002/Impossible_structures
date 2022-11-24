@@ -81,7 +81,7 @@ class Particle:
         cc_pts = self.connecting_comp.get_sample_points()
         cc_score = metrics.occlusion_score_wDist(self.foreground_structure,cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
 
-        # print("critical_count: ", critical_count, "sample_count: ", smaple_count)
+        # print("critical_count: ", critical_count, "cc_score: ", cc_score)
         return (critical_count * -20) + (seed_count * -50) + cc_score
 
     def too_close_score(self):

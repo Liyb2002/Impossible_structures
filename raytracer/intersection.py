@@ -18,7 +18,7 @@ class Scene:
         self.image_width = 800
 
         self.camera = Camera()
-        # self.get_impossible_intersection()
+        self.get_impossible_intersection()
         
 
     
@@ -56,4 +56,5 @@ class Scene:
         return np.array([self.min_screen[k][0], self.min_screen[k][1]])
     
     def get_possible_intersects(self, k):
+
         return np.array([self.possible_intersects[k][0], self.possible_intersects[k][1], self.possible_intersects[k][2]])
