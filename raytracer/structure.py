@@ -146,6 +146,7 @@ class Structure:
         new_next_possibles = self.get_next_possible(new_vertex_clean, new_direction)
         self.next_possibles = np.append(self.next_possibles,new_next_possibles, axis=0)
         #print("next_possibles, add new", self.next_possibles)
+    
 
 
 class rect:

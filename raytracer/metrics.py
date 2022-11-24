@@ -45,6 +45,17 @@ def occlusion_score(front_structure, points, eye):
     
     return count
 
+def occlusion_score_wDist(front_structure, points, eye, axis, start, end):
+    score = 0
+    for i in points:
+        if (occlude(front_structure, i, eye)):
+            dist = min(abs(start - i[axis]), abs(end-i[axis]))
+            print("dist", dist)
+            score += dist * -5 
+    
+    return score
+
+
 def out_of_screen(structure, max_coordinate, min_coordinate):
     max_x = max_coordinate[0]
     max_y = max_coordinate[1]
