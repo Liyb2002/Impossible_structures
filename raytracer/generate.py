@@ -75,10 +75,10 @@ if __name__ == "__main__":
 
     max_score = -1000
     result_particle = None
-    for i in range(10):
+    for i in range(20):
         tempt_particle = particle.Particle()
         tempt_score = tempt_particle.total_score()
-        print("score", tempt_score)
+        print("tempt_score: ", tempt_score)
 
         if tempt_score > max_score:
             max_score = tempt_score

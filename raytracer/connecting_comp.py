@@ -37,3 +37,21 @@ class connecting_structure:
 
     def xy_pos(self):
         return np.array([self.x, self.y])
+    
+    def get_sample_points(self):
+        start = self.foreground_z
+        end = self.background_z
+        dist = abs(start - end)
+        i = 0.05
+        points_list = []
+
+        while i < dist:
+            random_x = round(random.uniform(1, 6)/100,2)
+            random_y = round(random.uniform(1, 6)/100,2)
+
+            point = np.array([self.x + random_x, self.y + random_y, end + i])
+            points_list.append(point)
+            i += 0.05
+
+        return points_list
+

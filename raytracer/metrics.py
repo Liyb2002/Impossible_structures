@@ -16,17 +16,23 @@ def parallel_score(history_a, history_b):
 def occlude(front_structure,position, eye):
     ray = eye - position
     ray = ray / np.linalg.norm(ray)
-#     print("ray", ray)
+    # print("ray", ray)
 
     z_depth = front_structure.history[0][-1]
-    t = (eye[-1] - z_depth) / ray[-1]
-#     print("t", t)
+    t = (front_structure.seed[0][-1] - position[-1]) / ray[-1]
+    # print("t", t)
 
-    x = eye[0] + t*ray[0]
-    y = eye[1] + t*ray[1]
+    x = position[0] + t*ray[0]
+    y = position[1] + t*ray[1]
+    z = position[2] + t*ray[2]
+    # print("x", x, "y", y, "z", z)
     
     for i in front_structure.history:
-        if round(x,1)== round(i[0],1) and round(y,1) == round(i[1],1):
+
+        if x > i[0] and x < i[0] + 0.07 and y > i[1] and y < i[1] + 0.07:
+            return True
+        
+        if x < i[0] and x > i[0] - 0.07 and y < i[1] and y > i[1] - 0.07:
             return True
     
     return False
