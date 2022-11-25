@@ -54,6 +54,50 @@ def occlusion_score_wDist(front_structure, points, eye, axis, start, end):
     
     return score
 
+def occlusion_score_structures(front_structure, back_structure, eye):
+
+    total_score = 0
+
+    for i in back_structure.rect:
+        x_scale = i.scale_x
+        y_scale = i.scale_y
+        z_scale = i.scale_z
+        dist = max(x_scale, y_scale, z_scale)
+
+        scale_vec = np.array([x_scale, y_scale, z_scale])
+        dir = np.argmax(scale_vec)
+
+        if(dir == 0):
+            start = i.start_x
+            end = i.start_x + x_scale
+        
+        elif(dir == 1):
+            start = i.start_y
+            end = i.start_y + y_scale
+        
+        else:
+            start = i.start_z
+            end = i.start_z + z_scale
+        
+        step = 0.05
+        points_list = []
+
+        while step < dist:
+            if(dir == 0):
+                points_list.append((start + step, i.start_y, i.start_z))
+            elif(dir == 1):
+                points_list.append((i.start_x, start + step, i.start_z))
+            else:
+                points_list.append((i.start_x, i.start_y, start + step))
+            step += 0.05
+        
+        score = occlusion_score_wDist(front_structure, points_list, eye, dir, start, end)
+        # print("score", score)
+        total_score += score
+    
+    # print("total_score", total_score)
+    return total_score
+
 
 def out_of_screen(structure, max_coordinate, min_coordinate):
     max_x = max_coordinate[0]

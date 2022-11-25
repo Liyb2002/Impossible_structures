@@ -86,13 +86,17 @@ class Particle:
         checkpts.append(cc_back)
 
         critical_count = metrics.occlusion_score(self.foreground_structure,checkpts, eye)
-        seed_count = metrics.occlusion_score(self.foreground_structure,self.foreground_structure.seed, eye)
+        critical_score = critical_count * -50
+
+        seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
+        seed_score = seed_count * -50
 
         cc_pts = self.connecting_comp.get_sample_points()
         cc_score = metrics.occlusion_score_wDist(self.foreground_structure,cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
 
-        # print("critical_count: ", critical_count, "cc_score: ", cc_score)
-        return (critical_count * -20) + (seed_count * -20) + cc_score
+        structure_score = metrics.occlusion_score_structures(self.foreground_structure, self.background_structure, eye)
+        # print("critical_score: ", critical_score, " seed_score: ", seed_score, " cc_score: ", cc_score, " structure_score: ", structure_score)
+        return critical_score + seed_score + cc_score + structure_score
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
