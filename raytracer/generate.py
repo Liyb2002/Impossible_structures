@@ -91,8 +91,8 @@ if __name__ == "__main__":
     portion = background_index/ foreground_index
     
 
-    num_particles = 30
-    steps = 10
+    num_particles = 300
+    steps = 1
     particle_list = []
     score_list = []
 
@@ -125,10 +125,9 @@ if __name__ == "__main__":
     particle_list = particle.resample(particle_list, score_list)
     result_particle = particle_list[0]
 
-
-    cc = result_particle.connecting_comp
-    i = cc.get_object()
-    create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    for cc in result_particle.connecting_comp:
+        i = cc.get_object()
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
     f_struct = result_particle.foreground_structure
     for i in f_struct.rect:
