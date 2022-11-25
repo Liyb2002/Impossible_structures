@@ -14,7 +14,7 @@ class Particle:
         self.background_structure = None
         self.dummy_structure = None
         self.connecting_comp = []
-        self.dummy_connecting = None
+        self.dummy_connecting_comp = []
         self.f_seed = None
         self.b_seed = None
 
@@ -64,6 +64,7 @@ class Particle:
         for i in range(num):
             cc = connecting_comp.connecting_structure(x, y, z_front, z_back)
             self.connecting_comp.append(cc)
+            self.dummy_connecting_comp.append(cc)
 
     def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion):
         self.dummy_intersection = dummy_intersection
@@ -72,7 +73,11 @@ class Particle:
         d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1])
         d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion)
         self.dummy_structure = d_struct
-        self.generate_dummy_connecting_comp(1, dummy_intersection[0]+0.2, dummy_intersection[1]+0.6, self.foreground_intersection[2], dummy_intersection[2])
+
+        for i in range(1):
+            connecting_component_x = connecting_comp.offset()
+            connecting_component_y = connecting_comp.offset()
+            self.generate_dummy_connecting_comp(1, dummy_intersection[0]+connecting_component_x, dummy_intersection[1]+connecting_component_y, self.foreground_intersection[2], dummy_intersection[2])
 
     def generate_one(self):
         self.foreground_structure.generate(1)
@@ -84,8 +89,7 @@ class Particle:
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
 
-        dummy_xy_targets = []
-        dummy_xy_targets.append( np.array([self.dummy_intersection[0]+0.2, self.dummy_intersection[1]+0.6]))
+        dummy_xy_targets = self.get_xy_target()
         self.dummy_structure.to_dest(dummy_xy_targets)
     
     def get_xy_target(self):
@@ -94,6 +98,11 @@ class Particle:
             xy_targets.append(i.xy_pos())
         return xy_targets
     
+    def get_dummy_xy_target(self):
+        xy_targets = []
+        for i in self.dummy_connecting_comp:
+            xy_targets.append(i.xy_pos())
+        return xy_targets
 
     def is_off_screen(self):
 
