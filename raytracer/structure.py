@@ -37,7 +37,25 @@ class Structure:
             
             self.rect.append(rect1)
             self.rect.append(rect2)
-        
+    
+    def dummy_to_dest(self, destination):
+        for i in destination:
+            next_vertex = self.next_possibles[rand_index(self.next_possibles)]
+            x_dist = abs(i[0] - next_vertex[0])
+            x_start = min(i[0], next_vertex[0])
+            startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
+            scale = np.array([x_dist+0.07*self.portion, 0.07*self.portion, 0.07*self.portion])
+            rect1 = rect(startPos, scale)
+            
+            y_dist = abs(i[1] - next_vertex[1])
+            y_start = min(i[1], next_vertex[1])
+            startPos2 = np.array([i[0], y_start, next_vertex[2]])
+            scale2 = np.array([0.07,y_dist+0.07*self.portion, 0.07*self.portion])
+            rect2 = rect(startPos2, scale2)
+            
+            self.rect.append(rect1)
+            self.rect.append(rect2)
+
         
     def cleanUp(self):
         self.history = self.seed

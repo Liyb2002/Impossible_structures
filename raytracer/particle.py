@@ -14,6 +14,7 @@ class Particle:
         self.background_structure = None
         self.dummy_structure = None
         self.connecting_comp = []
+        self.dummy_connecting = None
         self.f_seed = None
         self.b_seed = None
 
@@ -26,7 +27,7 @@ class Particle:
         self.background_min_screen = background_min_screen
 
         self.portion = portion
-        self.generate_connecting_comp(1)
+        self.generate_connecting_comp(1, foreground_intersection[0], foreground_intersection[1], foreground_intersection[2], background_intersection[2])
         self.generate_structures()
         
 
@@ -49,12 +50,13 @@ class Particle:
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion,xy_target)
         self.background_structure = b_struct
 
-    def generate_connecting_comp(self,num):
+    def generate_connecting_comp(self,num,x,y,z_front, z_back):
         
         for i in range(num):
             connecting_component_x = connecting_comp.offset()
             connecting_component_y = connecting_comp.offset()
-            cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
+            cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back)
+            # cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
             self.connecting_comp.append(cc)
 
     def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion):
@@ -62,6 +64,10 @@ class Particle:
         d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1])
         d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion, [])
         self.dummy_structure = d_struct
+        self.generate_connecting_comp(1, dummy_intersection[0], dummy_intersection[1], self.background_intersection[2], dummy_intersection[2])
+        xy_targets = []
+        xy_targets.append( np.array([dummy_intersection[0], dummy_intersection[1]]))
+        self.dummy_structure.dummy_to_dest(xy_targets)
 
     def generate_one(self):
         self.foreground_structure.generate(1)

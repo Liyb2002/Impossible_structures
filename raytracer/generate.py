@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     foreground_index = 8
     background_index = 12
-    dummy_index = 15
+    dummy_index = 17
 
     basic_scene = intersection.Scene()
     foreground_max_screen = basic_scene.get_max_screen(foreground_index)
