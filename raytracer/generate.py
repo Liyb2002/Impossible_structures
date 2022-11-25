@@ -78,18 +78,24 @@ if __name__ == "__main__":
 
     foreground_index = 8
     background_index = 12
+    dummy_index = 15
+
     basic_scene = intersection.Scene()
     foreground_max_screen = basic_scene.get_max_screen(foreground_index)
-    background_max_screen = basic_scene.get_max_screen(background_index)
+    background_max_screen = basic_scene.get_max_screen(background_index)    
+    dummy_max_screen = basic_scene.get_max_screen(dummy_index)
+
     foreground_min_screen = basic_scene.get_min_screen(foreground_index)
     background_min_screen = basic_scene.get_min_screen(background_index)
+    dummy_min_screen = basic_scene.get_min_screen(dummy_index)
 
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
     background_intersection = basic_scene.get_possible_intersects(background_index)
-
+    dummy_intersection = basic_scene.get_possible_intersects(dummy_index)
+    dummy_intersection = np.array([dummy_intersection[0]-0.4, dummy_intersection[1]+0.25, dummy_intersection[2]])
 
     portion = background_index/ foreground_index
-    
+    portion_dummy = dummy_index/ foreground_index
 
     num_particles = 300
     steps = 1
@@ -100,6 +106,7 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
+        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion_dummy)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
@@ -131,12 +138,15 @@ if __name__ == "__main__":
 
     f_struct = result_particle.foreground_structure
     for i in f_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
     
     b_struct = result_particle.background_structure
     for i in b_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.2, 0.3)
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.9, 0.3)
 
+    d_struct = result_particle.dummy_structure
+    for i in d_struct.rect:
+        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.1, 0.1)
 
     while gui.running:
         render()

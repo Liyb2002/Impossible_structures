@@ -12,6 +12,7 @@ class Particle:
     def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion):
         self.foreground_structure = None
         self.background_structure = None
+        self.dummy_structure = None
         self.connecting_comp = []
         self.f_seed = None
         self.b_seed = None
@@ -25,7 +26,7 @@ class Particle:
         self.background_min_screen = background_min_screen
 
         self.portion = portion
-        self.generate_connecting_comp(4)
+        self.generate_connecting_comp(1)
         self.generate_structures()
         
 
@@ -56,9 +57,16 @@ class Particle:
             cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
             self.connecting_comp.append(cc)
 
+    def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion):
+        d_seed = gen_seed.get_seed(dummy_intersection)
+        d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1])
+        d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion, [])
+        self.dummy_structure = d_struct
+
     def generate_one(self):
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
+        self.dummy_structure.generate(1)
 
     def finish(self):
         self.foreground_structure.to_dest()
