@@ -90,25 +90,41 @@ if __name__ == "__main__":
 
     portion = background_index/ foreground_index
     
-    result_particle = None
 
-    num_particles = 300
+    num_particles = 30
+    steps = 2
     particle_list = []
     score_list = []
 
+
+    #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
-        print("particle: ", i, "has score: ", tempt_score)
 
     particle_list = particle.resample(particle_list, score_list)
 
-    for i in range(len(particle_list)):
-        print("new particle: ", i, "has score: ", particle_list[i].total_score())
+    #generate and resampling
+    for s in range(steps):
+        score_list = []
+        for i in range(len(particle_list)):
+            particle_list[i].generate_one()
+            score_list.append(particle_list[i].total_score())
+        
+        particle_list = particle.resample(particle_list, score_list)
+    
+    
+    #finish the process
+    for i in range (len(particle_list)):
+        particle_list[i].finish()
+        score_list[i] = particle_list[i].total_score()
+    
+    particle_list = particle.resample(particle_list, score_list)
+    result_particle = particle_list[0]
 
-
+    
     cc = result_particle.connecting_comp
     i = cc.get_object()
     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)

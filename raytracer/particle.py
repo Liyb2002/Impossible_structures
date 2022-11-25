@@ -6,6 +6,8 @@ import connecting_comp
 import gen_seed
 import metrics
 
+from copy import deepcopy
+
 class Particle:
     def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion):
         self.foreground_structure = None
@@ -47,6 +49,14 @@ class Particle:
         cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
         
         self.connecting_comp = cc
+
+    def generate_one(self):
+        self.foreground_structure.generate(1)
+        self.background_structure.generate(1)
+
+    def finish(self):
+        self.foreground_structure.to_dest()
+        self.background_structure.to_dest()
     
     def is_off_screen(self):
 
@@ -91,7 +101,7 @@ class Particle:
         return 0
     
     def total_score(self):
-        score = 200
+        score = 2000000
         score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
@@ -121,6 +131,7 @@ def resample(particle_list, score_list):
         num_copies = int(cur_score/considered_total * num_particles)
 
         for j in range(num_copies):
-            new_particle_list.append(particle_list[best_index])
+            cur_particle = deepcopy(particle_list[best_index])
+            new_particle_list.append(cur_particle)
     
     return new_particle_list

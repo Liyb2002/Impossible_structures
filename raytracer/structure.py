@@ -14,8 +14,8 @@ class Structure:
         
         self.cleanUp()
         self.destination = destination
-        self.generate(3)
-        self.to_dest()
+        # self.generate(1)
+        # self.to_dest()
 
         #print("initialized data: \n", self.data)
     
@@ -104,7 +104,6 @@ class Structure:
             self.history = np.append(self.history, self.data[1:], axis=0)
             self.rect.append(block_to_rect(self.data, self.portion))
             self.data = np.array([[0,0,0]])
-
 
 
     def process(self):
