@@ -92,7 +92,10 @@ if __name__ == "__main__":
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
     background_intersection = basic_scene.get_possible_intersects(background_index)
     dummy_intersection = basic_scene.get_possible_intersects(dummy_index)
-    dummy_intersection = np.array([dummy_intersection[0]-0.4, dummy_intersection[1]+0.25, dummy_intersection[2]])
+    offset_x = connecting_comp.offset()
+    offset_y = connecting_comp.offset()
+
+    dummy_intersection = np.array([dummy_intersection[0]+offset_x, dummy_intersection[1]+offset_y, dummy_intersection[2]])
 
     portion = background_index/ foreground_index
     portion_dummy = dummy_index/ foreground_index
