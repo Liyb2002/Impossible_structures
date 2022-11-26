@@ -123,6 +123,7 @@ if __name__ == "__main__":
             particle_list[i].generate_one()
             score_list.append(particle_list[i].total_score())
         
+        print("size of particle list: ", len(particle_list), "size of score list: ", len(score_list))
         particle_list = particle.resample(particle_list, score_list)
     
     print("finishing process")

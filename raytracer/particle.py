@@ -87,19 +87,20 @@ class Particle:
     def generate_one(self):
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
-        self.dummy_structure.generate(3)
+        self.dummy_structure.generate(1)
 
     def finish(self):
+        # self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x, self.foreground_structure.max_y, self.foreground_intersection[2], self.dummy_intersection[2])
+        self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x-0.07, self.foreground_structure.min_y+0.07, self.foreground_intersection[2], self.dummy_intersection[2])
+        # self.generate_dummy_connecting_comp(1, self.foreground_structure.min_x+0.07, self.foreground_structure.max_y-0.07, self.foreground_intersection[2], self.dummy_intersection[2])
+        # self.generate_dummy_connecting_comp(1, self.foreground_structure.min_x, self.foreground_structure.min_y, self.foreground_intersection[2], self.dummy_intersection[2])
+
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
 
         dummy_xy_targets = self.get_dummy_xy_target()
         self.dummy_structure.to_dest(dummy_xy_targets)
-
-        self.foreground_structure.get_MaxMin()
-        self.background_structure.get_MaxMin()
-        self.dummy_structure.get_MaxMin()
     
     def get_xy_target(self):
         xy_targets = []
@@ -120,7 +121,7 @@ class Particle:
         dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
-            return -100
+            return -1000
                   
         return 0
 
@@ -172,6 +173,8 @@ class Particle:
         return 0
     
     def size_score(self):
+        self.foreground_structure.get_MaxMin()
+        self.background_structure.get_MaxMin()
         return metrics.size_score(self.foreground_structure, self.background_structure)
     
     def total_score(self):
@@ -209,4 +212,9 @@ def resample(particle_list, score_list):
             cur_particle = deepcopy(particle_list[best_index])
             new_particle_list.append(cur_particle)
     
+    for i in range(num_particles - len(new_particle_list)):
+        best_index = sorted_index[0]
+        cur_particle = deepcopy(particle_list[best_index])
+        new_particle_list.append(cur_particle)
+
     return new_particle_list
