@@ -88,12 +88,12 @@ class Particle:
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
         self.dummy_structure.generate(1)
+    
+        
 
     def finish(self):
-        # self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x, self.foreground_structure.max_y, self.foreground_intersection[2], self.dummy_intersection[2])
-        self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x-0.07, self.foreground_structure.min_y+0.07, self.foreground_intersection[2], self.dummy_intersection[2])
-        # self.generate_dummy_connecting_comp(1, self.foreground_structure.min_x+0.07, self.foreground_structure.max_y-0.07, self.foreground_intersection[2], self.dummy_intersection[2])
         # self.generate_dummy_connecting_comp(1, self.foreground_structure.min_x, self.foreground_structure.min_y, self.foreground_intersection[2], self.dummy_intersection[2])
+        # self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x, self.foreground_structure.min_y, self.foreground_intersection[2], self.dummy_intersection[2])
 
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)
