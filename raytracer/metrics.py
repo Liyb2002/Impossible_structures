@@ -134,3 +134,14 @@ def too_close(structure):
                 return True
     
     return False
+
+
+def size_score(structure_a, struct_b):
+    x_max = max(structure_a.max_x, struct_b.max_x)
+    y_max = max(structure_a.max_y, struct_b.max_y)
+    x_min = min(structure_a.min_x, struct_b.min_x)
+    y_min = min(structure_a.min_y, struct_b.min_y)
+
+    area = (x_max - x_min) * (y_max - y_min)
+
+    return area

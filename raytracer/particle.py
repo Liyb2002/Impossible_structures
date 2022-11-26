@@ -56,7 +56,6 @@ class Particle:
         self.background_structure = b_struct
 
     def generate_connecting_comp(self,num,x,y,z_front, z_back):
-        
         for i in range(num):
             connecting_component_x = connecting_comp.offset()
             connecting_component_y = connecting_comp.offset()
@@ -97,6 +96,10 @@ class Particle:
 
         dummy_xy_targets = self.get_dummy_xy_target()
         self.dummy_structure.to_dest(dummy_xy_targets)
+
+        self.foreground_structure.get_MaxMin()
+        self.background_structure.get_MaxMin()
+        self.dummy_structure.get_MaxMin()
     
     def get_xy_target(self):
         xy_targets = []
@@ -168,11 +171,15 @@ class Particle:
         
         return 0
     
+    def size_score(self):
+        return metrics.size_score(self.foreground_structure, self.background_structure)
+    
     def total_score(self):
         score = 2000000
         score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
+        score += self.size_score()
         # (para_score, parallel_pts) = self.parallel_score()
         # score += para_score
         return score

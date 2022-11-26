@@ -11,10 +11,13 @@ class Structure:
         self.portion = portion
         self.seed = seed
         self.seed_next_possible = seed_next_possible
+
+        self.min_x = 1000
+        self.max_x = -1000
+        self.min_y = 1000
+        self.max_y = -1000
         
         self.cleanUp()
-        # self.generate(1)
-        # self.to_dest()
 
         #print("initialized data: \n", self.data)
     
@@ -46,6 +49,23 @@ class Structure:
         self.rect.append(block_to_rect(self.data, self.portion))
         self.data = np.array([[0.0,0.0,0.0]])
         self.next_possibles = self.seed_next_possible
+    
+    def get_MaxMin(self):
+        for i in self.rect:
+            x_1 = i.start_x
+            x_2 = i.start_x + i.scale_x
+            y_1 = i.start_y
+            y_2 = i.start_y + i.scale_y
+
+            if x_1 < self.min_x:
+                self.min_x = x_1
+            if x_2 > self.max_x:
+                self.max_x = x_2
+            if y_1 < self.min_y:
+                self.min_y = y_1
+            if y_2 > self.max_y:
+                self.max_y = y_2
+            
 
   
     def cost_func(self, pos):
