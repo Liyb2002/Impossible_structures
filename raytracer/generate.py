@@ -98,7 +98,6 @@ if __name__ == "__main__":
     dummy_intersection = np.array([dummy_intersection[0]+offset_x, dummy_intersection[1]+offset_y, dummy_intersection[2]])
 
     portion = background_index/ foreground_index
-    portion_dummy = dummy_index/ foreground_index
 
     num_particles = 300
     steps = 1
@@ -109,7 +108,7 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
-        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion_dummy)
+        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)

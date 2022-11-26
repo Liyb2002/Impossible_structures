@@ -13,8 +13,10 @@ class Particle:
         self.foreground_structure = None
         self.background_structure = None
         self.dummy_structure = None
+
         self.connecting_comp = []
         self.dummy_connecting_comp = []
+
         self.f_seed = None
         self.b_seed = None
 
@@ -26,6 +28,8 @@ class Particle:
         self.background_max_screen = background_max_screen
         self.foreground_min_screen = foreground_min_screen
         self.background_min_screen = background_min_screen
+        self.dummy_max_screen = None
+        self.dummy_min_screen = None
 
         self.portion = portion
         self.generate_connecting_comp(1, foreground_intersection[0], foreground_intersection[1], foreground_intersection[2], background_intersection[2])
@@ -68,6 +72,8 @@ class Particle:
 
     def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion):
         self.dummy_intersection = dummy_intersection
+        self.dummy_max_screen = dummy_max_screen
+        self.dummy_min_screen = dummy_min_screen
 
         d_seed = gen_seed.get_seed(dummy_intersection)
         d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1])
@@ -82,14 +88,14 @@ class Particle:
     def generate_one(self):
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
-        self.dummy_structure.generate(1)
+        self.dummy_structure.generate(3)
 
     def finish(self):
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
 
-        dummy_xy_targets = self.get_xy_target()
+        dummy_xy_targets = self.get_dummy_xy_target()
         self.dummy_structure.to_dest(dummy_xy_targets)
     
     def get_xy_target(self):
@@ -108,8 +114,9 @@ class Particle:
 
         foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, self.foreground_max_screen, self.foreground_min_screen)
         background_out_of_screen = metrics.out_of_screen(self.background_structure, self.background_max_screen, self.background_min_screen)
+        dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
-        if(foreground_out_of_screen or background_out_of_screen):
+        if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
             return -100
                   
         return 0
@@ -131,12 +138,20 @@ class Particle:
             critical_pts.append(cc_fore)
             critical_pts.append(cc_back)
             critical_pts.append(cc_center)
+        
+        for i in self.dummy_connecting_comp:
+            cc_center = i.get_center()
+            cc_fore = np.array([cc_center[0], cc_center[1], self.foreground_intersection[2]])
+            cc_back = np.array([cc_center[0], cc_center[1], self.dummy_intersection[2]])
+            critical_pts.append(cc_fore)
+            critical_pts.append(cc_back)
+            critical_pts.append(cc_center)
 
         critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
-        critical_score = critical_count * -50
+        critical_score = critical_count * -100
 
         seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
-        seed_score = seed_count * -50
+        seed_score = seed_count * -100
 
         cc_score = 0
         for i in self.connecting_comp:
@@ -148,7 +163,7 @@ class Particle:
         return critical_score + seed_score + cc_score + structure_score
 
     def too_close_score(self):
-        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
+        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure) or metrics.too_close(self.dummy_structure):
             return -100
         
         return 0
