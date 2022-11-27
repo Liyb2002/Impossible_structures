@@ -1,10 +1,21 @@
 [
 	{
-    "KEY1":{"NAME":"XXXXXX","VALUE":100},
-    "KEY2":{"NAME":"YYYYYYY","VALUE":200},
-    "KEY3":{"NAME":"ZZZZZZZ","VALUE":500}
+    "1":{"start_x":3.2,
+        "start_y":3.2,
+        "start_z":0.1,
+        "scale_x":0.07,
+        "scale_y":0.1,
+        "scale_z":0.81},
 
-}
+    "2":{"start_x":0.2,
+        "start_y":1.2,
+        "start_z":3.1,
+        "scale_x":0.7,
+        "scale_y":0.21,
+        "scale_z":0.41}
 
-	
+    
+    
+    
+    }
 ]

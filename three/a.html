@@ -12,7 +12,9 @@
 	   
 		<script>
 
+
 const loader = new THREE.FileLoader();
+
 
 //load a text file and output the result to the console
 loader.load(
@@ -21,10 +23,44 @@ loader.load(
 
 	// onLoad callback
 	function ( data ) {
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+		const renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		
+		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+
+		camera.position.set(5, 5, 5);
+		camera.lookAt(0,0,-1);
+		camera.up.set(0,1,0);
+
+
 		// output the text to the console
-		var jsonData = JSON.parse(data);     
-		console.log(jsonData[0]["KEY1"]["NAME"]);
-   
+		var jsonData = JSON.parse(data); 
+		var objects_num = Object.keys(jsonData[0]).length;
+
+		for (var i = 1; i <= objects_num; i++) {
+			var index = i.toString()
+			var start_x = jsonData[0][index]["start_x"];
+			var start_y = jsonData[0][index]["start_y"];
+			var start_z = jsonData[0][index]["start_z"];
+
+			var scale_x = jsonData[0][index]["scale_x"];
+			var scale_y = jsonData[0][index]["scale_y"];
+			var scale_z = jsonData[0][index]["scale_z"];
+			
+			const cube = new THREE.Mesh( geometry, material );
+            cube.position.set(start_x, start_y, start_z );
+            cube.scale.set(scale_x, scale_y, scale_z);
+            scene.add( cube );
+
+		}
+
+		renderer.render( scene, camera );
 	},
 
 	// onProgress callback
@@ -38,37 +74,6 @@ loader.load(
 	}
 );
 
-
-			
-			
-			const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-			const renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-
-			const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            
-			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-
-			const cube1 = new THREE.Mesh( geometry, material );
-            cube1.position.set(3.72, 3.52, 3.06 );
-            cube1.scale.set(0.07, 0.07, 0.65);
-            scene.add( cube1 );
-
-			const cube2 = new THREE.Mesh( geometry, material );
-            cube2.position.set(3.61, 3.01, 2.55 );
-            cube2.scale.set(0.07, 0.07, 1.46);
-            scene.add( cube2 );
-
-
-
-            camera.position.set(5, 5, 5);
-            camera.lookAt(0,0,-1);
-            camera.up.set(0,1,0);
-
-		    renderer.render( scene, camera );
 		</script>
 	</body>
 </html>
