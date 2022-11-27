@@ -9,7 +9,7 @@ def to_light_source(hit_point, light_source):
 
 
 @ti.func
-def diffuse(ray_direction, hit_point, hit_point_normal, color, material):
+def diffuse(ray_direction, hit_point, hit_point_normal, color):
 
     hit_point_to_source = to_light_source(hit_point, light_source)
     # Diffuse light
@@ -20,15 +20,6 @@ def diffuse(ray_direction, hit_point, hit_point_normal, color, material):
 
     return diffuse_color
 
-@ti.data_oriented
-class Ray:
-    def __init__(self, origin, direction):
-        self.origin = origin
-        self.direction = direction
-    
-    @ti.func
-    def at(self, t):
-        return self.origin + t * self.direction
 
 @ti.data_oriented
 class xy_rect:
@@ -62,7 +53,7 @@ class xy_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t
-        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.color
 
 @ti.data_oriented
 class xz_rect:
@@ -96,7 +87,7 @@ class xz_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t
-        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.color
 
 @ti.data_oriented
 class yz_rect:
@@ -130,7 +121,9 @@ class yz_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t    
-        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, self.color
+
+
 
 @ti.data_oriented
 class Hittable_list:
@@ -149,18 +142,16 @@ class Hittable_list:
         hit_point = ti.Vector([0.0, 0.0, 0.0])
         hit_point_normal = ti.Vector([0.0, 0.0, 0.0])
         color = ti.Vector([0.0, 0.0, 0.0])
-        material = 1
         for index in ti.static(range(len(self.objects))):
-            is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, material_tmp, color_tmp =  self.objects[index].hit(camera_pos, ray, t_min, closest_t)
+            is_hit_tmp, root_tmp, hit_point_tmp, hit_point_normal_tmp, front_face_tmp, color_tmp =  self.objects[index].hit(camera_pos, ray, t_min, closest_t)
             if is_hit_tmp and closest_t > root_tmp:
                 closest_t = root_tmp
                 is_hit = is_hit_tmp
                 hit_point = hit_point_tmp
                 hit_point_normal = hit_point_normal_tmp
                 front_face = front_face_tmp
-                material = material_tmp
                 color = color_tmp
-        return is_hit, hit_point, hit_point_normal, front_face, material, color
+        return is_hit, hit_point, hit_point_normal, front_face, color
 
 
 @ti.data_oriented

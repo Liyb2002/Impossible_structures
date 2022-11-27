@@ -10,7 +10,7 @@ import metrics
 import intersection
 import particle
 
-from ray_tracing_models import Ray, Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect, diffuse
+from ray_tracing_models import Camera, Hittable_list, PI, xy_rect, xz_rect, yz_rect, diffuse, rectangle
 ti.init(arch=ti.gpu)
 
 PI = 3.14159265
@@ -40,10 +40,10 @@ def create_rect(start_x, start_y, start_z, x_len, y_len, z_len,r,g,b):
     # scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z, material=1, color=ti.Vector([r, g, b])))
     scene.add(xy_rect(_x0=start_x, _x1=start_x+x_len, _y0=start_y, _y1=start_y+y_len, _k=start_z+z_len, color=ti.Vector([r, g, b])))
     
-    # scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
+    # # scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y, material=1, color=ti.Vector([0.2, 0.4, 0.5])))
     scene.add(xz_rect(_x0=start_x, _x1=start_x+x_len, _z0=start_z, _z1=start_z+z_len, _k=start_y+y_len, color=ti.Vector([0.8, 0.8, 0.5])))
 
-    # scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
+    # # scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x, material=1, color=ti.Vector([0.3, 0.3, 0.2])))
     scene.add(yz_rect(_y0=start_y, _y1=start_y+y_len, _z0=start_z, _z1=start_z+z_len, _k=start_x+x_len, color=ti.Vector([0.3, 0.3, 0.9])))
 
 @ti.func
@@ -51,9 +51,9 @@ def ray_color(ray, camera_pos):
     color_buffer = ti.Vector([1.0, 1.0, 1.0])
     curr_origin = camera_pos
     curr_direction = ray
-    is_hit, hit_point, hit_point_normal, front_face, material, color = scene.hit(curr_origin, curr_direction)
+    is_hit, hit_point, hit_point_normal, front_face, color = scene.hit(curr_origin, curr_direction)
     if is_hit:
-        color_buffer = diffuse(curr_direction, hit_point, hit_point_normal, color, material)
+        color_buffer = diffuse(curr_direction, hit_point, hit_point_normal, color)
     return color_buffer
 
 if __name__ == "__main__":

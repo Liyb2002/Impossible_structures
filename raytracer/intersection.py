@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import random
 
-from ray_tracing_models import Ray, Camera
+from ray_tracing_models import Camera
 
 @ti.data_oriented
 class Scene:
