@@ -9,7 +9,38 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
+	   
 		<script>
+
+const loader = new THREE.FileLoader();
+
+//load a text file and output the result to the console
+loader.load(
+	// resource URL
+	'rect.json',
+
+	// onLoad callback
+	function ( data ) {
+		// output the text to the console
+		var jsonData = JSON.parse(data);     
+		console.log(jsonData[0]["KEY1"]["NAME"]);
+   
+	},
+
+	// onProgress callback
+	function ( xhr ) {
+		console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+	},
+
+	// onError callback
+	function ( err ) {
+		console.error( 'An error happened' );
+	}
+);
+
+
+			
+			
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -20,14 +51,17 @@
 			const geometry = new THREE.BoxGeometry( 1, 1, 1 );
             
 			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-			const cube = new THREE.Mesh( geometry, material );
 
-            for (let i = 0; i < 10; i++) {
-                const cube = new THREE.Mesh( geometry, material );
-                cube.position.set(0, i, -1 );
-                cube.scale.set(0.5, 0.5, 0.5);
-                scene.add( cube );
-            }
+			const cube1 = new THREE.Mesh( geometry, material );
+            cube1.position.set(3.72, 3.52, 3.06 );
+            cube1.scale.set(0.07, 0.07, 0.65);
+            scene.add( cube1 );
+
+			const cube2 = new THREE.Mesh( geometry, material );
+            cube2.position.set(3.61, 3.01, 2.55 );
+            cube2.scale.set(0.07, 0.07, 1.46);
+            scene.add( cube2 );
+
 
 
             camera.position.set(5, 5, 5);

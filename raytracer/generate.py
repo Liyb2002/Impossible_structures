@@ -137,19 +137,20 @@ if __name__ == "__main__":
 
     for cc in result_particle.connecting_comp:
         i = cc.get_object()
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+        print(i.info())
+        # create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
 
-    f_struct = result_particle.foreground_structure
-    for i in f_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
+    # f_struct = result_particle.foreground_structure
+    # for i in f_struct.rect:
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
     
-    b_struct = result_particle.background_structure
-    for i in b_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.9, 0.3)
+    # b_struct = result_particle.background_structure
+    # for i in b_struct.rect:
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.9, 0.3)
 
-    d_struct = result_particle.dummy_structure
-    for i in d_struct.rect:
-        create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.1, 0.1)
+    # d_struct = result_particle.dummy_structure
+    # for i in d_struct.rect:
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.1, 0.1)
 
     while gui.running:
         render()
