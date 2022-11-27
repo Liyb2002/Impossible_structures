@@ -2,6 +2,7 @@ import taichi as ti
 import numpy as np
 import argparse
 import random
+import json
 
 import structure
 import gen_seed
@@ -135,11 +136,57 @@ if __name__ == "__main__":
     particle_list = particle.resample(particle_list, score_list)
     result_particle = particle_list[0]
 
-    for cc in result_particle.connecting_comp:
-        i = cc.get_object()
-        print(i.info())
-        # create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.5)
+    #create a json file, and write the result
+    with open('./result.json', 'w') as f:
+        for cc in result_particle.connecting_comp:
+            i = cc.get_object()
+            data = {'obj':[
+                {'start_x': i.start_x, 
+                'start_y': i.start_y, 
+                'start_z': i.start_z, 
+                'scale_x': i.scale_x, 
+                'scale_y': i.scale_y, 
+                'scale_z': i.scale_z}
+            ]}
+            json.dump(data, f)
+        
+        f_struct = result_particle.foreground_structure
+        b_struct = result_particle.background_structure
+        d_struct = result_particle.dummy_structure
 
+        for i in f_struct.rect:
+            data = {'obj':[
+                {'start_x': i.start_x, 
+                'start_y': i.start_y, 
+                'start_z': i.start_z, 
+                'scale_x': i.scale_x, 
+                'scale_y': i.scale_y, 
+                'scale_z': i.scale_z}
+            ]}
+            json.dump(data, f)
+
+        for i in b_struct.rect:
+            data = {'obj':[
+                {'start_x': i.start_x, 
+                'start_y': i.start_y, 
+                'start_z': i.start_z, 
+                'scale_x': i.scale_x, 
+                'scale_y': i.scale_y, 
+                'scale_z': i.scale_z}
+            ]}
+            json.dump(data, f)
+        
+        for i in d_struct.rect:
+            data = {'obj':[
+                {'start_x': i.start_x, 
+                'start_y': i.start_y, 
+                'start_z': i.start_z, 
+                'scale_x': i.scale_x, 
+                'scale_y': i.scale_y, 
+                'scale_z': i.scale_z}
+            ]}
+            json.dump(data, f)
+            
     # f_struct = result_particle.foreground_structure
     # for i in f_struct.rect:
     #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
