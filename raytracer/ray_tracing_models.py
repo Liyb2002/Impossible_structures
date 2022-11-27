@@ -32,13 +32,12 @@ class Ray:
 
 @ti.data_oriented
 class xy_rect:
-    def __init__(self, _x0, _x1, _y0, _y1, _k, material, color):
+    def __init__(self, _x0, _x1, _y0, _y1, _k, color):
         self.x0 = _x0
         self.x1 = _x1
         self.y0 = _y0
         self.y1 = _y1
         self.k = _k
-        self.material = material
         self.color = color
 
 
@@ -63,17 +62,16 @@ class xy_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t
-        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
 
 @ti.data_oriented
 class xz_rect:
-    def __init__(self, _x0, _x1, _z0, _z1, _k, material, color):
+    def __init__(self, _x0, _x1, _z0, _z1, _k, color):
         self.x0 = _x0
         self.x1 = _x1
         self.z0 = _z0
         self.z1 = _z1
         self.k = _k
-        self.material = material
         self.color = color
 
 
@@ -98,17 +96,16 @@ class xz_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t
-        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
 
 @ti.data_oriented
 class yz_rect:
-    def __init__(self, _y0, _y1, _z0, _z1, _k, material, color):
+    def __init__(self, _y0, _y1, _z0, _z1, _k, color):
         self.y0 = _y0
         self.y1 = _y1
         self.z0 = _z0
         self.z1 = _z1
         self.k = _k
-        self.material = material
         self.color = color
 
 
@@ -133,7 +130,7 @@ class yz_rect:
                 hit_point = camera_pos + t * ray
                 frontface = True
         root = t    
-        return is_hit, root, hit_point, hit_point_normal, frontface, self.material, self.color
+        return is_hit, root, hit_point, hit_point_normal, frontface, 1, self.color
 
 @ti.data_oriented
 class Hittable_list:
