@@ -19,7 +19,7 @@ const loader = new THREE.FileLoader();
 //load a text file and output the result to the console
 loader.load(
 	// resource URL
-	'rect.json',
+	'./result.json',
 
 	// onLoad callback
 	function ( data ) {
@@ -33,27 +33,17 @@ loader.load(
 			const geometry = new THREE.BoxGeometry( 1, 1, 1 ).toNonIndexed();
 			const material = new THREE.MeshBasicMaterial( { vertexColors: true } ); 
 
-
 			const positionAttribute = geometry.getAttribute( 'position' );
-		
-		const colors = [];
-		const color1 = new THREE.Color();
-		const color2 = new THREE.Color();
-		const color3 = new THREE.Color();
+			const colors = [];
+			const color = new THREE.Color();
 
-		
-		for ( let i = 0; i < positionAttribute.count; i += 3 ) {
-		
-			color1.set( 0.5 * 0xffffff );
-			color2.set( 0.2 * 0xffffff );
-			color3.set( 0.3 * 0xffffff );
-			
-			// define the same color for each vertex of a triangle
-			
-			colors.push( color1.r, color1.g, color1.b );
-			colors.push( color1.r, color1.g, color1.b );
-			colors.push( color1.r, color1.g, color1.b );
-		
+		console.log("positionAttribute.count",positionAttribute.count);
+		for ( let i = 0; i < positionAttribute.count; i += 6 ) {
+			color.set( Math.random() * 0xffffff );
+			for(let j=0;j<6;j++){
+				colors.push( color.r, color.g, color.b );
+			}
+
 		}
 		
 		// define the new attribute
@@ -63,7 +53,6 @@ loader.load(
 		camera.position.set(5, 5, 5);
 		camera.lookAt(0,0,-1);
 		camera.up.set(0,1,0);
-
 
 		// output the text to the console
 		var jsonData = JSON.parse(data); 

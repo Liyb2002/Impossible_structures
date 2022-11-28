@@ -137,7 +137,7 @@ if __name__ == "__main__":
     result_particle = particle_list[0]
 
     #create a json file, and write the result
-    with open('./result.json', 'w') as f:
+    with open('../three/result.json', 'w') as f:
         result = []
         for cc in result_particle.connecting_comp:
             i = cc.get_object()
