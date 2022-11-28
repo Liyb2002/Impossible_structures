@@ -9,15 +9,32 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
+
+		<script type="importmap">
+			{
+			"imports": {
+			 "three": "https://cdn.skypack.dev/three@0.139.2/build/three.module",
+				"three/": "https://cdn.skypack.dev/three@0.139.2/",      
+				"dat.gui": "https://cdn.skypack.dev/dat.gui"
+			}
+		   }
+		  </script>
+		  
 	   
-		<script>
+		<script type = "module">
+import * as THREE from 'three'
+import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
+import { Water } from 'https://threejs.org/examples/jsm/objects/Water.js';
+import { Sky } from 'https://threejs.org/examples/jsm/objects/Sky.js';
+
+
 
 
 const loader = new THREE.FileLoader();
 var mousePressed = false;
-camera_x = 5.0
-camera_y = 5.0
-camera_z = 5.0
+var camera_x = 5.0
+var camera_y = 5.0
+var camera_z = 5.0
 
 var start_mouse_x = 0
 var start_mouse_y = 0
@@ -102,17 +119,18 @@ loader.load(
 		start_mouse_y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 	
 	}
-	function onDocumentMouseUp( event ) { mousePressed = false; syncframe = 0; }
+	function onDocumentMouseUp( event ) { mousePressed = false}
 	function onDocumentMouseMove( event ) {
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 	}
+	const textureLoader = new THREE.TextureLoader();
 
 
 	function animate() {
 		requestAnimationFrame( animate );
-		
+
 		if(mousePressed){
 			var delta_x = mouse.x - start_mouse_x;
 			var delta_y = mouse.y - start_mouse_y;
@@ -120,9 +138,6 @@ loader.load(
 			camera_x -= delta_x;
 			camera_y -= delta_y;
 			camera_z = Math.sqrt(75 - camera_x*camera_x - camera_y*camera_y);
-
-			console.log("camera_x",camera_x, "camera_y",camera_y, "camera_z",camera_z);
-
 
 			start_mouse_x = mouse.x;
 			start_mouse_y = mouse.y;
@@ -135,7 +150,8 @@ loader.load(
 		renderer.render( scene, camera );
 	};
 
-			animate();
+
+animate();
 
 	},
 

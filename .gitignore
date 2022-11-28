@@ -1,0 +1,4 @@
+# ignore ALL node module files
+
+raytracer/node_modules/*
+three/node_modules/*
