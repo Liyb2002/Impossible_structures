@@ -138,55 +138,63 @@ if __name__ == "__main__":
 
     #create a json file, and write the result
     with open('./result.json', 'w') as f:
+        result = []
         for cc in result_particle.connecting_comp:
             i = cc.get_object()
-            data = {'obj':[
+            data = {'obj':
                 {'start_x': i.start_x, 
                 'start_y': i.start_y, 
                 'start_z': i.start_z, 
                 'scale_x': i.scale_x, 
                 'scale_y': i.scale_y, 
                 'scale_z': i.scale_z}
-            ]}
-            json.dump(data, f)
+            }
+            result.append(data)
         
         f_struct = result_particle.foreground_structure
         b_struct = result_particle.background_structure
         d_struct = result_particle.dummy_structure
 
         for i in f_struct.rect:
-            data = {'obj':[
+            data = {'obj':
                 {'start_x': i.start_x, 
                 'start_y': i.start_y, 
                 'start_z': i.start_z, 
                 'scale_x': i.scale_x, 
                 'scale_y': i.scale_y, 
                 'scale_z': i.scale_z}
-            ]}
-            json.dump(data, f)
+            }
+            result.append(data)
 
         for i in b_struct.rect:
-            data = {'obj':[
+            data = {'obj':
                 {'start_x': i.start_x, 
                 'start_y': i.start_y, 
                 'start_z': i.start_z, 
                 'scale_x': i.scale_x, 
                 'scale_y': i.scale_y, 
                 'scale_z': i.scale_z}
-            ]}
-            json.dump(data, f)
+            }
+            result.append(data)
         
         for i in d_struct.rect:
-            data = {'obj':[
+            data = {'obj':
                 {'start_x': i.start_x, 
                 'start_y': i.start_y, 
                 'start_z': i.start_z, 
                 'scale_x': i.scale_x, 
                 'scale_y': i.scale_y, 
                 'scale_z': i.scale_z}
-            ]}
-            json.dump(data, f)
-            
+            }
+            result.append(data)
+
+        json.dump(result, f, indent=2)
+
+
+    # for cc in result_particle.connecting_comp:
+    #     i = cc.get_object()
+    #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
+
     # f_struct = result_particle.foreground_structure
     # for i in f_struct.rect:
     #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.2, 0.4, 0.8)
@@ -199,8 +207,8 @@ if __name__ == "__main__":
     # for i in d_struct.rect:
     #     create_rect(i.start_x, i.start_y, i.start_z, i.scale_x, i.scale_y, i.scale_z, 0.9, 0.1, 0.1)
 
-    while gui.running:
-        render()
-        cnt += 1
-        gui.set_image(np.sqrt(canvas.to_numpy() / cnt))
-        gui.show()
+    # while gui.running:
+    #     render()
+    #     cnt += 1
+    #     gui.set_image(np.sqrt(canvas.to_numpy() / cnt))
+    #     gui.show()

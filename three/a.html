@@ -24,15 +24,41 @@ loader.load(
 	// onLoad callback
 	function ( data ) {
 		const scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-		const renderer = new THREE.WebGLRenderer();
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		document.body.appendChild( renderer.domElement );
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
 
-		const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			const geometry = new THREE.BoxGeometry( 1, 1, 1 ).toNonIndexed();
+			const material = new THREE.MeshBasicMaterial( { vertexColors: true } ); 
+
+
+			const positionAttribute = geometry.getAttribute( 'position' );
 		
-		const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+		const colors = [];
+		const color1 = new THREE.Color();
+		const color2 = new THREE.Color();
+		const color3 = new THREE.Color();
+
+		
+		for ( let i = 0; i < positionAttribute.count; i += 3 ) {
+		
+			color1.set( 0.5 * 0xffffff );
+			color2.set( 0.2 * 0xffffff );
+			color3.set( 0.3 * 0xffffff );
+			
+			// define the same color for each vertex of a triangle
+			
+			colors.push( color1.r, color1.g, color1.b );
+			colors.push( color1.r, color1.g, color1.b );
+			colors.push( color1.r, color1.g, color1.b );
+		
+		}
+		
+		// define the new attribute
+		
+		geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 
 		camera.position.set(5, 5, 5);
 		camera.lookAt(0,0,-1);
@@ -41,21 +67,26 @@ loader.load(
 
 		// output the text to the console
 		var jsonData = JSON.parse(data); 
-		var objects_num = Object.keys(jsonData[0]).length;
+		var objects_num = Object.keys(jsonData).length;
 
-		for (var i = 1; i <= objects_num; i++) {
-			var index = i.toString()
-			var start_x = jsonData[0][index]["start_x"];
-			var start_y = jsonData[0][index]["start_y"];
-			var start_z = jsonData[0][index]["start_z"];
+		for (var i = 0; i < objects_num; i++) {
 
-			var scale_x = jsonData[0][index]["scale_x"];
-			var scale_y = jsonData[0][index]["scale_y"];
-			var scale_z = jsonData[0][index]["scale_z"];
+			var start_x = jsonData[i]["obj"]["start_x"];
+			var start_y = jsonData[i]["obj"]["start_y"];
+			var start_z = jsonData[i]["obj"]["start_z"];
+
+			var scale_x = jsonData[i]["obj"]["scale_x"];
+			var scale_y = jsonData[i]["obj"]["scale_y"];
+			var scale_z = jsonData[i]["obj"]["scale_z"];
+
+			var center_x = start_x + scale_x/2;
+			var center_y = start_y + scale_y/2;
+			var center_z = start_z + scale_z/2;
 			
 			const cube = new THREE.Mesh( geometry, material );
-            cube.position.set(start_x, start_y, start_z );
+            cube.position.set(center_x, center_y, center_z );
             cube.scale.set(scale_x, scale_y, scale_z);
+
             scene.add( cube );
 
 		}
