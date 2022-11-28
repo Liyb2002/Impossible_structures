@@ -87,7 +87,7 @@ class Particle:
     def generate_one(self):
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
-        self.dummy_structure.generate(1)
+        self.dummy_structure.generate(3)
     
         
 

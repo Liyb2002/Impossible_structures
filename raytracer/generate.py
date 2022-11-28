@@ -118,7 +118,6 @@ if __name__ == "__main__":
 
     #generate and resampling
     for s in range(steps):
-        print("step: ", s)
         score_list = []
         for i in range(len(particle_list)):
             particle_list[i].generate_one()

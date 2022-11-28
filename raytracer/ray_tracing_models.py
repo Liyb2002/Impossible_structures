@@ -173,7 +173,7 @@ class Camera:
     @ti.kernel
     def reset(self):
         self.lookfrom[None] = [5.0, 5.0, 5.0]
-        self.lookat[None] = [0.0, 0.0, -1.0]
+        self.lookat[None] = [0.0, 0.0, 0.0]
         self.vup[None] = [0.0, 1.0, 0.0]
         theta = self.fov * (PI / 180.0)
         half_height = ti.tan(theta / 2.0)

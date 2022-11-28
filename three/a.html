@@ -14,6 +14,15 @@
 
 
 const loader = new THREE.FileLoader();
+var mousePressed = false;
+camera_x = 5.0
+camera_y = 5.0
+camera_z = 5.0
+
+var start_mouse_x = 0
+var start_mouse_y = 0
+
+var mouse = new THREE.Vector2();
 
 
 //load a text file and output the result to the console
@@ -50,13 +59,14 @@ loader.load(
 		
 		geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 
-		camera.position.set(5, 5, 5);
-		camera.lookAt(0,0,-1);
+		camera.position.set(camera_x, camera_y, camera_z);
+		camera.lookAt(0,0,0);
 		camera.up.set(0,1,0);
 
 		// output the text to the console
 		var jsonData = JSON.parse(data); 
 		var objects_num = Object.keys(jsonData).length;
+		var mouse = new THREE.Vector2();
 
 		for (var i = 0; i < objects_num; i++) {
 
@@ -80,7 +90,53 @@ loader.load(
 
 		}
 
+	window.addEventListener( 'resize', onWindowResize, false );    
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'mousedown', onDocumentMouseDown, false );    
+	document.addEventListener( 'mouseup', onDocumentMouseUp, false );   	      
+
+
+	function onDocumentMouseDown( event ) { 
+		mousePressed = true; 
+		start_mouse_x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		start_mouse_y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+	
+	}
+	function onDocumentMouseUp( event ) { mousePressed = false; syncframe = 0; }
+	function onDocumentMouseMove( event ) {
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	}
+
+
+	function animate() {
+		requestAnimationFrame( animate );
+		
+		if(mousePressed){
+			var delta_x = mouse.x - start_mouse_x;
+			var delta_y = mouse.y - start_mouse_y;
+
+			camera_x -= delta_x;
+			camera_y -= delta_y;
+			camera_z = Math.sqrt(75 - camera_x*camera_x - camera_y*camera_y);
+
+			console.log("camera_x",camera_x, "camera_y",camera_y, "camera_z",camera_z);
+
+
+			start_mouse_x = mouse.x;
+			start_mouse_y = mouse.y;
+
+			camera.position.set(camera_x, camera_y, camera_z);
+			camera.lookAt(0,0,0);
+
+	}
+
 		renderer.render( scene, camera );
+	};
+
+			animate();
+
 	},
 
 	// onProgress callback
@@ -93,6 +149,18 @@ loader.load(
 		console.error( 'An error happened' );
 	}
 );
+
+
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+
+
+
+
 
 		</script>
 	</body>
