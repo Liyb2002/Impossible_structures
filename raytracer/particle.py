@@ -9,7 +9,7 @@ import metrics
 from copy import deepcopy
 
 class Particle:
-    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion):
+    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion, num_cc, block_size):
         self.foreground_structure = None
         self.background_structure = None
         self.dummy_structure = None
@@ -19,6 +19,8 @@ class Particle:
 
         self.f_seed = None
         self.b_seed = None
+
+        self.block_size = block_size
 
         self.foreground_intersection = foreground_intersection
         self.background_intersection = background_intersection
@@ -32,7 +34,7 @@ class Particle:
         self.dummy_min_screen = None
 
         self.portion = portion
-        self.generate_connecting_comp(1, foreground_intersection[0], foreground_intersection[1], foreground_intersection[2], background_intersection[2])
+        self.generate_connecting_comp(num_cc, foreground_intersection[0], foreground_intersection[1], foreground_intersection[2], background_intersection[2])
         self.generate_structures()
 
 
@@ -43,43 +45,43 @@ class Particle:
             xy_target.append(i.xy_pos())
              
 
-        f_seed = gen_seed.get_seed(self.foreground_intersection)
+        f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size)
         self.f_seed = f_seed
-        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1])
-        f_struct = structure.Structure(f_seed, f_seed_next_possible, 1)
+        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size)
+        f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.foreground_structure = f_struct
     
-        b_seed = gen_seed.get_seed_2(self.background_intersection,self.portion)
+        b_seed = gen_seed.get_seed_2(self.background_intersection,self.portion, self.block_size)
         self.b_seed = b_seed
-        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1])
-        b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion)
+        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size)
+        b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
         self.background_structure = b_struct
 
     def generate_connecting_comp(self,num,x,y,z_front, z_back):
         for i in range(num):
             connecting_component_x = connecting_comp.offset()
             connecting_component_y = connecting_comp.offset()
-            cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back)
+            cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
             # cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
             self.connecting_comp.append(cc)
 
     def generate_dummy_connecting_comp(self,num,x,y,z_front, z_back):
         for i in range(num):
-            cc = connecting_comp.connecting_structure(x, y, z_front, z_back)
+            cc = connecting_comp.connecting_structure(x, y, z_front, z_back, self.block_size)
             self.connecting_comp.append(cc)
             self.dummy_connecting_comp.append(cc)
 
-    def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion):
+    def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion, dummy_cc):
         self.dummy_intersection = dummy_intersection
         self.dummy_max_screen = dummy_max_screen
         self.dummy_min_screen = dummy_min_screen
 
-        d_seed = gen_seed.get_seed(dummy_intersection)
-        d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1])
-        d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion)
+        d_seed = gen_seed.get_seed(dummy_intersection, self.block_size)
+        d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1], self.block_size)
+        d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion, self.block_size)
         self.dummy_structure = d_struct
 
-        for i in range(1):
+        for i in range(dummy_cc):
             connecting_component_x = connecting_comp.offset()
             connecting_component_y = connecting_comp.offset()
             self.generate_dummy_connecting_comp(1, dummy_intersection[0]+connecting_component_x, dummy_intersection[1]+connecting_component_y, self.foreground_intersection[2], dummy_intersection[2])

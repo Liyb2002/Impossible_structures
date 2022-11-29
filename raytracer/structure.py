@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 class Structure:
-    def __init__(self, seed, seed_next_possible, portion):
+    def __init__(self, seed, seed_next_possible, portion, block_size):
         self.history = None
         self.data = None
         self.rect = []
@@ -16,6 +16,8 @@ class Structure:
         self.max_x = -1000
         self.min_y = 1000
         self.max_y = -1000
+
+        self.block_size = block_size
         
         self.cleanUp()
 
@@ -28,13 +30,13 @@ class Structure:
             x_dist = abs(i[0] - next_vertex[0])
             x_start = min(i[0], next_vertex[0])
             startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
-            scale = np.array([x_dist+0.07*self.portion, 0.07*self.portion, 0.07*self.portion])
+            scale = np.array([x_dist+self.block_size*self.portion, self.block_size*self.portion, self.block_size*self.portion])
             rect1 = rect(startPos, scale)
             
             y_dist = abs(i[1] - next_vertex[1])
             y_start = min(i[1], next_vertex[1])
             startPos2 = np.array([i[0], y_start, next_vertex[2]])
-            scale2 = np.array([0.07,y_dist+0.07*self.portion, 0.07*self.portion])
+            scale2 = np.array([self.block_size,y_dist+self.block_size*self.portion, self.block_size*self.portion])
             rect2 = rect(startPos2, scale2)
             
             self.rect.append(rect1)
@@ -46,7 +48,7 @@ class Structure:
         self.data = np.array([[0.0,0.0,0.0]])
         self.data = np.append(self.data, self.seed, axis = 0)
         self.rect = []
-        self.rect.append(block_to_rect(self.data, self.portion))
+        self.rect.append(block_to_rect(self.data, self.portion, self.block_size))
         self.data = np.array([[0.0,0.0,0.0]])
         self.next_possibles = self.seed_next_possible
     
@@ -88,14 +90,14 @@ class Structure:
 
         available_contact = np.append(available_contact, 0)
         if direction == 0 or direction == 1:
-            result = np.vstack([result, available_contact + np.array([0.0,0.07,0.0,3])])
-            result = np.vstack([result, available_contact + np.array([0.0,-0.07,0.0,2])])
+            result = np.vstack([result, available_contact + np.array([0.0,self.block_size,0.0,3])])
+            result = np.vstack([result, available_contact + np.array([0.0,-self.block_size,0.0,2])])
             result = np.delete(result, 0, axis =0)
             return result
 
         if direction == 2 or direction == 3:
-            result = np.vstack([result, available_contact + np.array([0.07,0.0,0.0,1])])
-            result = np.vstack([result, available_contact + np.array([-0.07,0.0,0.0,1])])
+            result = np.vstack([result, available_contact + np.array([self.block_size,0.0,0.0,1])])
+            result = np.vstack([result, available_contact + np.array([-self.block_size,0.0,0.0,1])])
             result = np.delete(result, 0, axis =0)
             return result
 
@@ -106,23 +108,23 @@ class Structure:
   
     def get_vertex_forward(self, new_vertex_clean, direction):
         if direction == 0:
-            return new_vertex_clean + np.array([-0.07,0.0,0.0])
+            return new_vertex_clean + np.array([-self.block_size,0.0,0.0])
 
         if direction == 1:
-            return new_vertex_clean + np.array([0.07,0.0,0.0])
+            return new_vertex_clean + np.array([self.block_size,0.0,0.0])
 
         if direction == 2:
-            return new_vertex_clean + np.array([0.0,-0.07,0.0])
+            return new_vertex_clean + np.array([0.0,-self.block_size,0.0])
 
         if direction == 3:
-            return new_vertex_clean + np.array([0.0,0.07,0.0])
+            return new_vertex_clean + np.array([0.0,self.block_size,0.0])
     
     def generate(self, steps):
         for i in range(steps):
             #print("step ", i+1)
             self.process()
             self.history = np.append(self.history, self.data[1:], axis=0)
-            self.rect.append(block_to_rect(self.data, self.portion))
+            self.rect.append(block_to_rect(self.data, self.portion, self.block_size))
             self.data = np.array([[0,0,0]])
 
 
@@ -183,25 +185,25 @@ class rect:
         print("scale_x:",self.scale_x,"scale_y:",self.scale_y,"scale_z:",self.scale_z)
         print(" ")
     
-def block_to_rect(buffer, portion):
+def block_to_rect(buffer, portion, block_size):
     start = buffer[1]
     end = buffer[-1]
     x_start = min(start[0],end[0])
     y_start = min(start[1],end[1])    
     z_start = min(start[2],end[2])
     
-    x_scale = max(abs(start[0] - end[0]), 0.07 * portion)
-    y_scale = max(abs(start[1] - end[1]), 0.07 * portion)
-    z_scale = max(abs(start[2] - end[2]), 0.07 * portion)
+    x_scale = max(abs(start[0] - end[0]), block_size * portion)
+    y_scale = max(abs(start[1] - end[1]), block_size * portion)
+    z_scale = max(abs(start[2] - end[2]), block_size * portion)
     
-    if(x_scale > 0.07 * portion):
-        x_scale += 0.07 * portion
+    if(x_scale > block_size * portion):
+        x_scale += block_size * portion
         
-    if(y_scale > 0.07 * portion):
-        y_scale += 0.07 * portion
+    if(y_scale > block_size * portion):
+        y_scale += block_size * portion
         
-    if(z_scale > 0.07 * portion):
-        z_scale += 0.07 * portion
+    if(z_scale > block_size * portion):
+        z_scale += block_size * portion
 
     startPos = np.array([x_start,y_start,z_start])
     scale = np.array([x_scale,y_scale,z_scale])

@@ -10,18 +10,19 @@ def offset():
     return -num
 
 class connecting_structure:
-    def __init__(self, x, y, foreground_z, background_z):
+    def __init__(self, x, y, foreground_z, background_z, block_size):
         self.x = x
         self.y = y
         self.foreground_z = foreground_z
         self.background_z = background_z
+        self.block_size = block_size
     
     def get_object(self):
         z_start = min(self.foreground_z, self.background_z)
         z_scale = abs(self.foreground_z - self.background_z )
         
         startPos = np.array([self.x,self.y,z_start])
-        scale = np.array([0.07, 0.07, z_scale])
+        scale = np.array([self.block_size,self. block_size, z_scale])
         
         tempt = structure.rect(startPos, scale)
         

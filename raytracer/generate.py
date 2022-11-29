@@ -58,21 +58,21 @@ def ray_color(ray, camera_pos):
     return color_buffer
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Naive Ray Tracing')
-    parser.add_argument(
-        '--max_depth', type=int, default=10, help='max depth (default: 10)')
-    parser.add_argument(
-        '--samples_per_pixel', type=int, default=4, help='samples_per_pixel  (default: 4)')
-    args = parser.parse_args()
 
-    max_depth = args.max_depth
-    samples_per_pixel = args.samples_per_pixel
     scene = Hittable_list()
 
     camera = Camera()
     gui = ti.GUI("Ray Tracing", res=(image_width, image_height))
     canvas.fill(0)
     cnt = 0
+
+    num_connections = 0
+    with open('config.json', 'r') as config_file:
+        config_data = json.load(config_file)
+        num_layers = config_data[0]['num_layers']
+        num_connections = config_data[0]['num_connections']
+        block_size = config_data[0]['block_size']
+
 
     max_score = -1000
     result_particle = None
@@ -108,8 +108,8 @@ if __name__ == "__main__":
 
     #initialize particles
     for i in range(num_particles):
-        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion)
-        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion)
+        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, 1, block_size)
+        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)

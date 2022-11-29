@@ -1,0 +1,14 @@
+ [
+      {
+        "num_layers": 3,
+        "num_connections": 2,
+        "num_blocks":[50,20,10],
+        "num_particles":300,
+        "block_size": 0.05,
+        "X_freedom": false,
+        "Y_freedom": false,
+        "designated_structure":[]
+
+      }
+    ]
+  
