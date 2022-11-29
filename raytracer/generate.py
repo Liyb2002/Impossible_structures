@@ -63,7 +63,7 @@ if __name__ == "__main__":
     portion = background_index/ foreground_index
 
     num_particles = 300
-    steps = 1
+    steps = 0
     particle_list = []
     score_list = []
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, 1, block_size)
-        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
+        # tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
@@ -138,16 +138,17 @@ if __name__ == "__main__":
             }
             result.append(data)
         
-        for i in d_struct.rect:
-            data = {'obj':
-                {'start_x': i.start_x, 
-                'start_y': i.start_y, 
-                'start_z': i.start_z, 
-                'scale_x': i.scale_x, 
-                'scale_y': i.scale_y, 
-                'scale_z': i.scale_z}
-            }
-            result.append(data)
+        if d_struct != None:
+            for i in d_struct.rect:
+                data = {'obj':
+                    {'start_x': i.start_x, 
+                    'start_y': i.start_y, 
+                    'start_z': i.start_z, 
+                    'scale_x': i.scale_x, 
+                    'scale_y': i.scale_y, 
+                    'scale_z': i.scale_z}
+                }
+                result.append(data)
 
         json.dump(result, f, indent=2)
 

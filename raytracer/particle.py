@@ -102,7 +102,8 @@ class Particle:
         self.background_structure.to_dest(xy_targets)
 
         dummy_xy_targets = self.get_dummy_xy_target()
-        self.dummy_structure.to_dest(dummy_xy_targets)
+        if self.dummy_structure != None:
+            self.dummy_structure.to_dest(dummy_xy_targets)
     
     def get_xy_target(self):
         xy_targets = []

@@ -100,6 +100,10 @@ def occlusion_score_structures(front_structure, back_structure, eye):
 
 
 def out_of_screen(structure, max_coordinate, min_coordinate):
+
+    if structure == None:
+        return False
+    
     max_x = max_coordinate[0]
     max_y = max_coordinate[1]
     min_x = min_coordinate[0]
@@ -114,6 +118,10 @@ def out_of_screen(structure, max_coordinate, min_coordinate):
     return False
 
 def too_close(structure):
+
+    if structure == None:
+        return False
+
     horizontal = []
     vertical = []
 
