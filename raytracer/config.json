@@ -4,6 +4,8 @@
         "num_connections": 2,
         "num_blocks_per_layer":[50,20,10],
         "num_particles":300,
+        "beam_mean": 6,
+        "beam_std": 2,
         "block_size": 0.05,
         "X_freedom": false,
         "Y_freedom": false,

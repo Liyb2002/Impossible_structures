@@ -34,6 +34,8 @@ if __name__ == "__main__":
         num_layers = config_data[0]['num_layers']
         num_connections = config_data[0]['num_connections']
         block_size = config_data[0]['block_size']
+        beam_mean = config_data[0]['beam_mean']
+        beam_std = config_data[0]['beam_std']
 
 
     max_score = -1000
@@ -85,7 +87,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].background_structure.generate(1)
+            particle_list[i].background_structure.generate(1, beam_mean, beam_std)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].foreground_structure.generate(1)
+            particle_list[i].foreground_structure.generate(1, beam_mean, beam_std)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
@@ -111,7 +113,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].dummy_structure.generate(1)
+            particle_list[i].dummy_structure.generate(1, beam_mean, beam_std)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
