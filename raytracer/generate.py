@@ -36,7 +36,9 @@ if __name__ == "__main__":
         block_size = config_data[0]['block_size']
         beam_mean = config_data[0]['beam_mean']
         beam_std = config_data[0]['beam_std']
+        num_blocks_per_layer = config_data[0]['num_blocks_per_layer']
 
+    connecting_cost = beam_mean * 2 * num_connections
 
     max_score = -1000
     result_particle = None
@@ -70,19 +72,22 @@ if __name__ == "__main__":
     score_list = []
 
 
+    if(num_layers > 2):
+        num_connections -= 1
     #initialize particles
     for i in range(num_particles):
-        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, 1, block_size)
+        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
 
-        # tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
 
     particle_list = particle.resample(particle_list, score_list)
 
+    steps = max(0, int((num_blocks_per_layer[1] - connecting_cost) / beam_mean))
+    print("extra beams for background", steps)
     #generate background structure
     for s in range(steps):
         score_list = []
@@ -92,6 +97,8 @@ if __name__ == "__main__":
         
         particle_list = particle.resample(particle_list, score_list)
     
+    steps = int((num_blocks_per_layer[0] - connecting_cost) / beam_mean)
+    print("extra beams for foreground", steps)
     #generate foreground structure
     for s in range(steps):
         score_list = []
@@ -101,15 +108,18 @@ if __name__ == "__main__":
         
         particle_list = particle.resample(particle_list, score_list)
 
+
     #generate dummy components
-    num_dummy = 1
+    num_dummy = num_layers - 2
     for k in range(num_dummy):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
+            particle_list[i].generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, 1)
             score_list.append(particle_list[i].total_score())
         particle_list = particle.resample(particle_list, score_list)
 
+    steps = max(0, int((num_blocks_per_layer[2] - connecting_cost) / beam_mean))
+    print("extra beams for dummy", steps)
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
