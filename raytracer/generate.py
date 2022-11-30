@@ -71,7 +71,7 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, 1, block_size)
-        # tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
+        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         particle_list = particle.resample(particle_list, score_list)
     
     print("finishing process")
-    #finish the process
+    # finish the process
     for i in range (len(particle_list)):
         particle_list[i].finish()
         score_list[i] = particle_list[i].total_score()

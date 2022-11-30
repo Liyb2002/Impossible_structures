@@ -10,22 +10,9 @@
 	<body>
 		<script src="js/three.js"></script>
 
-		<script type="importmap">
-			{
-			"imports": {
-			 "three": "https://cdn.skypack.dev/three@0.139.2/build/three.module",
-				"three/": "https://cdn.skypack.dev/three@0.139.2/",      
-				"dat.gui": "https://cdn.skypack.dev/dat.gui"
-			}
-		   }
-		  </script>
 		  
 	   
 		<script type = "module">
-import * as THREE from 'three'
-import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
-import { Water } from 'https://threejs.org/examples/jsm/objects/Water.js';
-import { Sky } from 'https://threejs.org/examples/jsm/objects/Sky.js';
 
 
 
@@ -85,27 +72,38 @@ loader.load(
 		var objects_num = Object.keys(jsonData).length;
 		var mouse = new THREE.Vector2();
 
-		for (var i = 0; i < objects_num; i++) {
+		var start_x = 0;
+		var start_y = 0;
+		var start_z = 0;
+		var scale_x = 0.1;
+		var scale_y = 0.1;
+		var scale_z = 5.0;
 
-			var start_x = jsonData[i]["obj"]["start_x"];
-			var start_y = jsonData[i]["obj"]["start_y"];
-			var start_z = jsonData[i]["obj"]["start_z"];
+		var center_x = start_x + scale_x/2;
+		var center_y = start_y + scale_y/2;
+		var center_z = start_z + scale_z/2;
+		
+		const cube = new THREE.Mesh( geometry, material );
+		cube.position.set(center_x, center_y, center_z );
+		cube.scale.set(scale_x, scale_y, scale_z);
+		scene.add( cube );
 
-			var scale_x = jsonData[i]["obj"]["scale_x"];
-			var scale_y = jsonData[i]["obj"]["scale_y"];
-			var scale_z = jsonData[i]["obj"]["scale_z"];
+		var start_x_2 = 1;
+		var start_y_2 = 0;
+		var start_z_2 = 4;
+		var scale_x_2 = 0.1;
+		var scale_y_2 = 0.1;
+		var scale_z_2 = 1.0;
 
-			var center_x = start_x + scale_x/2;
-			var center_y = start_y + scale_y/2;
-			var center_z = start_z + scale_z/2;
-			
-			const cube = new THREE.Mesh( geometry, material );
-            cube.position.set(center_x, center_y, center_z );
-            cube.scale.set(scale_x, scale_y, scale_z);
+		var center_x_2 = start_x_2 + scale_x_2/2;
+		var center_y_2 = start_y_2 + scale_y_2/2;
+		var center_z_2 = start_z_2 + scale_z_2/2;
+		
+		const cube_2 = new THREE.Mesh( geometry, material );
+		cube_2.position.set(center_x_2, center_y_2, center_z_2 );
+		cube_2.scale.set(scale_x_2, scale_y_2, scale_z_2);
+		scene.add( cube_2 );
 
-            scene.add( cube );
-
-		}
 
 	window.addEventListener( 'resize', onWindowResize, false );    
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
