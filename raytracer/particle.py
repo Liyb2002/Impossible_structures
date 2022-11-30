@@ -34,9 +34,11 @@ class Particle:
         self.dummy_min_screen = None
 
         self.portion = portion
-        self.generate_connecting_comp(num_cc, foreground_intersection[0], foreground_intersection[1], foreground_intersection[2], background_intersection[2])
-        self.generate_structures()
+        self.num_cc = num_cc
 
+
+    def get_connecting_comp(self):
+        self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])
 
     def generate_structures(self):
 
@@ -62,7 +64,6 @@ class Particle:
             connecting_component_x = connecting_comp.offset()
             connecting_component_y = connecting_comp.offset()
             cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
-            # cc = connecting_comp.connecting_structure(self.foreground_intersection[0]+connecting_component_x, self.foreground_intersection[1]+connecting_component_y, self.foreground_intersection[2], self.background_intersection[2])
             self.connecting_comp.append(cc)
 
     def generate_dummy_connecting_comp(self,num,x,y,z_front, z_back):
@@ -94,8 +95,6 @@ class Particle:
         
 
     def finish(self):
-        # self.generate_dummy_connecting_comp(1, self.foreground_structure.min_x, self.foreground_structure.min_y, self.foreground_intersection[2], self.dummy_intersection[2])
-        # self.generate_dummy_connecting_comp(1, self.foreground_structure.max_x, self.foreground_structure.min_y, self.foreground_intersection[2], self.dummy_intersection[2])
 
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)

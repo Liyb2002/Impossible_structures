@@ -71,23 +71,51 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, 1, block_size)
-        tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
+        tempt_particle.get_connecting_comp()
+        tempt_particle.generate_structures()
+
+        # tempt_particle.generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
 
     particle_list = particle.resample(particle_list, score_list)
 
-    #generate and resampling
+    #generate background structure
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].generate_one()
+            particle_list[i].background_structure.generate(1)
             score_list.append(particle_list[i].total_score())
         
-        print("size of particle list: ", len(particle_list), "size of score list: ", len(score_list))
         particle_list = particle.resample(particle_list, score_list)
     
+    #generate foreground structure
+    for s in range(steps):
+        score_list = []
+        for i in range(len(particle_list)):
+            particle_list[i].foreground_structure.generate(1)
+            score_list.append(particle_list[i].total_score())
+        
+        particle_list = particle.resample(particle_list, score_list)
+
+    #generate dummy components
+    num_dummy = 1
+    for k in range(num_dummy):
+        score_list = []
+        for i in range(len(particle_list)):
+            particle_list[i].generate_dummy_comp(dummy_max_screen, dummy_min_screen, dummy_intersection, portion, num_connections-1)
+            score_list.append(particle_list[i].total_score())
+        particle_list = particle.resample(particle_list, score_list)
+
+    for s in range(steps):
+        score_list = []
+        for i in range(len(particle_list)):
+            particle_list[i].dummy_structure.generate(1)
+            score_list.append(particle_list[i].total_score())
+        
+        particle_list = particle.resample(particle_list, score_list)
+
     print("finishing process")
     # finish the process
     for i in range (len(particle_list)):
