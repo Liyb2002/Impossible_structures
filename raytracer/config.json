@@ -5,7 +5,7 @@
         "num_blocks_per_layer":[20,30,10],
         "num_particles":300,
         "beam_mean": 6,
-        "beam_std": 2,
+        "beam_sd": 2,
         "block_size": 0.05,
         "X_freedom": false,
         "Y_freedom": false,

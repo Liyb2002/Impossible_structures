@@ -35,8 +35,9 @@ if __name__ == "__main__":
         num_connections = config_data[0]['num_connections']
         block_size = config_data[0]['block_size']
         beam_mean = config_data[0]['beam_mean']
-        beam_std = config_data[0]['beam_std']
+        beam_sd = config_data[0]['beam_sd']
         num_blocks_per_layer = config_data[0]['num_blocks_per_layer']
+        num_particles = config_data[0]['num_particles']
 
     connecting_cost = beam_mean * 2 * num_connections
 
@@ -66,11 +67,9 @@ if __name__ == "__main__":
 
     portion = background_index/ foreground_index
 
-    num_particles = 300
-    steps = 0
+
     particle_list = []
     score_list = []
-
 
     if(num_layers > 2):
         num_connections -= 1
@@ -92,7 +91,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].background_structure.generate(1, beam_mean, beam_std)
+            particle_list[i].background_structure.generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
@@ -103,7 +102,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].foreground_structure.generate(1, beam_mean, beam_std)
+            particle_list[i].foreground_structure.generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)

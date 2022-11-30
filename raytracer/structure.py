@@ -119,16 +119,16 @@ class Structure:
         if direction == 3:
             return new_vertex_clean + np.array([0.0,self.block_size,0.0])
     
-    def generate(self, steps, beam_mean, beam_std):
+    def generate(self, steps, beam_mean, beam_sd):
         for i in range(steps):
             #print("step ", i+1)
-            self.process(beam_mean, beam_std)
+            self.process(beam_mean, beam_sd)
             self.history = np.append(self.history, self.data[1:], axis=0)
             self.rect.append(block_to_rect(self.data, self.portion, self.block_size))
             self.data = np.array([[0,0,0]])
 
 
-    def process(self, beam_mean, beam_std):
+    def process(self, beam_mean, beam_sd):
         #step 1: for all available contacts, assume they will make a turn  
         #print("next_possibles", self.next_possibles)
 
@@ -152,7 +152,7 @@ class Structure:
         #print("new_vertex_clean", new_vertex_clean)
         self.add_vertex(new_vertex_clean)
         
-        span = int(np.random.normal(loc=beam_mean - 2, scale=beam_std, size=None)) + 2
+        span = int(np.random.normal(loc=beam_mean - 2, scale=beam_sd, size=None)) + 2
         for i in range(span):
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, new_direction)
             self.add_vertex(new_vertex_clean)
