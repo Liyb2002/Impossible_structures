@@ -84,9 +84,11 @@ def render(coordinates):
     #==============================================================================
 
     r = OffscreenRenderer(viewport_width=640*2, viewport_height=480*2)
+    color, depth = r.render(scene)
 
 
-coordinates = np.array([[0, 0, 0], [0.01,0,0], [0.02,0,0],[0.03,0,0], 
-                        [-0.1,0,0.01], [-0.1,0,0.02], [-0.1,0,0.03], [-0.1,0,0.04],
-                        [-0.1,0,1], [-0.6,0,0.02],  [-0.1,2,0.04]])
+coordinates = np.array([[0, 0, 0],  [-0.1,2,0.04]])
 render(coordinates)
+
+r = pyrender.OffscreenRenderer(viewport_width=640,viewport_height=480,point_size=1.0) 
+color, depth = r.render(scene)

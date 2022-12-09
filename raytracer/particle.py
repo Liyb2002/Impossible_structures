@@ -5,11 +5,13 @@ import structure
 import connecting_comp
 import gen_seed
 import metrics
+import perspective
 
 from copy import deepcopy
 
 class Particle:
-    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, portion, num_cc, block_size):
+    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, 
+        portion, num_cc, block_size):
         self.foreground_structure = None
         self.background_structure = None
         self.dummy_structure = None
@@ -35,7 +37,6 @@ class Particle:
 
         self.portion = portion
         self.num_cc = num_cc
-
 
     def get_connecting_comp(self):
         self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])

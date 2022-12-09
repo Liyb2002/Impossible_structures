@@ -10,6 +10,7 @@ import connecting_comp
 import metrics
 import intersection
 import particle
+import perspective
 
 ti.init(arch=ti.gpu)
 
@@ -73,6 +74,8 @@ if __name__ == "__main__":
 
     if(num_layers > 2):
         num_connections -= 1
+
+
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
