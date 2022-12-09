@@ -1,5 +1,6 @@
 import numpy as np
 import perspective
+import rasterizer
 
 from sympy import *
 x, y, z = symbols('x y z')
@@ -106,38 +107,12 @@ def occlusion_score_structures(front_structure, back_structure, eye):
     return total_score
 
 
-def occlusion_raster(rect, back_structure):
-    front_x = rect.start_x
-    front_y = rect.start_y
-    front_z = rect.start_z
+def occlusion_raster(front_structure, back_structure):
+    score = 0
+    graph_front = rasterizer.get_graph(front_structure.rect)
+    graph_back = rasterizer.get_graph(back_structure.rect)
 
-    front_point = np.array([front_x, front_y, front_z, 1.0])
-    transformed_point = front_point.dot(m_view).dot(m_proj)
-    transformed_x = transformed_point[0]
-    transformed_y = transformed_point[1]
-
-    for i in back_structure.rect:
-        small_x = i.start_x
-        small_y = i.start_y
-        large_x = i.start_x + i.scale_x
-        large_y = i.start_y + i.scale_y
-
-        pt1 = np.array([small_x, small_y, i.start_z, 1.0])
-        pt2 = np.array([large_x, large_y, i.start_z, 1.0])
-
-        transformed_pt1 = pt1.dot(m_view).dot(m_proj)
-        transformed_pt2 = pt2.dot(m_view).dot(m_proj)
-        transformed_pt3 = pt3.dot(m_view).dot(m_proj)
-        transformed_pt4 = pt4.dot(m_view).dot(m_proj)
-
-        score = 0
-        if (transformed_pt1[0] < transformed_x and transformed_pt2[0] > transformed_x and transformed_pt1[1] < transformed_y and transformed_pt4[1] > transformed_y):
-            center_x = small_x + i.scale_x/2
-            center_y = small_y + i.scale_y/2
-
-            score = integrate(exp((x-center_x)**2+(y-center_y)**2), (x, front_x, front_x+0.05), (y, front_y, front_y+0.05))
-        
-        return score
+    return score
 
 
 def out_of_screen(structure, max_coordinate, min_coordinate):

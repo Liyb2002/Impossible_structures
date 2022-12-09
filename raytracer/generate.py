@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
     #initialize particles
     for i in range(num_particles):
+        print("initializing particle", i)
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
@@ -94,6 +95,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
+            print("generating background", i)
             particle_list[i].background_structure.generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
