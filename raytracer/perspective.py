@@ -3,7 +3,7 @@ import numpy as np
 
 camera_pos = np.array([5,5,5])
 lookAt = np.array([0,0,0])
-up = np.array([0,1,0])
+up = np.array([0,0,1])
 look_vec = lookAt - camera_pos
 
 w = 800
@@ -21,17 +21,24 @@ c = - near / far
 
 
 def get_m_view():
+    look_vec = lookAt - camera_pos 
     w = look_vec / np.linalg.norm(look_vec)
-    u = np.cross(up, w)
-    u = u / np.linalg.norm(u)
-    v = np.cross(w, u)
-    m_view = np.array([u,v,w])
+    v = up - np.dot(up, w)*w
+    v = v / np.linalg.norm(v)
+    u = np.cross(v, w)
+
+    m_rotate = np.array([[u[0], u[1], u[2], 0], 
+                    [v[0], v[1], v[2], 0],
+                    [w[0], w[1], w[2], 0],
+                    [0, 0, 0, 1]])
+    m_rotate = np.transpose(m_rotate)
     m_view = np.array([
-        [u[0], u[1], u[2],  camera_pos[0]],
-        [v[0], v[1], v[2], camera_pos[1]],
-        [w[0], w[1], w[2], camera_pos[2]],
+        [m_rotate[0][0], m_rotate[0][1], m_rotate[0][2],  camera_pos[0]],
+        [m_rotate[1][0], m_rotate[1][1], m_rotate[1][2], camera_pos[1]],
+        [m_rotate[2][0], m_rotate[2][1], m_rotate[2][2], camera_pos[2]],
         [0, 0, 0, 1]
     ])
+
     return m_view
 
 def get_m_proj():
