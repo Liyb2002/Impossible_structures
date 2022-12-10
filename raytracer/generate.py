@@ -59,7 +59,9 @@ if __name__ == "__main__":
     dummy_min_screen = basic_scene.get_min_screen(dummy_index)
 
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
+    print(foreground_intersection)
     background_intersection = basic_scene.get_possible_intersects(background_index)
+    print(background_intersection)
     dummy_intersection = basic_scene.get_possible_intersects(dummy_index)
     offset_x = connecting_comp.offset()
     offset_y = connecting_comp.offset()

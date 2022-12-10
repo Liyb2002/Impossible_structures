@@ -1,8 +1,8 @@
 [
   {
     "obj": {
-      "start_x": 3.45,
-      "start_y": 4.05,
+      "start_x": 4.25,
+      "start_y": 4.15,
       "start_z": 3.27,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -11,8 +11,8 @@
   },
   {
     "obj": {
-      "start_x": 3.45,
-      "start_y": 4.35,
+      "start_x": 4.15,
+      "start_y": 3.35,
       "start_z": 3.27,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -21,8 +21,8 @@
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 1.65,
+      "start_x": 1.55,
+      "start_y": 1.75,
       "start_z": 2.55,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -41,7 +41,7 @@
   },
   {
     "obj": {
-      "start_x": 3.45,
+      "start_x": 3.85,
       "start_y": 4.0,
       "start_z": 3.85,
       "scale_x": 0.45,
@@ -51,51 +51,51 @@
   },
   {
     "obj": {
-      "start_x": 3.45,
+      "start_x": 4.25,
       "start_y": 4.0,
       "start_z": 3.85,
       "scale_x": 0.05,
-      "scale_y": 0.1,
+      "scale_y": 0.2,
       "scale_z": 0.05
     }
   },
   {
     "obj": {
-      "start_x": 3.45,
-      "start_y": 4.0,
-      "start_z": 3.85,
-      "scale_x": 0.45,
-      "scale_y": 0.05,
-      "scale_z": 0.05
-    }
-  },
-  {
-    "obj": {
-      "start_x": 3.45,
-      "start_y": 4.0,
-      "start_z": 3.85,
-      "scale_x": 0.05,
-      "scale_y": 0.4,
-      "scale_z": 0.05
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.05,
+      "start_x": 3.85,
       "start_y": 4.1,
       "start_z": 3.85,
-      "scale_x": 1.85,
+      "scale_x": 0.35,
       "scale_y": 0.05,
       "scale_z": 0.05
     }
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 1.65,
+      "start_x": 4.15,
+      "start_y": 3.35,
       "start_z": 3.85,
       "scale_x": 0.05,
-      "scale_y": 2.5,
+      "scale_y": 0.8,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 1.55,
+      "start_y": 4.0,
+      "start_z": 3.85,
+      "scale_x": 2.35,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 1.55,
+      "start_y": 1.75,
+      "start_z": 3.85,
+      "scale_x": 0.05,
+      "scale_y": 2.3,
       "scale_z": 0.05
     }
   },
@@ -114,18 +114,18 @@
       "start_x": 2.97,
       "start_y": 3.22,
       "start_z": 3.27,
-      "scale_x": 0.55,
+      "scale_x": 1.35,
       "scale_y": 0.08,
       "scale_z": 0.08
     }
   },
   {
     "obj": {
-      "start_x": 3.45,
+      "start_x": 4.25,
       "start_y": 3.22,
       "start_z": 3.27,
       "scale_x": 0.05,
-      "scale_y": 0.9,
+      "scale_y": 1.0,
       "scale_z": 0.08
     }
   },
@@ -134,35 +134,35 @@
       "start_x": 2.97,
       "start_y": 3.22,
       "start_z": 3.27,
-      "scale_x": 0.55,
+      "scale_x": 1.25,
       "scale_y": 0.08,
       "scale_z": 0.08
     }
   },
   {
     "obj": {
-      "start_x": 3.45,
+      "start_x": 4.15,
       "start_y": 3.22,
       "start_z": 3.27,
       "scale_x": 0.05,
-      "scale_y": 1.2,
+      "scale_y": 0.2,
       "scale_z": 0.08
     }
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 3.22,
+      "start_x": 1.55,
+      "start_y": 3.32,
       "start_z": 3.27,
-      "scale_x": 1.0,
+      "scale_x": 1.5,
       "scale_y": 0.08,
       "scale_z": 0.08
     }
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 1.65,
+      "start_x": 1.55,
+      "start_y": 1.75,
       "start_z": 3.27,
       "scale_x": 0.05,
       "scale_y": 1.65,
@@ -171,8 +171,8 @@
   },
   {
     "obj": {
-      "start_x": 2.25,
-      "start_y": 2.05,
+      "start_x": 1.95,
+      "start_y": 2.35,
       "start_z": 2.55,
       "scale_x": 0.08,
       "scale_y": 0.28,
@@ -181,21 +181,21 @@
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 2.2,
+      "start_x": 1.55,
+      "start_y": 2.6,
       "start_z": 2.55,
-      "scale_x": 0.28,
+      "scale_x": 0.47,
       "scale_y": 0.08,
       "scale_z": 0.08
     }
   },
   {
     "obj": {
-      "start_x": 2.05,
-      "start_y": 1.65,
+      "start_x": 1.55,
+      "start_y": 1.75,
       "start_z": 2.55,
       "scale_x": 0.05,
-      "scale_y": 0.63,
+      "scale_y": 0.92,
       "scale_z": 0.08
     }
   }

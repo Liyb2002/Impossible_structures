@@ -21,8 +21,8 @@ c = - near / far
 
 
 def get_m_view():
-    look_vec = lookAt - camera_pos 
-    w = look_vec / np.linalg.norm(look_vec)
+    look_vec = lookAt - camera_pos
+    w = -look_vec / np.linalg.norm(look_vec)
     v = up - np.dot(up, w)*w
     v = v / np.linalg.norm(v)
     u = np.cross(v, w)
@@ -31,7 +31,7 @@ def get_m_view():
                     [v[0], v[1], v[2], 0],
                     [w[0], w[1], w[2], 0],
                     [0, 0, 0, 1]])
-    m_rotate = np.transpose(m_rotate)
+
     m_view = np.array([
         [m_rotate[0][0], m_rotate[0][1], m_rotate[0][2],  camera_pos[0]],
         [m_rotate[1][0], m_rotate[1][1], m_rotate[1][2], camera_pos[1]],
@@ -39,7 +39,7 @@ def get_m_view():
         [0, 0, 0, 1]
     ])
 
-    return m_view
+    return np.around(m_view,2)
 
 def get_m_proj():
     m_proj = np.array([[1 / (math.tan(theta_w / 2)), 0, 0, 0],

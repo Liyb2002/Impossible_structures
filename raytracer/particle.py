@@ -136,8 +136,7 @@ class Particle:
         score = 0
         eye = np.array([5.0,5.0,5.0])
 
-        raster_score = metrics.occlusion_raster(self.foreground_structure, self.background_structure)
-        print("raster score: ", raster_score)
+        # raster_score = metrics.occlusion_raster(self.foreground_structure, self.background_structure)
 
         critical_pts = []
 
@@ -170,7 +169,7 @@ class Particle:
 
         structure_score = metrics.occlusion_score_structures(self.foreground_structure, self.background_structure, eye)
         # print("critical_score: ", critical_score, " seed_score: ", seed_score, " cc_score: ", cc_score, " structure_score: ", structure_score)
-        return critical_score + seed_score + cc_score + structure_score - raster_score
+        return critical_score + seed_score + cc_score + structure_score
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure) or metrics.too_close(self.dummy_structure):
@@ -182,6 +181,11 @@ class Particle:
         self.foreground_structure.get_MaxMin()
         self.background_structure.get_MaxMin()
         return metrics.size_score(self.foreground_structure, self.background_structure)
+    
+    def triangle_score(self):
+        intersection_loc = np.array([self.foreground_intersection,1])
+        intersection_loc = intersection_loc.dot(perspective.get_m_view()).dot(perspective.get_m_proj())
+
     
     def total_score(self):
         score = 2000000
