@@ -136,7 +136,8 @@ class Particle:
         score = 0
         eye = np.array([5.0,5.0,5.0])
 
-        metrics.occlusion_raster(self.foreground_structure, self.background_structure)
+        raster_score = metrics.occlusion_raster(self.foreground_structure, self.background_structure)
+        print("raster score: ", raster_score)
 
         critical_pts = []
 
@@ -169,7 +170,7 @@ class Particle:
 
         structure_score = metrics.occlusion_score_structures(self.foreground_structure, self.background_structure, eye)
         # print("critical_score: ", critical_score, " seed_score: ", seed_score, " cc_score: ", cc_score, " structure_score: ", structure_score)
-        return critical_score + seed_score + cc_score + structure_score
+        return critical_score + seed_score + cc_score + structure_score - raster_score
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure) or metrics.too_close(self.dummy_structure):

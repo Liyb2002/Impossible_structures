@@ -107,7 +107,7 @@ def occlusion_score_structures(front_structure, back_structure, eye):
     return total_score
 
 
-def occlusion_raster(front_structure, rect):
+def occlusion_raster(front_structure, back_structure):
     score = 0
     mid_points = []
     for i in back_structure.rect:
@@ -116,37 +116,38 @@ def occlusion_raster(front_structure, rect):
     
     graph_back = rasterizer.get_graph(back_structure.rect)
 
-    start_x = rect.start_x
-    start_y = rect.start_y
-    start_z = rect.start_z
-    scale_x = rect.scale_x
-    scale_y = rect.scale_y
+    for rect in front_structure.rect:
+        start_x = rect.start_x
+        start_y = rect.start_y
+        start_z = rect.start_z
+        scale_x = rect.scale_x
+        scale_y = rect.scale_y
 
-    m_view = perspective.get_m_view()
-    m_proj = perspective.get_m_proj()
+        m_view = perspective.get_m_view()
+        m_proj = perspective.get_m_proj()
 
-    right_up = np.array([start_x + scale_x, start_y + scale_y, start_z, 1])
-    left_down = np.array([start_x, start_y, start_z, 1])
+        right_up = np.array([start_x + scale_x, start_y + scale_y, start_z, 1])
+        left_down = np.array([start_x, start_y, start_z, 1])
 
-    right_up = right_up.dot(m_view).dot(m_proj)
-    left_down = left_down.dot(m_view).dot(m_proj)
+        right_up = right_up.dot(m_view).dot(m_proj)
+        left_down = left_down.dot(m_view).dot(m_proj)
 
-    right_up_x = to_pixel_x(right_up[0])
-    right_up_y = to_pixel_y(right_up[1])
-    left_down_x = to_pixel_x(left_down[0])
-    left_down_y = to_pixel_y(left_down[1])
+        right_up_x = int(to_pixel_x(right_up[0]))
+        right_up_y = int(to_pixel_y(right_up[1]))
+        left_down_x = int(to_pixel_x(left_down[0]))
+        left_down_y = int(to_pixel_y(left_down[1]))
 
-    for i in range(left_down_x, right_up_x):
-        for j in range(left_down_y, right_up_y):
-            if(graph_back[i][j] == 1):
-                x = start_x + (i - left_down_x) * scale_x / (right_up_x - left_down_x)
-                y = start_y + (j - left_down_y) * scale_y / (right_up_y - left_down_y)
-                dist = 1000
-                for k in mid_points:
-                    if(dist > math.sqrt((x-k[0])**2 + (y-k[1])**2)):
-                        dist = math.sqrt((x-k[0])**2 + (y-k[1])**2)
-                
-                score += np.log(dist+1)
+        for i in range(left_down_x, right_up_x):
+            for j in range(left_down_y, right_up_y):
+                if(graph_back[i][j] == 1):
+                    x = start_x + (i - left_down_x) * scale_x / (right_up_x - left_down_x)
+                    y = start_y + (j - left_down_y) * scale_y / (right_up_y - left_down_y)
+                    dist = 1000
+                    for k in mid_points:
+                        if(dist > math.sqrt((x-k[0])**2 + (y-k[1])**2)):
+                            dist = math.sqrt((x-k[0])**2 + (y-k[1])**2)
+                    
+                    score += np.log(dist+1)
 
     return score
 
@@ -211,5 +212,3 @@ def to_pixel_x(x):
 
 def to_pixel_y(y):
     return 400 - y*400
-
-def occulusion_func(x, y):
