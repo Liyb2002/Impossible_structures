@@ -135,8 +135,9 @@ class Particle:
     def occulusion_score(self):
         score = 0
         eye = np.array([5.0,5.0,5.0])
-        
+
         metrics.occlusion_raster(self.foreground_structure, self.background_structure)
+
         critical_pts = []
 
         for i in self.connecting_comp:
