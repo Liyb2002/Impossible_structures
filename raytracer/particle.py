@@ -6,6 +6,7 @@ import connecting_comp
 import gen_seed
 import metrics
 import perspective
+import interpolation
 
 from copy import deepcopy
 
@@ -184,7 +185,43 @@ class Particle:
     
     def triangle_score(self):
         intersection_loc = np.array([self.foreground_intersection,1])
-        intersection_loc = intersection_loc.dot(perspective.get_m_view()).dot(perspective.get_m_proj())
+        m_view = perspective.get_m_view()
+        m_proj = perspective.get_m_proj()
+        intersection_loc = np.matmul(m_view, background.T)
+        intersection_loc = np.matmul(m_proj, intersection_loc)
+
+        count = 0
+        for cc in self.connecting_comp:
+            x = cc.x
+            y = cc.y
+            foreground_z = cc.foreground_z
+            background_z = cc.background_z
+
+            foreground_loc = np.array([x,y,foreground_z,1])
+            foreground_loc = np.matmul(m_view, foreground_loc.T)
+            foreground_loc = np.matmul(m_proj, foreground_loc)
+
+            background_loc = np.array([x,y,background_z,1])
+            background_loc = np.matmul(m_view, background_loc.T)
+            background_loc = np.matmul(m_proj, background_loc)
+
+            for i in self.foreground_structure.rect:
+                point = i.center()
+                point = np.matmul(m_view, point.T)
+                point = np.matmul(m_proj, point)
+
+                if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
+                    count += 1
+
+            for i in self.background_structure.rect:
+                point = i.center()
+                point = np.matmul(m_view, point.T)
+                point = np.matmul(m_proj, point)
+
+                if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
+                    count += 1
+
+        return count * -100 
 
     
     def total_score(self):

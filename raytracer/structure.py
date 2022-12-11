@@ -185,6 +185,9 @@ class rect:
         print("scale_x:",self.scale_x,"scale_y:",self.scale_y,"scale_z:",self.scale_z)
         print(" ")
     
+    def center(self):
+        return np.array([self.start_x + self.scale_x/2, self.start_y + self.scale_y/2, self.start_z + self.scale_z/2, 1])
+    
 def block_to_rect(buffer, portion, block_size):
     start = buffer[1]
     end = buffer[-1]
