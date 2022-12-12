@@ -3,11 +3,23 @@ import random
 import structure
 
 def offset():
-    num = round(int(random.random() * 5 % 5) * 0.1 + 0.2, 1)
+    num = round(int(random.random() * 5 % 5) * 0.1 + 0.4, 1)
     sign = random.random()
     if(sign > 0.5):
         return num
     return -num
+
+def valid_offset(offsets, pos):
+    for offset in offsets:
+        if isClose(pos, offset):
+            return False
+    return True
+
+def isClose(pos1, pos2):
+    dist = (pos1[0] - pos2[0]) **2 + (pos1[1] - pos1[2]) **2
+    if dist < 0.1:
+        return True
+    return False
 
 class connecting_structure:
     def __init__(self, x, y, foreground_z, background_z, block_size):
