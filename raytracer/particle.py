@@ -8,6 +8,7 @@ import metrics
 import perspective
 import interpolation
 
+import random
 from copy import deepcopy
 import math
 
@@ -49,16 +50,16 @@ class Particle:
         for i in self.connecting_comp:
             xy_target.append(i.xy_pos())
              
-
-        f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True)
+        intersect_type = random.randint(1,2)
+        f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         self.f_seed = f_seed
-        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size)
+        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.foreground_structure = f_struct
     
-        b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False)
+        b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False, intersect_type)
         self.b_seed = b_seed
-        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size)
+        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
         self.background_structure = b_struct
 
