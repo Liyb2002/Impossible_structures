@@ -50,13 +50,13 @@ class Particle:
             xy_target.append(i.xy_pos())
              
 
-        f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size)
+        f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True)
         self.f_seed = f_seed
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.foreground_structure = f_struct
     
-        b_seed = gen_seed.get_seed_2(self.background_intersection,self.portion, self.block_size)
+        b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False)
         self.b_seed = b_seed
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
@@ -125,7 +125,7 @@ class Particle:
         dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
-            return -100
+            return -1000
                   
         return 0
 
@@ -158,7 +158,7 @@ class Particle:
             critical_pts.append(cc_center)
 
         critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
-        critical_score = critical_count * -10
+        critical_score = critical_count * -100
 
         seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
         seed_score = seed_count * -100
