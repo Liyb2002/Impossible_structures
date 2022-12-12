@@ -9,6 +9,7 @@ import perspective
 import interpolation
 
 from copy import deepcopy
+import math
 
 class Particle:
     def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, 
@@ -94,7 +95,6 @@ class Particle:
         self.background_structure.generate(1)
         self.dummy_structure.generate(1)
     
-        
 
     def finish(self):
 
@@ -125,7 +125,7 @@ class Particle:
         dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
-            return -1000
+            return -100
                   
         return 0
 
@@ -158,7 +158,7 @@ class Particle:
             critical_pts.append(cc_center)
 
         critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
-        critical_score = critical_count * -100
+        critical_score = critical_count * -10
 
         seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
         seed_score = seed_count * -100
@@ -174,8 +174,7 @@ class Particle:
 
     def too_close_score(self):
         if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure) or metrics.too_close(self.dummy_structure):
-            return -100
-        
+            return -20
         return 0
     
     def size_score(self):
@@ -184,14 +183,15 @@ class Particle:
         return metrics.size_score(self.foreground_structure, self.background_structure)
     
     def triangle_score(self):
-        intersection_loc = np.array([self.foreground_intersection,1])
+        intersection_loc = np.array([self.foreground_intersection[0],self.foreground_intersection[1],self.foreground_intersection[2], 1])
         m_view = perspective.get_m_view()
         m_proj = perspective.get_m_proj()
-        intersection_loc = np.matmul(m_view, background.T)
+        intersection_loc = np.matmul(m_view, intersection_loc.T)
         intersection_loc = np.matmul(m_proj, intersection_loc)
 
-        count = 0
+        triangle_score = 0
         for cc in self.connecting_comp:
+            cc_triangle_score = 0
             x = cc.x
             y = cc.y
             foreground_z = cc.foreground_z
@@ -205,31 +205,60 @@ class Particle:
             background_loc = np.matmul(m_view, background_loc.T)
             background_loc = np.matmul(m_proj, background_loc)
 
-            for i in self.foreground_structure.rect:
-                point = i.center()
-                point = np.matmul(m_view, point.T)
-                point = np.matmul(m_proj, point)
+            #pixles inside triangle
+            count = self.tirangle_occulusion(foreground_loc, background_loc, intersection_loc, m_view, m_proj)
+            pixle_score = 10 - count
+            # print("pixle_score: ", pixle_score)
+            cc_triangle_score += pixle_score
 
-                if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
-                    count += 1
+            #ratio
+            ratio_score = 10
+            mid_point = interpolation.mid_cc(foreground_loc, background_loc)
+            dist1 = interpolation.dist_pt(mid_point, intersection_loc)
+            dist2 = interpolation.dist_pt(foreground_loc, background_loc)
 
-            for i in self.background_structure.rect:
-                point = i.center()
-                point = np.matmul(m_view, point.T)
-                point = np.matmul(m_proj, point)
+            r = dist1 / dist2
+            if r < 0.6 or r > 0.9:
+                ratio_score -= metrics.triangle_property_score(r)
+            # print("ratio_score: ", ratio_score)
+            cc_triangle_score += ratio_score
 
-                if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
-                    count += 1
+            #cc on screen size
+            screen_cc_score = dist2 ** 2
+            # print("screen_cc_score: ", screen_cc_score)
+            cc_triangle_score += screen_cc_score
 
-        return count * -100 
+        triangle_score += cc_triangle_score
+        # print("triangle_score: ", triangle_score)
+        return triangle_score 
 
-    
+    def tirangle_occulusion(self, foreground_loc, background_loc, intersection_loc, m_view, m_proj):
+        count = 0
+        for i in self.foreground_structure.rect:
+            point = i.center()
+            point = np.matmul(m_view, point.T)
+            point = np.matmul(m_proj, point)
+
+            if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
+                count += 1
+
+        for i in self.background_structure.rect:
+            point = i.center()
+            point = np.matmul(m_view, point.T)
+            point = np.matmul(m_proj, point)
+
+            if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
+                count += 1
+
+        return count
+
     def total_score(self):
         score = 2000000
         score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
         score += self.size_score()
+        score += self.triangle_score()
         # (para_score, parallel_pts) = self.parallel_score()
         # score += para_score
         return score

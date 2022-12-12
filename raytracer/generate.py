@@ -80,7 +80,6 @@ if __name__ == "__main__":
 
     #initialize particles
     for i in range(num_particles):
-        print("initializing particle", i)
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()

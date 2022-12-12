@@ -1,7 +1,7 @@
 import numpy as np
 import perspective
 import rasterizer
-
+import math
 from sympy import *
 x, y, z = symbols('x y z')
 
@@ -202,10 +202,12 @@ def size_score(structure_a, struct_b):
     y_max = max(structure_a.max_y, struct_b.max_y)
     x_min = min(structure_a.min_x, struct_b.min_x)
     y_min = min(structure_a.min_y, struct_b.min_y)
-
     area = (x_max - x_min) * (y_max - y_min)
-
     return area
+
+def triangle_property_score(dist):
+    coef = (dist - 0.618) ** 2 
+    return math.exp(coef)
 
 def to_pixel_x(x):
     return x*400 + 400
