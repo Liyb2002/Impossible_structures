@@ -49,7 +49,7 @@ class Particle:
         for i in self.connecting_comp:
             xy_target.append(i.xy_pos())
              
-        intersect_type = 3
+        intersect_type = 5
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         self.f_seed = f_seed
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,intersect_type)
