@@ -7,13 +7,13 @@ from ray_tracing_models import Camera
 
 @ti.data_oriented
 class Scene:
-    def __init__(self):
+    def __init__(self, startPos):
         self.possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
         self.max_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
         self.min_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
 
-        self.x_start = 400
-        self.y_start = 400
+        self.x_start = startPos[0]
+        self.y_start = startPos[1]
         self.image_height = 800
         self.image_width = 800
 
@@ -48,6 +48,19 @@ class Scene:
             y_min = camera_pos[1] + ray_min[1] * (k*0.25)
             pos_min = ti.Vector([x_min, y_min])
             self.min_screen[k] += pos_min
+
+    def get_intersection_t(self, screenPos, worldPos):
+        u = (screenPos[0]) / self.image_width
+        v = (screenPos[1]) / self.image_height
+        camera_pos = self.camera.get_camera_origin()
+        ray = self.camera.get_ray(u, v)
+
+        t = (worldPos[2] - camera_pos[2]) / ray[2]
+        x = camera_pos[0] + ray[0] * t
+        y = camera_pos[1] + ray[1] * t
+
+        return np.array([x, y, worldPos[2]])
+
 
     def get_max_screen(self, k):
         return np.array([self.max_screen[k][0], self.max_screen[k][1]])

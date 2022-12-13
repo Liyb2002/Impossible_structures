@@ -49,7 +49,8 @@ if __name__ == "__main__":
     background_index = 12
     dummy_index = 17
 
-    basic_scene = intersection.Scene()
+    startPos = np.array([400, 400])
+    basic_scene = intersection.Scene(startPos)
     foreground_max_screen = basic_scene.get_max_screen(foreground_index)
     background_max_screen = basic_scene.get_max_screen(background_index)    
     dummy_max_screen = basic_scene.get_max_screen(dummy_index)
