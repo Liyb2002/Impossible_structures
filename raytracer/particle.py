@@ -54,6 +54,9 @@ class Particle:
         b_rect = structure.block_to_rect(b_seed, self.portion, self.block_size)
         self.background_structure.rect.append(b_rect)
 
+        self.f_2.append( np.array([f_seed[-1][0], f_seed[-1][1]]))
+        self.b_2.append(np.array([b_seed[-1][0], b_seed[-1][1]]))
+
 
     def get_connecting_comp(self):
         self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])
@@ -127,6 +130,9 @@ class Particle:
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
+
+        self.foreground_structure.to_dest(self.f_2)
+        self.background_structure.to_dest(self.b_2)
 
         dummy_xy_targets = self.get_dummy_xy_target()
         if self.dummy_structure != None:

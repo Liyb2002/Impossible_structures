@@ -2,7 +2,7 @@
   {
     "obj": {
       "start_x": 3.14,
-      "start_y": 3.49,
+      "start_y": 4.29,
       "start_z": 2.05,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -31,6 +31,16 @@
   },
   {
     "obj": {
+      "start_x": 2.74,
+      "start_y": 2.74,
+      "start_z": 2.74,
+      "scale_x": 0.05,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
       "start_x": 2.79,
       "start_y": 3.89,
       "start_z": 2.74,
@@ -42,7 +52,7 @@
   {
     "obj": {
       "start_x": 3.14,
-      "start_y": 3.49,
+      "start_y": 3.89,
       "start_z": 2.74,
       "scale_x": 0.05,
       "scale_y": 0.45,
@@ -66,6 +76,26 @@
       "start_z": 2.74,
       "scale_x": 0.05,
       "scale_y": 0.45,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.74,
+      "start_y": 3.89,
+      "start_z": 2.74,
+      "scale_x": 0.1,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.74,
+      "start_y": 2.74,
+      "start_z": 2.74,
+      "scale_x": 0.05,
+      "scale_y": 1.2,
       "scale_z": 0.05
     }
   },
@@ -82,20 +112,10 @@
   {
     "obj": {
       "start_x": 2.05,
-      "start_y": 3.2,
+      "start_y": 1.75,
       "start_z": 2.05,
-      "scale_x": 1.17,
-      "scale_y": 0.08,
-      "scale_z": 0.08
-    }
-  },
-  {
-    "obj": {
-      "start_x": 3.14,
-      "start_y": 3.2,
-      "start_z": 2.05,
-      "scale_x": 0.05,
-      "scale_y": 0.37,
+      "scale_x": 0.08,
+      "scale_y": 0.3,
       "scale_z": 0.08
     }
   },
@@ -116,6 +136,46 @@
       "start_z": 2.05,
       "scale_x": 0.05,
       "scale_y": 1.17,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.05,
+      "start_y": 3.2,
+      "start_z": 2.05,
+      "scale_x": 1.17,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.14,
+      "start_y": 3.2,
+      "start_z": 2.05,
+      "scale_x": 0.05,
+      "scale_y": 1.17,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.05,
+      "start_y": 3.2,
+      "start_z": 2.05,
+      "scale_x": 0.08,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.05,
+      "start_y": 1.75,
+      "start_z": 2.05,
+      "scale_x": 0.05,
+      "scale_y": 1.53,
       "scale_z": 0.08
     }
   }
