@@ -41,6 +41,19 @@ class Particle:
         self.portion = portion
         self.num_cc = num_cc
 
+
+    def set_intersections(self,foreground_intersection, background_intersection):
+        intersect_type = random.randint(1,2)
+        f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, 1.0, True, intersect_type)
+        f_rect = structure.block_to_rect(f_seed, 1.0, self.block_size)
+        print("f_rect: ", f_rect.info)
+        self.foreground_structure.rect.append(f_rect)
+    
+        b_seed = gen_seed.get_seed(background_intersection, self.block_size, self.portion, False, intersect_type)
+        b_rect = structure.block_to_rect(b_seed, self.portion, self.block_size)
+        self.background_structure.rect.append(b_rect)
+
+
     def get_connecting_comp(self):
         self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])
 

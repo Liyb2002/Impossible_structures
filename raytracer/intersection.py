@@ -7,13 +7,13 @@ from ray_tracing_models import Camera
 
 @ti.data_oriented
 class Scene:
-    def __init__(self):
+    def __init__(self, startPos):
         self.possible_intersects = ti.Vector.field(3, dtype=ti.f32, shape=(25))
         self.max_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
         self.min_screen = ti.Vector.field(2, dtype=ti.f32, shape=(25))
 
-        self.x_start = 400
-        self.y_start = 400
+        self.x_start = startPos[0]
+        self.y_start = startPos[1]
         self.image_height = 800
         self.image_width = 800
 
