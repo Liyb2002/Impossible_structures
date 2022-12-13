@@ -23,6 +23,7 @@ class Structure:
 
         #print("initialized data: \n", self.data)
     
+
     def to_dest(self, destination):
         for i in destination:
             next_vertex = self.next_possibles[rand_index(self.next_possibles)]

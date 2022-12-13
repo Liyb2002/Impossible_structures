@@ -49,8 +49,7 @@ if __name__ == "__main__":
     background_index = 12
     dummy_index = 17
 
-    startPos = np.array([400,400])
-    basic_scene = intersection.Scene(startPos)
+    basic_scene = intersection.Scene()
     foreground_max_screen = basic_scene.get_max_screen(foreground_index)
     background_max_screen = basic_scene.get_max_screen(background_index)    
     dummy_max_screen = basic_scene.get_max_screen(dummy_index)
@@ -60,7 +59,9 @@ if __name__ == "__main__":
     dummy_min_screen = basic_scene.get_min_screen(dummy_index)
 
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
+    print(foreground_intersection)
     background_intersection = basic_scene.get_possible_intersects(background_index)
+    print(background_intersection)
     dummy_intersection = basic_scene.get_possible_intersects(dummy_index)
     offset_x = connecting_comp.offset()
     offset_y = connecting_comp.offset()
@@ -76,17 +77,12 @@ if __name__ == "__main__":
     if(num_layers > 2):
         num_connections -= 1
 
-    startPos2 = np.array([300,500])
-    # foreground_intersection2 = basic_scene.get_intersection_t(startPos2, foreground_intersection)
-    # background_intersection2 = basic_scene.get_intersection_t(startPos2, background_intersection)
 
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
-
-        # tempt_particle.set_intersections(foreground_intersection2, background_intersection2)
 
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
@@ -95,21 +91,17 @@ if __name__ == "__main__":
     particle_list = particle.resample(particle_list, score_list)
 
     steps = max(0, int((num_blocks_per_layer[1] - connecting_cost) / beam_mean))
-    steps = 0
-
     print("extra beams for background", steps)
     #generate background structure
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            # print("generating background", i)
             particle_list[i].background_structure.generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
     
     steps = int((num_blocks_per_layer[0] - connecting_cost) / beam_mean)
-    steps = 0
     print("extra beams for foreground", steps)
     #generate foreground structure
     for s in range(steps):
