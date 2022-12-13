@@ -41,12 +41,13 @@ class Particle:
         self.portion = portion
         self.num_cc = num_cc
 
+        self.f_2 = []
+        self.b_2 = []
 
     def set_intersections(self,foreground_intersection, background_intersection):
         intersect_type = random.randint(1,2)
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, 1.0, True, intersect_type)
         f_rect = structure.block_to_rect(f_seed, 1.0, self.block_size)
-        print("f_rect: ", f_rect.info)
         self.foreground_structure.rect.append(f_rect)
     
         b_seed = gen_seed.get_seed(background_intersection, self.block_size, self.portion, False, intersect_type)

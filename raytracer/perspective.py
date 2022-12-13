@@ -85,11 +85,3 @@ class Camera:
     def get_camera_origin(self):
         return self.cam_origin
     
-# rays = []
-# myCamera = Camera()
-# for i in range(800):
-#     for j in range(800):
-#         u = (i) / 800
-#         v = (j) / 800
-#         ray = myCamera.get_ray(u, v)
-#         rays.append(ray)

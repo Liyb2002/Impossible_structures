@@ -77,9 +77,8 @@ if __name__ == "__main__":
         num_connections -= 1
 
     startPos2 = np.array([100,100])
-    scene2 = intersection.Scene(startPos2)
-    foreground_intersection2 = scene2.get_possible_intersects(foreground_index)
-    background_intersection2 = scene2.get_possible_intersects(background_index)
+    # foreground_intersection2 = basic_scene.get_intersection_t(startPos2, foreground_intersection)
+    # print(foreground_intersection2)
 
     #initialize particles
     for i in range(num_particles):
@@ -87,7 +86,7 @@ if __name__ == "__main__":
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
 
-        tempt_particle.set_intersections(foreground_intersection2, background_intersection2)
+        # tempt_particle.set_intersections(foreground_intersection2, background_intersection2)
 
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
