@@ -46,6 +46,7 @@ class Particle:
 
     def set_intersections(self,foreground_intersection, background_intersection):
         intersect_type = random.randint(1,2)
+        intersect_type = 1
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, 1.0, True, intersect_type)
         f_rect = structure.block_to_rect(f_seed, 1.0, self.block_size)
         self.foreground_structure.rect.append(f_rect)
@@ -68,6 +69,7 @@ class Particle:
             xy_target.append(i.xy_pos())
              
         intersect_type = random.randint(1,2)
+        intersect_type = 1
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         self.f_seed = f_seed
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
