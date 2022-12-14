@@ -77,9 +77,15 @@ if __name__ == "__main__":
     if(num_layers > 2):
         num_connections -= 1
 
+    dforeground_intersection = basic_scene.get_possible_intersects(16)
+    dbackground_intersection = basic_scene.get_possible_intersects(20)
+    fore_portion = 16/ foreground_index
+    back_portion = 20/ foreground_index
+
     startPos2 = np.array([500,500])
-    foreground_intersection2 = basic_scene.get_intersection_t(startPos2, foreground_intersection)
-    background_intersection2 = basic_scene.get_intersection_t(startPos2, background_intersection)
+    foreground_intersection2 = basic_scene.get_intersection_t(startPos2, dforeground_intersection)
+    background_intersection2 = basic_scene.get_intersection_t(startPos2, dbackground_intersection)
+
 
     #initialize particles
     for i in range(num_particles):
@@ -87,7 +93,7 @@ if __name__ == "__main__":
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
 
-        tempt_particle.set_intersections(foreground_intersection2, background_intersection2)
+        tempt_particle.set_intersections(foreground_intersection2, background_intersection2, fore_portion, back_portion)
 
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)

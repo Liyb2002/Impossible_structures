@@ -1,8 +1,8 @@
  [
       {
         "num_layers": 2,
-        "num_connections": 2,
-        "num_blocks_per_layer":[20,30,10],
+        "num_connections": 1,
+        "num_blocks_per_layer":[20,20,10],
         "num_particles":300,
         "beam_mean": 6,
         "beam_sd": 2,

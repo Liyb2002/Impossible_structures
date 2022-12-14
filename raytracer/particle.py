@@ -44,16 +44,22 @@ class Particle:
         self.f_2 = []
         self.b_2 = []
 
-    def set_intersections(self,foreground_intersection, background_intersection):
-        intersect_type = random.randint(1,2)
-        intersect_type = 1
-        f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, 1.0, True, intersect_type)
-        f_rect = structure.block_to_rect(f_seed, 1.0, self.block_size)
+    def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
+        intersect_type = random.randint(1,4)
+        intersect_type = 3
+        f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
+        f_rect = structure.block_to_rect(f_seed, fore_portion, self.block_size)
         self.foreground_structure.rect.append(f_rect)
+        f_cc = connecting_comp.connecting_structure(f_seed[-1][0], f_seed[-1][1], self.foreground_intersection[2], foreground_intersection[2], self.block_size)
+        self.connecting_comp.append(f_cc)
+
     
-        b_seed = gen_seed.get_seed(background_intersection, self.block_size, self.portion, False, intersect_type)
-        b_rect = structure.block_to_rect(b_seed, self.portion, self.block_size)
+        b_seed = gen_seed.get_seed(background_intersection, self.block_size, back_portion, False, intersect_type)
+        b_rect = structure.block_to_rect(b_seed, back_portion, self.block_size)
         self.background_structure.rect.append(b_rect)
+        b_cc = connecting_comp.connecting_structure(b_seed[-1][0], b_seed[-1][1], self.foreground_intersection[2], background_intersection[2], self.block_size)
+        self.connecting_comp.append(b_cc)
+
 
         self.f_2.append( np.array([f_seed[-1][0], f_seed[-1][1]]))
         self.b_2.append(np.array([b_seed[-1][0], b_seed[-1][1]]))
@@ -132,9 +138,6 @@ class Particle:
         xy_targets = self.get_xy_target()
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
-
-        self.foreground_structure.to_dest(self.f_2)
-        self.background_structure.to_dest(self.b_2)
 
         dummy_xy_targets = self.get_dummy_xy_target()
         if self.dummy_structure != None:
