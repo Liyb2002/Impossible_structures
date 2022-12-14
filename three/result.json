@@ -1,8 +1,8 @@
 [
   {
     "obj": {
-      "start_x": 4.65,
-      "start_y": 4.35,
+      "start_x": 4.45,
+      "start_y": 4.55,
       "start_z": 3.27,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -11,8 +11,8 @@
   },
   {
     "obj": {
-      "start_x": 3.15,
-      "start_y": 3.25,
+      "start_x": 3.25,
+      "start_y": 3.15,
       "start_z": 3.27,
       "scale_x": 0.05,
       "scale_y": 0.05,
@@ -22,7 +22,7 @@
   {
     "obj": {
       "start_x": 3.85,
-      "start_y": 3.65,
+      "start_y": 3.85,
       "start_z": 3.85,
       "scale_x": 0.05,
       "scale_y": 0.25,
@@ -31,41 +31,71 @@
   },
   {
     "obj": {
+      "start_x": 4.16,
+      "start_y": 4.33,
+      "start_z": 3.85,
+      "scale_x": 0.05,
+      "scale_y": 0.2,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
       "start_x": 3.85,
-      "start_y": 3.7,
+      "start_y": 4.0,
       "start_z": 3.85,
-      "scale_x": 0.85,
+      "scale_x": 0.65,
       "scale_y": 0.05,
       "scale_z": 0.05
     }
   },
   {
     "obj": {
-      "start_x": 4.65,
-      "start_y": 3.7,
+      "start_x": 4.45,
+      "start_y": 4.0,
       "start_z": 3.85,
       "scale_x": 0.05,
-      "scale_y": 0.7,
+      "scale_y": 0.6,
       "scale_z": 0.05
     }
   },
   {
     "obj": {
-      "start_x": 3.15,
-      "start_y": 3.7,
+      "start_x": 3.25,
+      "start_y": 4.0,
       "start_z": 3.85,
-      "scale_x": 0.75,
+      "scale_x": 0.65,
       "scale_y": 0.05,
       "scale_z": 0.05
     }
   },
   {
     "obj": {
-      "start_x": 3.15,
-      "start_y": 3.25,
+      "start_x": 3.25,
+      "start_y": 3.15,
       "start_z": 3.85,
       "scale_x": 0.05,
-      "scale_y": 0.5,
+      "scale_y": 0.9,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.85,
+      "start_y": 4.0,
+      "start_z": 3.85,
+      "scale_x": 0.37,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.16,
+      "start_y": 4.0,
+      "start_z": 3.85,
+      "scale_x": 0.05,
+      "scale_y": 0.54,
       "scale_z": 0.05
     }
   },
@@ -81,38 +111,8 @@
   },
   {
     "obj": {
-      "start_x": 2.97,
-      "start_y": 2.72,
-      "start_z": 3.27,
-      "scale_x": 0.08,
-      "scale_y": 0.57,
-      "scale_z": 0.08
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.92,
-      "start_y": 2.72,
-      "start_z": 3.27,
-      "scale_x": 1.8,
-      "scale_y": 0.08,
-      "scale_z": 0.08
-    }
-  },
-  {
-    "obj": {
-      "start_x": 4.65,
-      "start_y": 2.72,
-      "start_z": 3.27,
-      "scale_x": 0.05,
-      "scale_y": 1.7,
-      "scale_z": 0.08
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.92,
-      "start_y": 2.72,
+      "start_x": 3.45,
+      "start_y": 3.92,
       "start_z": 3.27,
       "scale_x": 0.3,
       "scale_y": 0.08,
@@ -121,11 +121,71 @@
   },
   {
     "obj": {
-      "start_x": 3.15,
-      "start_y": 2.72,
+      "start_x": 2.97,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 0.08,
+      "scale_y": 0.47,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.02,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 1.5,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.45,
+      "start_y": 2.82,
       "start_z": 3.27,
       "scale_x": 0.05,
-      "scale_y": 0.6,
+      "scale_y": 1.8,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.92,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 0.4,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.25,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 0.05,
+      "scale_y": 0.4,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.92,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 0.6,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.45,
+      "start_y": 2.82,
+      "start_z": 3.27,
+      "scale_x": 0.05,
+      "scale_y": 1.18,
       "scale_z": 0.08
     }
   }

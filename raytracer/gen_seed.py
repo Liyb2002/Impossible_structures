@@ -47,7 +47,7 @@ def get_seed(pos, block_size, portion, isFront, type):
     return seed
 
 
-def get_next_possible(pos, block_size, type):
+def get_next_possible(pos, block_size, isFront, type):
 
     if type == 1 or type == 2 or type == 3:
         tempt1 = np.array([pos[0],pos[1]+block_size,pos[2],3])

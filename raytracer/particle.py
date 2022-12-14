@@ -8,6 +8,7 @@ import metrics
 import perspective
 import interpolation
 
+import random
 from copy import deepcopy
 import math
 
@@ -40,6 +41,24 @@ class Particle:
         self.portion = portion
         self.num_cc = num_cc
 
+        self.f_2 = []
+        self.b_2 = []
+
+    def set_intersections(self,foreground_intersection, background_intersection):
+        intersect_type = random.randint(1,2)
+        intersect_type = 1
+        f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, 1.0, True, intersect_type)
+        f_rect = structure.block_to_rect(f_seed, 1.0, self.block_size)
+        self.foreground_structure.rect.append(f_rect)
+    
+        b_seed = gen_seed.get_seed(background_intersection, self.block_size, self.portion, False, intersect_type)
+        b_rect = structure.block_to_rect(b_seed, self.portion, self.block_size)
+        self.background_structure.rect.append(b_rect)
+
+        self.f_2.append( np.array([f_seed[-1][0], f_seed[-1][1]]))
+        self.b_2.append(np.array([b_seed[-1][0], b_seed[-1][1]]))
+
+
     def get_connecting_comp(self):
         self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])
 
@@ -49,16 +68,17 @@ class Particle:
         for i in self.connecting_comp:
             xy_target.append(i.xy_pos())
              
-        intersect_type = 3
+        intersect_type = random.randint(1,2)
+        intersect_type = 1
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         self.f_seed = f_seed
-        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,intersect_type)
+        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.foreground_structure = f_struct
     
         b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False, intersect_type)
         self.b_seed = b_seed
-        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size, intersect_type)
+        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
         self.background_structure = b_struct
 
@@ -113,6 +133,9 @@ class Particle:
         self.foreground_structure.to_dest(xy_targets)
         self.background_structure.to_dest(xy_targets)
 
+        self.foreground_structure.to_dest(self.f_2)
+        self.background_structure.to_dest(self.b_2)
+
         dummy_xy_targets = self.get_dummy_xy_target()
         if self.dummy_structure != None:
             self.dummy_structure.to_dest(dummy_xy_targets)
@@ -136,7 +159,7 @@ class Particle:
         dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
-            return -100
+            return -1000
                   
         return 0
 
@@ -169,7 +192,7 @@ class Particle:
             critical_pts.append(cc_center)
 
         critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
-        critical_score = critical_count * -10
+        critical_score = critical_count * -100
 
         seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
         seed_score = seed_count * -100
