@@ -41,28 +41,37 @@ class Particle:
         self.portion = portion
         self.num_cc = num_cc
 
-        self.f_2 = []
-        self.b_2 = []
+        self.extra_foreground = None
+        self.extra_background = None
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
         intersect_type = random.randint(1,4)
         intersect_type = 3
+
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
-        f_rect = structure.block_to_rect(f_seed, fore_portion, self.block_size)
-        self.foreground_structure.rect.append(f_rect)
-        f_cc = connecting_comp.connecting_structure(f_seed[-1][0], f_seed[-1][1], self.foreground_intersection[2], foreground_intersection[2], self.block_size)
+        f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
+        f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
+        self.extra_foreground = f_struct
+        connecting_component_x = connecting_comp.offset()
+        connecting_component_y = connecting_comp.offset()
+        f_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.foreground_intersection[2], foreground_intersection[2], self.block_size)
         self.connecting_comp.append(f_cc)
+        dest = []
+        dest.append(np.array([connecting_component_x, connecting_component_y, foreground_intersection[2]]))
+        f_struct.to_dest(dest)
 
-    
+
         b_seed = gen_seed.get_seed(background_intersection, self.block_size, back_portion, False, intersect_type)
-        b_rect = structure.block_to_rect(b_seed, back_portion, self.block_size)
-        self.background_structure.rect.append(b_rect)
-        b_cc = connecting_comp.connecting_structure(b_seed[-1][0], b_seed[-1][1], self.foreground_intersection[2], background_intersection[2], self.block_size)
+        b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
+        b_struct = structure.Structure(b_seed, b_seed_next_possible, back_portion, self.block_size)
+        self.extra_background = b_struct
+        connecting_component_x = connecting_comp.offset()
+        connecting_component_y = connecting_comp.offset()
+        b_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.foreground_intersection[2], background_intersection[2], self.block_size)
         self.connecting_comp.append(b_cc)
-
-
-        self.f_2.append( np.array([f_seed[-1][0], f_seed[-1][1]]))
-        self.b_2.append(np.array([b_seed[-1][0], b_seed[-1][1]]))
+        dest = []
+        dest.append(np.array([connecting_component_x, connecting_component_y, foreground_intersection[2]]))
+        b_struct.to_dest(dest)
 
 
     def get_connecting_comp(self):
