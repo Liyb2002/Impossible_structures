@@ -13,9 +13,8 @@ from copy import deepcopy
 import math
 
 class Particle:
-    def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, 
+    def __init__(self, foreground_intersection, background_intersection, 
         portion, num_cc, block_size):
-
 
         self.structures = []
         self.connecting_comp = []
@@ -25,16 +24,9 @@ class Particle:
         self.foreground_intersection = foreground_intersection
         self.background_intersection = background_intersection
 
-        self.foreground_max_screen = foreground_max_screen
-        self.background_max_screen = background_max_screen
-        self.foreground_min_screen = foreground_min_screen
-        self.background_min_screen = background_min_screen
-
         self.portion = portion
         self.num_cc = num_cc
 
-        self.extra_foreground = None
-        self.extra_background = None
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
         intersect_type = random.randint(1,4)
@@ -42,7 +34,7 @@ class Particle:
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
-        self.extra_foreground = f_struct
+        self.structures.append(f_struct)
         connecting_component_x = connecting_comp.offset()
         connecting_component_y = connecting_comp.offset()
         f_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.background_intersection[2], foreground_intersection[2], self.block_size)
@@ -55,7 +47,7 @@ class Particle:
         b_seed = gen_seed.get_seed(background_intersection, self.block_size, back_portion, False, intersect_type)
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, back_portion, self.block_size)
-        self.extra_background = b_struct
+        self.structures.append(b_struct)
         connecting_component_x = connecting_comp.offset()
         connecting_component_y = connecting_comp.offset()
         b_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.background_intersection[2], background_intersection[2], self.block_size)
@@ -215,11 +207,12 @@ class Particle:
             dist1 = interpolation.dist_pt(mid_point, intersection_loc)
             dist2 = interpolation.dist_pt(foreground_loc, background_loc)
 
-            r = dist1 / dist2
-            if r < 0.6 or r > 0.9:
-                ratio_score -= metrics.triangle_property_score(r)
-            # print("ratio_score: ", ratio_score)
-            cc_triangle_score += ratio_score
+            if dist2 != 0:
+                r = dist1 / dist2
+                if r < 0.6 or r > 0.9:
+                    ratio_score -= metrics.triangle_property_score(r)
+                # print("ratio_score: ", ratio_score)
+                cc_triangle_score += ratio_score
 
             #cc on screen size
             screen_cc_score = dist2 ** 2
@@ -252,7 +245,7 @@ class Particle:
 
     def total_score(self):
         score = 2000000
-        score += self.is_off_screen()
+        # score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
         score += self.size_score()

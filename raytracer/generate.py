@@ -32,8 +32,10 @@ if __name__ == "__main__":
     num_connections = 0
     with open('config.json', 'r') as config_file:
         config_data = json.load(config_file)
-        num_layers = config_data[0]['num_layers']
+        num_intersection = config_data[0]['num_intersection']
+        layer_index = config_data[0]['layer_index']
         num_connections = config_data[0]['num_connections']
+        intersection_pos = config_data[0]['intersection_pos']
         block_size = config_data[0]['block_size']
         beam_mean = config_data[0]['beam_mean']
         beam_sd = config_data[0]['beam_sd']
@@ -45,46 +47,43 @@ if __name__ == "__main__":
     max_score = -1000
     result_particle = None
 
-    foreground_index = 8
-    background_index = 12
-
-    startPos = np.array([400, 400])
+    foreground_index = int(layer_index[0])
+    background_index = int(layer_index[1])
+    startPos = np.array([intersection_pos[0][0], intersection_pos[0][1]])
     basic_scene = intersection.Scene(startPos)
-    foreground_max_screen = basic_scene.get_max_screen(foreground_index)
-    background_max_screen = basic_scene.get_max_screen(background_index)    
-
-    foreground_min_screen = basic_scene.get_min_screen(foreground_index)
-    background_min_screen = basic_scene.get_min_screen(background_index)
 
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
     background_intersection = basic_scene.get_possible_intersects(background_index)
-
     portion = background_index/ foreground_index
+
+    extra_foreground_intersection = []
+    extra_background_intersection = []
+    extra_backPortion = []
+
+    for i in range(num_intersection-1):
+        foreground_index = int(layer_index[2 * (i+1)])
+        background_index = int(layer_index[2 * (i+1) + 1])
+        dforeground_intersection = basic_scene.get_possible_intersects(foreground_index)
+        dbackground_intersection = basic_scene.get_possible_intersects(background_index)
+        e_startPos = np.array([intersection_pos[1][0], intersection_pos[1][1]])
+        e_foreground_intersection = basic_scene.get_intersection_t(e_startPos, dforeground_intersection)
+        e_background_intersection = basic_scene.get_intersection_t(e_startPos, dbackground_intersection)
+        back_portion = background_index/ foreground_index
+        extra_foreground_intersection.append(e_foreground_intersection)
+        extra_background_intersection.append(e_background_intersection)
+        extra_backPortion.append(back_portion)
 
 
     particle_list = []
     score_list = []
-
-    if(num_layers > 2):
-        num_connections -= 1
-
-    dforeground_intersection = basic_scene.get_possible_intersects(16)
-    dbackground_intersection = basic_scene.get_possible_intersects(20)
-    fore_portion = 1.0
-    back_portion = 20/ 16
-
-    startPos2 = np.array([500,500])
-    foreground_intersection2 = basic_scene.get_intersection_t(startPos2, dforeground_intersection)
-    background_intersection2 = basic_scene.get_intersection_t(startPos2, dbackground_intersection)
-
-
     #initialize particles
     for i in range(num_particles):
-        tempt_particle = particle.Particle(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen, foreground_intersection, background_intersection, portion, num_connections, block_size)
+        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size)
         tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
-
-        tempt_particle.set_intersections(foreground_intersection2, background_intersection2, fore_portion, back_portion)
+        
+        for j in range(num_intersection-1):
+            tempt_particle.set_intersections(extra_foreground_intersection[j], extra_background_intersection[j], 1.0, extra_backPortion[j])
 
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
@@ -114,8 +113,6 @@ if __name__ == "__main__":
         
         particle_list = particle.resample(particle_list, score_list)
 
-
-
     print("finishing process")
     # finish the process
     for i in range (len(particle_list)):
@@ -140,54 +137,18 @@ if __name__ == "__main__":
             }
             result.append(data)
         
-        f_struct = result_particle.structures[1]
-        b_struct = result_particle.structures[2]
-        extra_f_struct = result_particle.extra_foreground
-        extra_b_struct = result_particle.extra_background
-
-        for i in f_struct.rect:
-            data = {'obj':
-                {'start_x': i.start_x, 
-                'start_y': i.start_y, 
-                'start_z': i.start_z, 
-                'scale_x': i.scale_x, 
-                'scale_y': i.scale_y, 
-                'scale_z': i.scale_z}
-            }
-            result.append(data)
-
-        for i in b_struct.rect:
-            data = {'obj':
-                {'start_x': i.start_x, 
-                'start_y': i.start_y, 
-                'start_z': i.start_z, 
-                'scale_x': i.scale_x, 
-                'scale_y': i.scale_y, 
-                'scale_z': i.scale_z}
-            }
-            result.append(data)
-        
-        for i in extra_f_struct.rect:
-            data = {'obj':
-                {'start_x': i.start_x, 
-                'start_y': i.start_y, 
-                'start_z': i.start_z, 
-                'scale_x': i.scale_x, 
-                'scale_y': i.scale_y, 
-                'scale_z': i.scale_z}
-            }
-            result.append(data)
-        
-        for i in extra_b_struct.rect:
-            data = {'obj':
-                {'start_x': i.start_x, 
-                'start_y': i.start_y, 
-                'start_z': i.start_z, 
-                'scale_x': i.scale_x, 
-                'scale_y': i.scale_y, 
-                'scale_z': i.scale_z}
-            }
-            result.append(data)
+        for structure in result_particle.structures:
+            for i in structure.rect:
+                data = {'obj':
+                    {'start_x': i.start_x, 
+                    'start_y': i.start_y, 
+                    'start_z': i.start_z, 
+                    'scale_x': i.scale_x, 
+                    'scale_y': i.scale_y, 
+                    'scale_z': i.scale_z}
+                }
+                result.append(data)
+            
 
         json.dump(result, f, indent=2)
 
