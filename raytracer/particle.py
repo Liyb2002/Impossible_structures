@@ -15,9 +15,9 @@ import math
 class Particle:
     def __init__(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen, foreground_intersection, background_intersection, 
         portion, num_cc, block_size):
-        self.foreground_structure = None
-        self.background_structure = None
 
+
+        self.structures = []
         self.connecting_comp = []
 
         self.block_size = block_size
@@ -79,12 +79,13 @@ class Particle:
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
-        self.foreground_structure = f_struct
-    
+        self.structures.append(f_struct)
+        self.structures.append(f_struct)
+
         b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False, intersect_type)
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
-        self.background_structure = b_struct
+        self.structures.append(b_struct)
 
     def generate_connecting_comp(self,num,x,y,z_front, z_back, layer1, layer2):
         offsets = []
@@ -106,16 +107,16 @@ class Particle:
             self.connecting_comp.append(cc)
 
     def generate_one(self):
-        self.foreground_structure.generate(1)
-        self.background_structure.generate(1)
+        for i in self.structures:
+            i.generate(1)
     
 
     def finish(self):
         xy_targets1 = self.get_xy_target(1)
-        self.foreground_structure.to_dest(xy_targets1)
+        self.structures[1].to_dest(xy_targets1)
 
         xy_targets2 = self.get_xy_target(2)
-        self.background_structure.to_dest(xy_targets2)
+        self.structures[2].to_dest(xy_targets2)
     
     def get_xy_target(self, layer):
         xy_targets = []
@@ -126,8 +127,8 @@ class Particle:
     
     def is_off_screen(self):
 
-        foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, self.foreground_max_screen, self.foreground_min_screen)
-        background_out_of_screen = metrics.out_of_screen(self.background_structure, self.background_max_screen, self.background_min_screen)
+        foreground_out_of_screen = metrics.out_of_screen(self.structures[1], self.foreground_max_screen, self.foreground_min_screen)
+        background_out_of_screen = metrics.out_of_screen(self.structures[2], self.background_max_screen, self.background_min_screen)
 
         if(foreground_out_of_screen or background_out_of_screen):
             return -1000
@@ -135,14 +136,14 @@ class Particle:
         return 0
 
     def parallel_score(self):
-        (score, parallel_pts) = metrics.parallel_score(np.round(self.foreground_structure.history,1), np.round(self.background_structure.history,1))
+        (score, parallel_pts) = metrics.parallel_score(np.round(self.structures[1].history,1), np.round(self.structures[2].history,1))
         return score, parallel_pts
     
     def occulusion_score(self):
         score = 0
         eye = np.array([5.0,5.0,5.0])
 
-        # raster_score = metrics.occlusion_raster(self.foreground_structure, self.background_structure)
+        # raster_score = metrics.occlusion_raster(self.structures[1], self.structures[2])
 
         critical_pts = []
 
@@ -154,30 +155,30 @@ class Particle:
             critical_pts.append(cc_back)
             critical_pts.append(cc_center)
         
-        critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
+        critical_count = metrics.occlusion_score(self.structures[1],critical_pts, eye)
         critical_score = critical_count * -100
 
-        seed_count = metrics.occlusion_score(self.foreground_structure,self.background_structure.seed, eye)
+        seed_count = metrics.occlusion_score(self.structures[1],self.structures[2].seed, eye)
         seed_score = seed_count * -100
 
         cc_score = 0
         for i in self.connecting_comp:
             cc_pts = i.get_sample_points()
-            cc_score += metrics.occlusion_score_wDist(self.foreground_structure,cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
+            cc_score += metrics.occlusion_score_wDist(self.structures[1],cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
 
-        structure_score = metrics.occlusion_score_structures(self.foreground_structure, self.background_structure, eye)
+        structure_score = metrics.occlusion_score_structures(self.structures[1], self.structures[2], eye)
         # print("critical_score: ", critical_score, " seed_score: ", seed_score, " cc_score: ", cc_score, " structure_score: ", structure_score)
         return critical_score + seed_score + cc_score + structure_score
 
     def too_close_score(self):
-        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
+        if metrics.too_close(self.structures[1]) or metrics.too_close(self.structures[2]):
             return -20
         return 0
     
     def size_score(self):
-        self.foreground_structure.get_MaxMin()
-        self.background_structure.get_MaxMin()
-        return metrics.size_score(self.foreground_structure, self.background_structure)
+        self.structures[1].get_MaxMin()
+        self.structures[2].get_MaxMin()
+        return metrics.size_score(self.structures[1], self.structures[2])
     
     def triangle_score(self):
         intersection_loc = np.array([self.foreground_intersection[0],self.foreground_intersection[1],self.foreground_intersection[2], 1])
@@ -231,7 +232,7 @@ class Particle:
 
     def tirangle_occulusion(self, foreground_loc, background_loc, intersection_loc, m_view, m_proj):
         count = 0
-        for i in self.foreground_structure.rect:
+        for i in self.structures[1].rect:
             point = i.center()
             point = np.matmul(m_view, point.T)
             point = np.matmul(m_proj, point)
@@ -239,7 +240,7 @@ class Particle:
             if interpolation.PointInTriangle(point, foreground_loc, background_loc, intersection_loc):
                 count += 1
 
-        for i in self.background_structure.rect:
+        for i in self.structures[2].rect:
             point = i.center()
             point = np.matmul(m_view, point.T)
             point = np.matmul(m_proj, point)

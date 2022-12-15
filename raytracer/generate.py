@@ -98,7 +98,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].background_structure.generate(1, beam_mean, beam_sd)
+            particle_list[i].structures[2].generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     for s in range(steps):
         score_list = []
         for i in range(len(particle_list)):
-            particle_list[i].foreground_structure.generate(1, beam_mean, beam_sd)
+            particle_list[i].structures[1].generate(1, beam_mean, beam_sd)
             score_list.append(particle_list[i].total_score())
         
         particle_list = particle.resample(particle_list, score_list)
@@ -140,8 +140,8 @@ if __name__ == "__main__":
             }
             result.append(data)
         
-        f_struct = result_particle.foreground_structure
-        b_struct = result_particle.background_structure
+        f_struct = result_particle.structures[1]
+        b_struct = result_particle.structures[2]
         extra_f_struct = result_particle.extra_foreground
         extra_b_struct = result_particle.extra_background
 
