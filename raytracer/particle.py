@@ -17,26 +17,18 @@ class Particle:
         portion, num_cc, block_size):
         self.foreground_structure = None
         self.background_structure = None
-        self.dummy_structure = None
 
         self.connecting_comp = []
-        self.dummy_connecting_comp = []
-
-        self.f_seed = None
-        self.b_seed = None
 
         self.block_size = block_size
 
         self.foreground_intersection = foreground_intersection
         self.background_intersection = background_intersection
-        self.dummy_intersection = None
 
         self.foreground_max_screen = foreground_max_screen
         self.background_max_screen = background_max_screen
         self.foreground_min_screen = foreground_min_screen
         self.background_min_screen = background_min_screen
-        self.dummy_max_screen = None
-        self.dummy_min_screen = None
 
         self.portion = portion
         self.num_cc = num_cc
@@ -46,7 +38,6 @@ class Particle:
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
         intersect_type = random.randint(1,4)
-        intersect_type = 3
 
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
@@ -54,10 +45,10 @@ class Particle:
         self.extra_foreground = f_struct
         connecting_component_x = connecting_comp.offset()
         connecting_component_y = connecting_comp.offset()
-        f_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.foreground_intersection[2], foreground_intersection[2], self.block_size)
+        f_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.background_intersection[2], foreground_intersection[2], self.block_size)
         self.connecting_comp.append(f_cc)
-        dest = []
-        dest.append(np.array([connecting_component_x, connecting_component_y, foreground_intersection[2]]))
+        f_cc.set_layer(2, 3)
+        dest = self.get_xy_target(3)
         f_struct.to_dest(dest)
 
 
@@ -67,15 +58,15 @@ class Particle:
         self.extra_background = b_struct
         connecting_component_x = connecting_comp.offset()
         connecting_component_y = connecting_comp.offset()
-        b_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.foreground_intersection[2], background_intersection[2], self.block_size)
+        b_cc = connecting_comp.connecting_structure(connecting_component_x, connecting_component_y, self.background_intersection[2], background_intersection[2], self.block_size)
         self.connecting_comp.append(b_cc)
-        dest = []
-        dest.append(np.array([connecting_component_x, connecting_component_y, foreground_intersection[2]]))
+        b_cc.set_layer(2, 4)
+        dest = self.get_xy_target(4)
         b_struct.to_dest(dest)
 
 
     def get_connecting_comp(self):
-        self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2])
+        self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2], 1,2)
 
     def generate_structures(self):
 
@@ -86,18 +77,16 @@ class Particle:
         intersect_type = random.randint(1,2)
         intersect_type = 1
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
-        self.f_seed = f_seed
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.foreground_structure = f_struct
     
         b_seed = gen_seed.get_seed(self.background_intersection, self.block_size, self.portion, False, intersect_type)
-        self.b_seed = b_seed
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, self.portion, self.block_size)
         self.background_structure = b_struct
 
-    def generate_connecting_comp(self,num,x,y,z_front, z_back):
+    def generate_connecting_comp(self,num,x,y,z_front, z_back, layer1, layer2):
         offsets = []
         for i in range(num):
             valid_offset = False
@@ -113,64 +102,34 @@ class Particle:
                 tempt_pt = np.array([connecting_component_x, connecting_component_y])
 
             cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
+            cc.set_layer(layer1, layer2)
             self.connecting_comp.append(cc)
-
-    def generate_dummy_connecting_comp(self,num,x,y,z_front, z_back):
-        for i in range(num):
-            cc = connecting_comp.connecting_structure(x, y, z_front, z_back, self.block_size)
-            self.connecting_comp.append(cc)
-            self.dummy_connecting_comp.append(cc)
-
-    def generate_dummy_comp(self, dummy_max_screen, dummy_min_screen, dummy_intersection, dummy_portion, dummy_cc):
-        self.dummy_intersection = dummy_intersection
-        self.dummy_max_screen = dummy_max_screen
-        self.dummy_min_screen = dummy_min_screen
-
-        d_seed = gen_seed.get_seed(dummy_intersection, self.block_size)
-        d_seed_next_possible = gen_seed.get_next_possible(d_seed[-1], self.block_size)
-        d_struct = structure.Structure(d_seed, d_seed_next_possible, dummy_portion, self.block_size)
-        self.dummy_structure = d_struct
-
-        for i in range(dummy_cc):
-            connecting_component_x = connecting_comp.offset()
-            connecting_component_y = connecting_comp.offset()
-            self.generate_dummy_connecting_comp(1, dummy_intersection[0]+connecting_component_x, dummy_intersection[1]+connecting_component_y, self.foreground_intersection[2], dummy_intersection[2])
 
     def generate_one(self):
         self.foreground_structure.generate(1)
         self.background_structure.generate(1)
-        self.dummy_structure.generate(1)
     
 
     def finish(self):
+        xy_targets1 = self.get_xy_target(1)
+        self.foreground_structure.to_dest(xy_targets1)
 
-        xy_targets = self.get_xy_target()
-        self.foreground_structure.to_dest(xy_targets)
-        self.background_structure.to_dest(xy_targets)
-
-        dummy_xy_targets = self.get_dummy_xy_target()
-        if self.dummy_structure != None:
-            self.dummy_structure.to_dest(dummy_xy_targets)
+        xy_targets2 = self.get_xy_target(2)
+        self.background_structure.to_dest(xy_targets2)
     
-    def get_xy_target(self):
+    def get_xy_target(self, layer):
         xy_targets = []
         for i in self.connecting_comp:
-            xy_targets.append(i.xy_pos())
+            if i.layer1 == layer or i.layer2 == layer:
+                xy_targets.append(i.xy_pos())
         return xy_targets
     
-    def get_dummy_xy_target(self):
-        xy_targets = []
-        for i in self.dummy_connecting_comp:
-            xy_targets.append(i.xy_pos())
-        return xy_targets
-
     def is_off_screen(self):
 
         foreground_out_of_screen = metrics.out_of_screen(self.foreground_structure, self.foreground_max_screen, self.foreground_min_screen)
         background_out_of_screen = metrics.out_of_screen(self.background_structure, self.background_max_screen, self.background_min_screen)
-        dummy_out_of_screen = metrics.out_of_screen(self.dummy_structure, self.dummy_max_screen, self.dummy_min_screen)
 
-        if(foreground_out_of_screen or background_out_of_screen or dummy_out_of_screen):
+        if(foreground_out_of_screen or background_out_of_screen):
             return -1000
                   
         return 0
@@ -195,14 +154,6 @@ class Particle:
             critical_pts.append(cc_back)
             critical_pts.append(cc_center)
         
-        for i in self.dummy_connecting_comp:
-            cc_center = i.get_center()
-            cc_fore = np.array([cc_center[0], cc_center[1], self.foreground_intersection[2]])
-            cc_back = np.array([cc_center[0], cc_center[1], self.dummy_intersection[2]])
-            critical_pts.append(cc_fore)
-            critical_pts.append(cc_back)
-            critical_pts.append(cc_center)
-
         critical_count = metrics.occlusion_score(self.foreground_structure,critical_pts, eye)
         critical_score = critical_count * -100
 
@@ -219,7 +170,7 @@ class Particle:
         return critical_score + seed_score + cc_score + structure_score
 
     def too_close_score(self):
-        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure) or metrics.too_close(self.dummy_structure):
+        if metrics.too_close(self.foreground_structure) or metrics.too_close(self.background_structure):
             return -20
         return 0
     

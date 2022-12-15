@@ -28,6 +28,13 @@ class connecting_structure:
         self.foreground_z = foreground_z
         self.background_z = background_z
         self.block_size = block_size
+
+        self.layer1 = 0
+        self.layer2 = 0
+    
+    def set_layer(self, layer1, layer2):
+        self.layer1 = layer1
+        self.layer2 = layer2
     
     def get_object(self):
         z_start = min(self.foreground_z, self.background_z)
