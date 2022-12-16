@@ -61,14 +61,14 @@ if __name__ == "__main__":
     extra_backPortion = []
 
     for i in range(num_intersection-1):
-        foreground_index = int(layer_index[2 * (i+1)])
-        background_index = int(layer_index[2 * (i+1) + 1])
-        dforeground_intersection = basic_scene.get_possible_intersects(foreground_index)
-        dbackground_intersection = basic_scene.get_possible_intersects(background_index)
+        e_foreground_index = int(layer_index[2 * (i+1)])
+        e_background_index = int(layer_index[2 * (i+1) + 1])
+        dforeground_intersection = basic_scene.get_possible_intersects(e_foreground_index)
+        dbackground_intersection = basic_scene.get_possible_intersects(e_background_index)
         e_startPos = np.array([intersection_pos[1][0], intersection_pos[1][1]])
         e_foreground_intersection = basic_scene.get_intersection_t(e_startPos, dforeground_intersection)
         e_background_intersection = basic_scene.get_intersection_t(e_startPos, dbackground_intersection)
-        back_portion = background_index/ foreground_index
+        back_portion = e_background_index/ foreground_index
         extra_foreground_intersection.append(e_foreground_intersection)
         extra_background_intersection.append(e_background_intersection)
         extra_backPortion.append(back_portion)

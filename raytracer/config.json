@@ -1,11 +1,11 @@
  [
       {
         "num_intersection": 2,
-        "layer_index": [8, 12, 16, 19],
+        "layer_index": [8, 12, 8, 16],
         "intersection_pos": [[400,400], [500,500]],
         "num_connections": 1,
         "num_blocks_per_layer":[20,20,10],
-        "num_particles":300,
+        "num_particles":10,
         "beam_mean": 6,
         "beam_sd": 2,
         "block_size": 0.05,
