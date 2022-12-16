@@ -2,12 +2,20 @@ import numpy as np
 import random
 import structure
 
-def offset():
-    num = round(int(random.random() * 4 % 4) * 0.1 + 0.5, 1)
+def offset_x():
+    num = round(int(random.random() * 6 % 6) * 0.1 + 0.6, 1)
     sign = random.random()
     if(sign > 0.5):
         return num
     return -num
+
+def offset_y():
+    num = round(int(random.random() * 5 % 5) * 0.1 + 0.5, 1)
+    sign = random.random()
+    if(sign > 0.5):
+        return num
+    return -num
+
 
 def valid_offset(offsets, pos):
     for offset in offsets:

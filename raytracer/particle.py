@@ -78,19 +78,8 @@ class Particle:
         self.structures.append(b_struct)
 
     def generate_connecting_comp(self,num,x,y,z_front, z_back, layer1, layer2):
-        offsets = []
-        for i in range(num):
-            valid_offset = False
-
-            connecting_component_x = connecting_comp.offset()
-            connecting_component_y = connecting_comp.offset()
-            tempt_pt = np.array([connecting_component_x, connecting_component_y])
-
-            while valid_offset == False:
-                valid_offset = connecting_comp.valid_offset(offsets, tempt_pt)
-                connecting_component_x = connecting_comp.offset()
-                connecting_component_y = connecting_comp.offset()
-                tempt_pt = np.array([connecting_component_x, connecting_component_y])
+            connecting_component_x = connecting_comp.offset_x()
+            connecting_component_y = connecting_comp.offset_y()
 
             cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
             cc.set_layer(layer1, layer2)
