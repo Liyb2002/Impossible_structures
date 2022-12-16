@@ -35,30 +35,28 @@ class Particle:
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
         self.structures.append(f_struct)
-        connecting_component_x = connecting_comp.offset()
-        connecting_component_y = connecting_comp.offset()
-        f_cc = connecting_comp.connecting_structure(foreground_intersection[0]+connecting_component_x, foreground_intersection[1]+connecting_component_y, self.background_intersection[2], foreground_intersection[2], self.block_size)
-        self.connecting_comp.append(f_cc)
-        f_cc.set_layer(2, 3)
-        dest = self.get_xy_target(3)
-        f_struct.to_dest(dest)
 
 
         b_seed = gen_seed.get_seed(background_intersection, self.block_size, back_portion, False, intersect_type)
         b_seed_next_possible = gen_seed.get_next_possible(b_seed[-1], self.block_size,False,intersect_type)
         b_struct = structure.Structure(b_seed, b_seed_next_possible, back_portion, self.block_size)
         self.structures.append(b_struct)
-        connecting_component_x = connecting_comp.offset()
-        connecting_component_y = connecting_comp.offset()
-        b_cc = connecting_comp.connecting_structure(background_intersection[0]+connecting_component_x, background_intersection[1]+connecting_component_y, self.background_intersection[2], background_intersection[2], self.block_size)
-        self.connecting_comp.append(b_cc)
-        b_cc.set_layer(2, 4)
-        dest = self.get_xy_target(4)
-        b_struct.to_dest(dest)
 
 
-    def get_connecting_comp(self):
-        self.generate_connecting_comp(self.num_cc, self.foreground_intersection[0], self.foreground_intersection[1], self.foreground_intersection[2], self.background_intersection[2], 1,2)
+    def get_connecting_comp(self, connections):
+        for i in connections:
+            layer1 = i[0]
+            layer2 = i[1]
+
+            struct1 = self.structures[layer1]
+            front_z = struct1.seed[-1][2]
+            struct2 = self.structures[layer2]
+            back_z = struct2.seed[-1][2]
+
+            x = struct1.seed[-1][0]
+            y = struct1.seed[-1][1]
+
+            self.generate_connecting_comp(self.num_cc, x, y, front_z, back_z, layer1, layer2)
 
     def generate_structures(self):
 
@@ -104,11 +102,9 @@ class Particle:
     
 
     def finish(self):
-        xy_targets1 = self.get_xy_target(1)
-        self.structures[1].to_dest(xy_targets1)
-
-        xy_targets2 = self.get_xy_target(2)
-        self.structures[2].to_dest(xy_targets2)
+        for i in range(1, len(self.structures)):
+            xy_targets = self.get_xy_target(i)
+            self.structures[i].to_dest(xy_targets)
     
     def get_xy_target(self, layer):
         xy_targets = []

@@ -33,6 +33,7 @@ if __name__ == "__main__":
     with open('config.json', 'r') as config_file:
         config_data = json.load(config_file)
         num_intersection = config_data[0]['num_intersection']
+        connection = config_data[0]['connection']
         layer_index = config_data[0]['layer_index']
         num_connections = config_data[0]['num_connections']
         intersection_pos = config_data[0]['intersection_pos']
@@ -68,7 +69,7 @@ if __name__ == "__main__":
         e_startPos = np.array([intersection_pos[1][0], intersection_pos[1][1]])
         e_foreground_intersection = basic_scene.get_intersection_t(e_startPos, dforeground_intersection)
         e_background_intersection = basic_scene.get_intersection_t(e_startPos, dbackground_intersection)
-        back_portion = e_background_index/ foreground_index
+        back_portion = e_background_index/ e_foreground_index
         extra_foreground_intersection.append(e_foreground_intersection)
         extra_background_intersection.append(e_background_intersection)
         extra_backPortion.append(back_portion)
@@ -79,12 +80,12 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size)
-        tempt_particle.get_connecting_comp()
         tempt_particle.generate_structures()
         
         for j in range(num_intersection-1):
             tempt_particle.set_intersections(extra_foreground_intersection[j], extra_background_intersection[j], 1.0, extra_backPortion[j])
-
+        
+        tempt_particle.get_connecting_comp(connection)
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
