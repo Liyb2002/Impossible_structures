@@ -26,7 +26,7 @@ class Structure:
 
     def to_dest_1(self, destination):
         for i in destination:
-            next_vertex = self.next_possibles[rand_index(self.next_possibles)]
+            next_vertex = self.next_possibles[0]
             x_dist = abs(i[0] - next_vertex[0])
             x_start = min(i[0], next_vertex[0])
             startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
@@ -36,7 +36,7 @@ class Structure:
     
     def to_dest_2(self, destination):
         for i in destination:
-            next_vertex = self.next_possibles[rand_index(self.next_possibles)]
+            next_vertex = self.next_possibles[0]
             y_dist = abs(i[1] - next_vertex[1])
             y_start = min(i[1], next_vertex[1])
             startPos2 = np.array([i[0], y_start, next_vertex[2]])

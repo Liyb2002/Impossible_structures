@@ -33,8 +33,8 @@ class connecting_structure:
     def __init__(self, x, y, foreground_z, background_z, block_size):
         self.x = x
         self.y = y
-        self.foreground_z = foreground_z
-        self.background_z = background_z
+        self.foreground_z = foreground_z + 0.02
+        self.background_z = background_z - 0.02
         self.block_size = block_size
 
         self.layer1 = 0
