@@ -8,7 +8,7 @@ def get_seed(pos, block_size, portion, isFront, type):
                 tempt = np.array([pos[0],pos[1]+block_size*i*portion,pos[2]])
                 seed = np.vstack([seed, tempt])
         
-        if type == 2:
+        if type == 4:
             for i in range(0,5):
                 tempt = np.array([pos[0],pos[1]+block_size*i*portion,pos[2]])
                 seed = np.vstack([seed, tempt])
@@ -18,7 +18,7 @@ def get_seed(pos, block_size, portion, isFront, type):
                 tempt = np.array([pos[0],pos[1]-block_size*i*portion,pos[2]])
                 seed = np.vstack([seed, tempt])
         
-        if type == 4:
+        if type == 2:
             for i in range(0,5):
                 tempt = np.array([pos[0]+block_size*i*portion,pos[1],pos[2]])
                 seed = np.vstack([seed, tempt])
@@ -29,7 +29,7 @@ def get_seed(pos, block_size, portion, isFront, type):
                 tempt = np.array([pos[0]-block_size*i * portion,pos[1],pos[2]])
                 seed = np.vstack([seed, tempt])
         
-        if type == 2:
+        if type == 4:
             for i in range(0,5):
                 tempt = np.array([pos[0],pos[1]-block_size*i * portion,pos[2]])
                 seed = np.vstack([seed, tempt])
@@ -39,7 +39,7 @@ def get_seed(pos, block_size, portion, isFront, type):
                 tempt = np.array([pos[0]-block_size*i * portion,pos[1],pos[2]])
                 seed = np.vstack([seed, tempt])
         
-        if type == 4:
+        if type == 2:
             for i in range(0,5):
                 tempt = np.array([pos[0],pos[1]-block_size*i * portion,pos[2]])
                 seed = np.vstack([seed, tempt])

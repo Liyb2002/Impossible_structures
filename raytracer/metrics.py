@@ -186,12 +186,12 @@ def too_close(structure):
     
     for i in horizontal:
         for j in horizontal:
-            if(i.start_y != j.start_y and abs(i.start_y - j.start_y)<0.2):
+            if(i.start_y != j.start_y and abs(i.start_y - j.start_y)<0.3):
                 return True
     
     for i in vertical:
         for j in vertical:
-            if(i.start_x != j.start_x and abs(i.start_x - j.start_x)<0.2):
+            if(i.start_x != j.start_x and abs(i.start_x - j.start_x)<0.3):
                 return True
     
     return False
@@ -202,7 +202,7 @@ def size_score(structure_a, struct_b):
     y_max = max(structure_a.max_y, struct_b.max_y)
     x_min = min(structure_a.min_x, struct_b.min_x)
     y_min = min(structure_a.min_y, struct_b.min_y)
-    area = (x_max - x_min) * (y_max - y_min)
+    area = (x_max - x_min) * (y_max - y_min) ** 2
     return area
 
 def triangle_property_score(dist):

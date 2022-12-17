@@ -29,11 +29,11 @@ class Particle:
 
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
-        intersect_type = random.randint(1,4)
+        intersect_type = random.randint(1,3)
 
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
-        f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
+        f_struct = structure.Structure(f_seed, f_seed_next_possible, fore_portion, self.block_size)
         self.structures.append(f_struct)
 
 
@@ -64,8 +64,7 @@ class Particle:
         for i in self.connecting_comp:
             xy_target.append(i.xy_pos())
              
-        intersect_type = random.randint(1,2)
-        intersect_type = 1
+        intersect_type = random.randint(1,4)
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
@@ -85,10 +84,8 @@ class Particle:
             cc.set_layer(layer1, layer2)
             self.connecting_comp.append(cc)
 
-    def generate_one(self):
-        for i in self.structures:
-            i.generate(1)
-    
+    def generate_one(self, layer):
+        self.structures[layer].generate(1)      
 
     def finish(self):
         for i in range(1, len(self.structures)):
@@ -117,7 +114,6 @@ class Particle:
         return score, parallel_pts
     
     def occulusion_score(self):
-        score = 0
         eye = np.array([5.0,5.0,5.0])
 
         # raster_score = metrics.occlusion_raster(self.structures[1], self.structures[2])
@@ -132,25 +128,34 @@ class Particle:
             critical_pts.append(cc_back)
             critical_pts.append(cc_center)
         
-        critical_count = metrics.occlusion_score(self.structures[1],critical_pts, eye)
-        critical_score = critical_count * -100
+        critical_count = 0
+        for i in self.structures:
+            critical_count += metrics.occlusion_score(i,critical_pts, eye)
+        critical_score = critical_count * -30
 
-        seed_count = metrics.occlusion_score(self.structures[1],self.structures[2].seed, eye)
-        seed_score = seed_count * -100
+        seed_count = 0
+        for i in self.structures:
+            for j in self.structures:
+                seed_count += metrics.occlusion_score(j,i.seed, eye)
+        seed_score = seed_count * -30
 
         cc_score = 0
         for i in self.connecting_comp:
             cc_pts = i.get_sample_points()
             cc_score += metrics.occlusion_score_wDist(self.structures[1],cc_pts, eye, 2, self.foreground_intersection[2], self.background_intersection[2])
-
-        structure_score = metrics.occlusion_score_structures(self.structures[1], self.structures[2], eye)
-        # print("critical_score: ", critical_score, " seed_score: ", seed_score, " cc_score: ", cc_score, " structure_score: ", structure_score)
-        return critical_score + seed_score + cc_score + structure_score
+        
+        structure_score = 0
+        for i in self.structures:
+            for j in self.structures:
+                structure_score += metrics.occlusion_score_structures(i,j, eye)
+        return critical_score + seed_score + cc_score + structure_score + 100
 
     def too_close_score(self):
-        if metrics.too_close(self.structures[1]) or metrics.too_close(self.structures[2]):
-            return -20
-        return 0
+        score = 5 * len(self.structures)
+        for i in self.structures:
+            if metrics.too_close(i):
+                score -= 5
+        return score
     
     def size_score(self):
         self.structures[1].get_MaxMin()
@@ -229,7 +234,7 @@ class Particle:
         return count
 
     def total_score(self):
-        score = 2000000
+        score = 0
         # score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
@@ -237,6 +242,8 @@ class Particle:
         score += self.triangle_score()
         # (para_score, parallel_pts) = self.parallel_score()
         # score += para_score
+        # print("self.too_close_score()", self.too_close_score(), "self.occulusion_score()", self.occulusion_score(), "self.size_score()", self.size_score(), "self.triangle_score()", self.triangle_score())
+        # print("score: ", score)
         return score
 
 

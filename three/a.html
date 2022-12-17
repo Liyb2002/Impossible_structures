@@ -63,12 +63,21 @@ loader.load(
 			const colors = [];
 			const color = new THREE.Color();
 
-		console.log("positionAttribute.count",positionAttribute.count);
+		var count = 0;
 		for ( let i = 0; i < positionAttribute.count; i += 12 ) {
-			color.set( Math.random() * 0xffffff );
+			if (count == 0){
+				color.set( 0.5 * 0xffffff );
+			}
+			if (count == 1){
+				color.set( 0.8 * 0xffffff );
+			}
+			if (count == 2){
+				color.set( 0.65 * 0xffffff );
+			}
 			for(let j=0;j<12;j++){
 				colors.push( color.r, color.g, color.b );
 			}
+			count += 1
 
 		}
 		
