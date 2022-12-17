@@ -11,8 +11,8 @@
         "block_size": 0.05,
         "X_freedom": false,
         "Y_freedom": false,
-        "input_structure":[]
-
+        "input_structure":[],
+        "use_pixel": false
       }
     ]
   

@@ -14,7 +14,7 @@ import math
 
 class Particle:
     def __init__(self, foreground_intersection, background_intersection, 
-        portion, num_cc, block_size):
+        portion, num_cc, block_size, Y_freedom, use_pixel):
 
         self.structures = []
         self.connecting_comp = []
@@ -26,10 +26,15 @@ class Particle:
 
         self.portion = portion
         self.num_cc = num_cc
+        self.Y_freedom = Y_freedom
+        self.use_pixel = use_pixel
 
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
         intersect_type = random.randint(1,3)
+
+        if self.Y_freedom:
+            intersect_type = 1
 
         f_seed = gen_seed.get_seed(foreground_intersection, self.block_size, fore_portion, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
@@ -65,6 +70,10 @@ class Particle:
             xy_target.append(i.xy_pos())
              
         intersect_type = random.randint(1,4)
+
+        if self.Y_freedom:
+            intersect_type = random.randint(1,2)
+
         f_seed = gen_seed.get_seed(self.foreground_intersection, self.block_size, 1.0, True, intersect_type)
         f_seed_next_possible = gen_seed.get_next_possible(f_seed[-1], self.block_size,True,intersect_type)
         f_struct = structure.Structure(f_seed, f_seed_next_possible, 1, self.block_size)
@@ -119,7 +128,10 @@ class Particle:
     def occulusion_score(self):
         eye = np.array([5.0,5.0,5.0])
 
-        # raster_score = metrics.occlusion_raster(self.structures[1], self.structures[2])
+        raster_score = 0
+        if self.use_pixel:
+            for i in range(2, len(self.structures)):
+                raster_score += metrics.occlusion_raster(self.structures[i-1], self.structures[i])
 
         critical_pts = []
 
@@ -151,7 +163,7 @@ class Particle:
         for i in self.structures:
             for j in self.structures:
                 structure_score += metrics.occlusion_score_structures(i,j, eye)
-        return critical_score + seed_score + cc_score + structure_score + 100
+        return critical_score + seed_score + cc_score + structure_score + raster_score + 100
 
     def too_close_score(self):
         score = 5 * len(self.structures)

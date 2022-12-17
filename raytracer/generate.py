@@ -41,6 +41,8 @@ if __name__ == "__main__":
         beam_sd = config_data[0]['beam_sd']
         num_blocks_per_layer = config_data[0]['num_blocks_per_layer']
         num_particles = config_data[0]['num_particles']
+        Y_freedom = config_data[0]['Y_freedom']
+        use_pixel = config_data[0]['use_pixel']
 
     num_intersection = len(intersection_pos)
     max_score = -1000
@@ -73,11 +75,13 @@ if __name__ == "__main__":
         extra_backPortion.append(back_portion)
 
 
+
     particle_list = []
     score_list = []
     #initialize particles
     for i in range(num_particles):
-        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size)
+        print("initializing particle: ", i)
+        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel)
         tempt_particle.generate_structures()
         
         for j in range(num_intersection-1):
