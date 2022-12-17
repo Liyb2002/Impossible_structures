@@ -32,7 +32,6 @@ if __name__ == "__main__":
     num_connections = 0
     with open('config.json', 'r') as config_file:
         config_data = json.load(config_file)
-        num_intersection = config_data[0]['num_intersection']
         connection = config_data[0]['connection']
         layer_index = config_data[0]['layer_index']
         num_connections = config_data[0]['num_connections']
@@ -43,8 +42,7 @@ if __name__ == "__main__":
         num_blocks_per_layer = config_data[0]['num_blocks_per_layer']
         num_particles = config_data[0]['num_particles']
 
-    connecting_cost = beam_mean * 2 * num_connections
-
+    num_intersection = len(intersection_pos)
     max_score = -1000
     result_particle = None
 
@@ -92,36 +90,38 @@ if __name__ == "__main__":
 
     particle_list = particle.resample(particle_list, score_list)
 
-    steps = max(0, int((num_blocks_per_layer[1] - connecting_cost) / beam_mean))
-    print("extra beams for background", steps)
-    #generate background structure
-    for s in range(steps):
-        score_list = []
-        for i in range(len(particle_list)):
-            particle_list[i].structures[2].generate(1, beam_mean, beam_sd)
-            score_list.append(particle_list[i].total_score())
+    for i in range(num_intersection*2):
+        layer = 2*num_intersection - i
+        blocks = num_blocks_per_layer[layer-1]
         
-        particle_list = particle.resample(particle_list, score_list)
-    
-    steps = int((num_blocks_per_layer[0] - connecting_cost) / beam_mean)
-    print("extra beams for foreground", steps)
-    #generate foreground structure
-    for s in range(steps):
-        score_list = []
-        for i in range(len(particle_list)):
-            particle_list[i].structures[1].generate(1, beam_mean, beam_sd)
-            score_list.append(particle_list[i].total_score())
-        
-        particle_list = particle.resample(particle_list, score_list)
+        cc = 0
+        for i in connection:
+            if (i[0] == layer or i[1] == layer):
+                cc += 1
+
+        extra_block = max(0,blocks - cc*beam_mean)
+        steps = int(extra_block / beam_mean)
+        print("layer: ", layer, "extra block: ", extra_block)
+        for s in range(steps):
+            score_list = []
+            for i in range(len(particle_list)):
+                particle_list[i].structures[layer].generate(1, beam_mean, beam_sd)
+                score_list.append(particle_list[i].total_score())
+            
+            particle_list = particle.resample(particle_list, score_list)
+
+
 
     print("finishing process")
     # finish the process
-    for i in range (len(particle_list)):
-        particle_list[i].finish()
-        score_list[i] = particle_list[i].total_score()
-    
-    particle_list = particle.resample(particle_list, score_list)
-    result_particle = particle_list[0]
+    for s in range(2):
+        print("finishing step: ", s)
+        for i in range (len(particle_list)):
+            particle_list[i].finish(s)
+            score_list[i] = particle_list[i].total_score()
+        
+        particle_list = particle.resample(particle_list, score_list)
+        result_particle = particle_list[0]
 
     #create a json file, and write the result
     with open('../three/result.json', 'w') as f:

@@ -87,10 +87,13 @@ class Particle:
     def generate_one(self, layer):
         self.structures[layer].generate(1)      
 
-    def finish(self):
+    def finish(self, step):
         for i in range(1, len(self.structures)):
             xy_targets = self.get_xy_target(i)
-            self.structures[i].to_dest(xy_targets)
+            if step == 0:
+                self.structures[i].to_dest_1(xy_targets)
+            elif step == 1:
+                self.structures[i].to_dest_2(xy_targets)
     
     def get_xy_target(self, layer):
         xy_targets = []
