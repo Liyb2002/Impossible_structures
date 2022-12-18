@@ -43,6 +43,7 @@ if __name__ == "__main__":
         num_particles = config_data[0]['num_particles']
         Y_freedom = config_data[0]['Y_freedom']
         use_pixel = config_data[0]['use_pixel']
+        use_symmetry = config_data[0]['use_symmetry']
 
     num_intersection = len(intersection_pos)
     max_score = -1000
@@ -80,8 +81,7 @@ if __name__ == "__main__":
     score_list = []
     #initialize particles
     for i in range(num_particles):
-        print("initializing particle: ", i)
-        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel)
+        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel, use_symmetry)
         tempt_particle.generate_structures()
         
         for j in range(num_intersection-1):
