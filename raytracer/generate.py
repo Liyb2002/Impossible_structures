@@ -58,6 +58,12 @@ if __name__ == "__main__":
     background_intersection = basic_scene.get_possible_intersects(background_index)
     portion = background_index/ foreground_index
 
+    foreground_max_screen = basic_scene.get_max_screen(foreground_index)
+    background_max_screen = basic_scene.get_max_screen(background_index)    
+
+    foreground_min_screen = basic_scene.get_min_screen(foreground_index)
+    background_min_screen = basic_scene.get_min_screen(background_index)
+
     extra_foreground_intersection = []
     extra_background_intersection = []
     extra_backPortion = []
@@ -82,6 +88,7 @@ if __name__ == "__main__":
     #initialize particles
     for i in range(num_particles):
         tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel, use_symmetry)
+        tempt_particle.set_screenSize(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen)
         tempt_particle.generate_structures()
         
         for j in range(num_intersection-1):
@@ -106,6 +113,7 @@ if __name__ == "__main__":
         extra_block = max(0,blocks - cc*beam_mean)
         steps = int(extra_block / beam_mean)
         print("layer: ", layer, "extra block: ", extra_block)
+        print("layer: ", layer, "steps: ", steps)
         for s in range(steps):
             score_list = []
             for i in range(len(particle_list)):

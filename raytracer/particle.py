@@ -30,6 +30,17 @@ class Particle:
         self.use_pixel = use_pixel
         self.use_symmetry = use_symmetry
 
+        self.foreground_max_screen = None
+        self.background_max_screen = None
+        self.foreground_min_screen = None
+        self.background_min_screen = None
+
+
+    def set_screenSize(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen):
+        self.foreground_max_screen = foreground_max_screen
+        self.background_max_screen = background_max_screen
+        self.foreground_min_screen = foreground_min_screen
+        self.background_min_screen = background_min_screen
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
         intersect_type = random.randint(1,2)
@@ -266,7 +277,7 @@ class Particle:
 
     def total_score(self):
         score = 0
-        # score += self.is_off_screen()
+        score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
         score += self.size_score()

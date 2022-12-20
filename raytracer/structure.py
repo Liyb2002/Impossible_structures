@@ -26,7 +26,7 @@ class Structure:
 
     def to_dest_1(self, destination):
         for i in destination:
-            next_vertex = self.next_possibles[0]
+            next_vertex = self.next_possibles[-1]
             x_dist = abs(i[0] - next_vertex[0])
             x_start = min(i[0], next_vertex[0])
             startPos = np.array([x_start, next_vertex[1], next_vertex[2]])
@@ -36,7 +36,7 @@ class Structure:
     
     def to_dest_2(self, destination):
         for i in destination:
-            next_vertex = self.next_possibles[0]
+            next_vertex = self.next_possibles[-1]
             y_dist = abs(i[1] - next_vertex[1])
             y_start = min(i[1], next_vertex[1])
             startPos2 = np.array([i[0], y_start, next_vertex[2]])
@@ -155,7 +155,7 @@ class Structure:
         #print("new_vertex_clean", new_vertex_clean)
         self.add_vertex(new_vertex_clean)
         
-        span = int(np.random.normal(loc=beam_mean - 2, scale=beam_sd, size=None)) + 2
+        span = int(np.random.normal(loc=beam_mean - 2, scale=beam_sd, size=None)) + 3
         for i in range(span):
             new_vertex_clean = self.get_vertex_forward(new_vertex_clean, new_direction)
             self.add_vertex(new_vertex_clean)

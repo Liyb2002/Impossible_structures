@@ -2,7 +2,7 @@
   {
     "obj": {
       "start_x": 2.96,
-      "start_y": 3.45,
+      "start_y": 3.25,
       "start_z": 3.73,
       "scale_x": 0.07,
       "scale_y": 0.07,
@@ -25,26 +25,36 @@
       "start_y": 3.82,
       "start_z": 4.17,
       "scale_x": 0.07,
-      "scale_y": 0.35,
+      "scale_y": 0.91,
       "scale_z": 0.07
     }
   },
   {
     "obj": {
-      "start_x": 3.83,
-      "start_y": 4.1,
+      "start_x": 3.69,
+      "start_y": 4.66,
       "start_z": 4.17,
-      "scale_x": 0.21,
+      "scale_x": 0.84,
       "scale_y": 0.07,
       "scale_z": 0.07
     }
   },
   {
     "obj": {
-      "start_x": 3.76,
-      "start_y": 3.61,
+      "start_x": 4.46,
+      "start_y": 4.73,
       "start_z": 4.17,
       "scale_x": 0.07,
+      "scale_y": 0.98,
+      "scale_z": 0.07
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.96,
+      "start_y": 5.64,
+      "start_z": 4.17,
+      "scale_x": 1.5,
       "scale_y": 0.07,
       "scale_z": 0.07
     }
@@ -52,20 +62,10 @@
   {
     "obj": {
       "start_x": 2.96,
-      "start_y": 4.1,
-      "start_z": 4.17,
-      "scale_x": 0.8,
-      "scale_y": 0.07,
-      "scale_z": 0.07
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.96,
-      "start_y": 3.45,
+      "start_y": 3.25,
       "start_z": 4.17,
       "scale_x": 0.07,
-      "scale_y": 0.72,
+      "scale_y": 2.46,
       "scale_z": 0.07
     }
   },
@@ -85,26 +85,36 @@
       "start_y": 3.82,
       "start_z": 4.17,
       "scale_x": 0.07,
-      "scale_y": 0.35,
+      "scale_y": 0.91,
       "scale_z": 0.07
     }
   },
   {
     "obj": {
-      "start_x": 3.83,
-      "start_y": 4.1,
+      "start_x": 3.69,
+      "start_y": 4.66,
       "start_z": 4.17,
-      "scale_x": 0.21,
+      "scale_x": 0.84,
       "scale_y": 0.07,
       "scale_z": 0.07
     }
   },
   {
     "obj": {
-      "start_x": 3.76,
-      "start_y": 3.61,
+      "start_x": 4.46,
+      "start_y": 4.73,
       "start_z": 4.17,
       "scale_x": 0.07,
+      "scale_y": 0.98,
+      "scale_z": 0.07
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.96,
+      "start_y": 5.64,
+      "start_z": 4.17,
+      "scale_x": 1.5,
       "scale_y": 0.07,
       "scale_z": 0.07
     }
@@ -112,20 +122,10 @@
   {
     "obj": {
       "start_x": 2.96,
-      "start_y": 4.1,
-      "start_z": 4.17,
-      "scale_x": 0.8,
-      "scale_y": 0.07,
-      "scale_z": 0.07
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.96,
-      "start_y": 3.45,
+      "start_y": 3.25,
       "start_z": 4.17,
       "scale_x": 0.07,
-      "scale_y": 0.72,
+      "scale_y": 2.46,
       "scale_z": 0.07
     }
   },
@@ -141,40 +141,20 @@
   },
   {
     "obj": {
-      "start_x": 3.0,
+      "start_x": 2.23,
       "start_y": 2.63,
       "start_z": 3.75,
-      "scale_x": 0.24,
+      "scale_x": 1.01,
       "scale_y": 0.11,
       "scale_z": 0.11
     }
   },
   {
     "obj": {
-      "start_x": 3.0,
-      "start_y": 2.42,
+      "start_x": 2.23,
+      "start_y": 2.56,
       "start_z": 3.75,
-      "scale_x": 0.11,
-      "scale_y": 0.24,
-      "scale_z": 0.11
-    }
-  },
-  {
-    "obj": {
-      "start_x": 3.0,
-      "start_y": 2.7,
-      "start_z": 3.75,
-      "scale_x": 0.11,
-      "scale_y": 0.24,
-      "scale_z": 0.11
-    }
-  },
-  {
-    "obj": {
-      "start_x": 2.96,
-      "start_y": 2.77,
-      "start_z": 3.75,
-      "scale_x": 0.28,
+      "scale_x": 0.84,
       "scale_y": 0.11,
       "scale_z": 0.11
     }
@@ -182,10 +162,10 @@
   {
     "obj": {
       "start_x": 2.96,
-      "start_y": 2.77,
+      "start_y": 2.56,
       "start_z": 3.75,
       "scale_x": 0.07,
-      "scale_y": 0.78,
+      "scale_y": 0.79,
       "scale_z": 0.11
     }
   }
