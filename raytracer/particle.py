@@ -14,7 +14,7 @@ import math
 
 class Particle:
     def __init__(self, foreground_intersection, background_intersection, 
-        portion, num_cc, block_size, Y_freedom, use_pixel, use_symmetry):
+        portion, num_cc, block_size, Y_freedom, use_pixel):
 
         self.structures = []
         self.connecting_comp = []
@@ -28,22 +28,10 @@ class Particle:
         self.num_cc = num_cc
         self.Y_freedom = Y_freedom
         self.use_pixel = use_pixel
-        self.use_symmetry = use_symmetry
 
-        self.foreground_max_screen = None
-        self.background_max_screen = None
-        self.foreground_min_screen = None
-        self.background_min_screen = None
-
-
-    def set_screenSize(self, foreground_max_screen, background_max_screen, foreground_min_screen, background_min_screen):
-        self.foreground_max_screen = foreground_max_screen
-        self.background_max_screen = background_max_screen
-        self.foreground_min_screen = foreground_min_screen
-        self.background_min_screen = background_min_screen
 
     def set_intersections(self,foreground_intersection, background_intersection, fore_portion, back_portion):
-        intersect_type = random.randint(1,2)
+        intersect_type = random.randint(1,3)
 
         if self.Y_freedom:
             intersect_type = 1
@@ -81,7 +69,7 @@ class Particle:
         for i in self.connecting_comp:
             xy_target.append(i.xy_pos())
              
-        intersect_type = random.randint(1,3)
+        intersect_type = random.randint(1,4)
 
         if self.Y_freedom:
             intersect_type = random.randint(1,2)
@@ -104,21 +92,6 @@ class Particle:
             cc = connecting_comp.connecting_structure(x+connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
             cc.set_layer(layer1, layer2)
             self.connecting_comp.append(cc)
-
-            if self.use_symmetry:
-                cc_sym1 = connecting_comp.connecting_structure(x-connecting_component_x, y-connecting_component_y, z_front, z_back, self.block_size)
-                cc_sym1.set_layer(layer1, layer2)
-                self.connecting_comp.append(cc_sym1)
-
-                cc_sym2 = connecting_comp.connecting_structure(x+connecting_component_x, y-connecting_component_y, z_front, z_back, self.block_size)
-                cc_sym2.set_layer(layer1, layer2)
-                self.connecting_comp.append(cc_sym2)
-
-                cc_sym3 = connecting_comp.connecting_structure(x-connecting_component_x, y+connecting_component_y, z_front, z_back, self.block_size)
-                cc_sym3.set_layer(layer1, layer2)
-                self.connecting_comp.append(cc_sym3)
-
-
 
     def generate_one(self, layer):
         self.structures[layer].generate(1)      
@@ -277,7 +250,7 @@ class Particle:
 
     def total_score(self):
         score = 0
-        score += self.is_off_screen()
+        # score += self.is_off_screen()
         score += self.too_close_score()
         score += self.occulusion_score()
         score += self.size_score()

@@ -1,19 +1,18 @@
  [
       {
         "layer_index": [8, 12],
-        "intersection_pos": [[300,300]],
+        "intersection_pos": [[500,500]],
         "connection": [[1,2]],
         "num_connections": 1,
-        "num_blocks_per_layer":[60,40],
+        "num_blocks_per_layer":[50,20],
         "num_particles":300,
-        "beam_mean": 15,
+        "beam_mean": 6,
         "beam_sd": 2,
-        "block_size": 0.07,
+        "block_size": 0.05,
         "X_freedom": false,
         "Y_freedom": false,
         "input_structure":[],
-        "use_pixel": false,
-        "use_symmetry": false
+        "use_pixel": false
       }
     ]
   

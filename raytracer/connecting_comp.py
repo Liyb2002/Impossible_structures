@@ -10,7 +10,7 @@ def offset_x():
     return -num
 
 def offset_y():
-    num = round(int(random.random() * 3 % 3) * 0.1 + 0.3, 1)
+    num = round(int(random.random() * 5 % 5) * 0.1 + 0.5, 1)
     sign = random.random()
     if(sign > 0.5):
         return num

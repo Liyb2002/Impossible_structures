@@ -43,7 +43,6 @@ if __name__ == "__main__":
         num_particles = config_data[0]['num_particles']
         Y_freedom = config_data[0]['Y_freedom']
         use_pixel = config_data[0]['use_pixel']
-        use_symmetry = config_data[0]['use_symmetry']
 
     num_intersection = len(intersection_pos)
     max_score = -1000
@@ -57,12 +56,6 @@ if __name__ == "__main__":
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
     background_intersection = basic_scene.get_possible_intersects(background_index)
     portion = background_index/ foreground_index
-
-    foreground_max_screen = basic_scene.get_max_screen(foreground_index)
-    background_max_screen = basic_scene.get_max_screen(background_index)    
-
-    foreground_min_screen = basic_scene.get_min_screen(foreground_index)
-    background_min_screen = basic_scene.get_min_screen(background_index)
 
     extra_foreground_intersection = []
     extra_background_intersection = []
@@ -87,8 +80,8 @@ if __name__ == "__main__":
     score_list = []
     #initialize particles
     for i in range(num_particles):
-        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel, use_symmetry)
-        tempt_particle.set_screenSize(foreground_max_screen,background_max_screen,foreground_min_screen,background_min_screen)
+        print("initializing particle: ", i)
+        tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel)
         tempt_particle.generate_structures()
         
         for j in range(num_intersection-1):
@@ -113,7 +106,6 @@ if __name__ == "__main__":
         extra_block = max(0,blocks - cc*beam_mean)
         steps = int(extra_block / beam_mean)
         print("layer: ", layer, "extra block: ", extra_block)
-        print("layer: ", layer, "steps: ", steps)
         for s in range(steps):
             score_list = []
             for i in range(len(particle_list)):
