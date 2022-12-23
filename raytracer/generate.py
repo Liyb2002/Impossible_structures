@@ -57,6 +57,9 @@ if __name__ == "__main__":
     background_intersection = basic_scene.get_possible_intersects(background_index)
     portion = background_index/ foreground_index
 
+    # print("foreground_intersection", foreground_intersection)
+    # print("background_intersection", background_intersection)
+    
     extra_foreground_intersection = []
     extra_background_intersection = []
     extra_backPortion = []
@@ -80,7 +83,7 @@ if __name__ == "__main__":
     score_list = []
     #initialize particles
     for i in range(num_particles):
-        print("initializing particle: ", i)
+        # print("initializing particle: ", i)
         tempt_particle = particle.Particle(foreground_intersection, background_intersection, portion, num_connections, block_size, Y_freedom, use_pixel)
         tempt_particle.generate_structures()
         
