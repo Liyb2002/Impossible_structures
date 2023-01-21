@@ -1,0 +1,242 @@
+[
+  {
+    "obj": {
+      "start_x": 4.23,
+      "start_y": 4.58,
+      "start_z": 2.77,
+      "scale_x": 0.05,
+      "scale_y": 0.05,
+      "scale_z": 0.78
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 3.78,
+      "start_z": 2.77,
+      "scale_x": 0.05,
+      "scale_y": 0.05,
+      "scale_z": 0.78
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.12,
+      "start_y": 4.22,
+      "start_z": 2.77,
+      "scale_x": 0.05,
+      "scale_y": 0.05,
+      "scale_z": 0.78
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.93,
+      "start_y": 4.13,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.2,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.93,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.35,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.75,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.23,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.3,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 3.78,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.6,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.93,
+      "start_y": 4.13,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.2,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.93,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.35,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.75,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.23,
+      "start_y": 4.33,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.3,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 3.78,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.6,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.4,
+      "start_y": 3.62,
+      "start_z": 2.79,
+      "scale_x": 0.37,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.7,
+      "start_y": 3.67,
+      "start_z": 2.79,
+      "scale_x": 0.61,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.23,
+      "start_y": 3.67,
+      "start_z": 2.79,
+      "scale_x": 0.05,
+      "scale_y": 0.98,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.52,
+      "start_y": 3.52,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.25,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.52,
+      "start_y": 3.77,
+      "start_z": 3.52,
+      "scale_x": 0.65,
+      "scale_y": 0.05,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.12,
+      "start_y": 3.77,
+      "start_z": 3.52,
+      "scale_x": 0.05,
+      "scale_y": 0.5,
+      "scale_z": 0.05
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.79,
+      "start_y": 2.49,
+      "start_z": 2.79,
+      "scale_x": 0.08,
+      "scale_y": 0.37,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.79,
+      "start_y": 2.54,
+      "start_z": 2.79,
+      "scale_x": 0.52,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 2.79,
+      "start_y": 2.54,
+      "start_z": 2.79,
+      "scale_x": 1.41,
+      "scale_y": 0.08,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 3.23,
+      "start_y": 2.54,
+      "start_z": 2.79,
+      "scale_x": 0.05,
+      "scale_y": 1.32,
+      "scale_z": 0.08
+    }
+  },
+  {
+    "obj": {
+      "start_x": 4.12,
+      "start_y": 2.54,
+      "start_z": 2.79,
+      "scale_x": 0.05,
+      "scale_y": 1.76,
+      "scale_z": 0.08
+    }
+  }
+]

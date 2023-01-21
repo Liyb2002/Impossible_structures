@@ -1,192 +1,190 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Impossible Structure</title>
-		<style>
-			body { margin: 0; }
-		</style>
-	</head>
-	<body>
-		<script src="js/three.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <title>Impossible Structure</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.js"></script>
 
-		<script type="importmap">
-			{
-			"imports": {
-			 "three": "https://cdn.skypack.dev/three@0.139.2/build/three.module",
-				"three/": "https://cdn.skypack.dev/three@0.139.2/",      
-				"dat.gui": "https://cdn.skypack.dev/dat.gui"
-			}
-		   }
-		  </script>
-		  
-	   
-		<script type = "module">
-import * as THREE from 'three'
-import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
-import { Water } from 'https://threejs.org/examples/jsm/objects/Water.js';
-import { Sky } from 'https://threejs.org/examples/jsm/objects/Sky.js';
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.skypack.dev/three@0.139.2/build/three.module",
+          "three/": "https://cdn.skypack.dev/three@0.139.2/",
+          "dat.gui": "https://cdn.skypack.dev/dat.gui"
+        }
+      }
+    </script>
 
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+      import { Water } from "https://threejs.org/examples/jsm/objects/Water.js";
+      import { Sky } from "https://threejs.org/examples/jsm/objects/Sky.js";
 
+      const loader = new THREE.FileLoader();
+      var mousePressed = false;
+      var camera_x = 5.0;
+      var camera_y = 5.0;
+      var camera_z = 5.0;
 
+      var start_mouse_x = 0;
+      var start_mouse_y = 0;
 
-const loader = new THREE.FileLoader();
-var mousePressed = false;
-var camera_x = 5.0
-var camera_y = 5.0
-var camera_z = 5.0
+      var mouse = new THREE.Vector2();
 
-var start_mouse_x = 0
-var start_mouse_y = 0
+      //load a text file and output the result to the console
+      loader.load(
+        // resource URL
+        "./result.json",
 
-var mouse = new THREE.Vector2();
+        // onLoad callback
+        function (data) {
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+          );
 
+          const renderer = new THREE.WebGLRenderer();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          document.body.appendChild(renderer.domElement);
 
-//load a text file and output the result to the console
-loader.load(
-	// resource URL
-	'./result.json',
+          const geometry = new THREE.BoxGeometry(1, 1, 1).toNonIndexed();
+          const material = new THREE.MeshBasicMaterial({ vertexColors: true });
 
-	// onLoad callback
-	function ( data ) {
-		const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+          const positionAttribute = geometry.getAttribute("position");
+          const colors = [];
+          const color = new THREE.Color();
 
-			const renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
+          console.log(positionAttribute.count);
 
-			const geometry = new THREE.BoxGeometry( 1, 1, 1 ).toNonIndexed();
-			const material = new THREE.MeshBasicMaterial( { vertexColors: true } ); 
+          var count = 0;
+          for (let i = 0; i < positionAttribute.count; i += 12) {
+            if (count == 0) {
+              color.set(0xd88293);
+            }
+            if (count == 1) {
+              color.set(0xecec51);
+            }
+            if (count == 2) {
+              color.set(0x584b19);
+            }
+            console.log(color.getHex());
+            console.log(color.r);
+            console.log(color.g);
+            console.log(color.b);
 
-			const positionAttribute = geometry.getAttribute( 'position' );
-			const colors = [];
-			const color = new THREE.Color();
+            for (let j = 0; j < 12; j++) {
+              colors.push(color.r, color.g, color.b);
+            }
+            count += 1;
+          }
 
-		var count = 0;
-		for ( let i = 0; i < positionAttribute.count; i += 12 ) {
-			if (count == 0){
-				color.set( 0xD88293 );
-			}
-			if (count == 1){
-				color.set( 0xECEC51 );
-			}
-			if (count == 2){
-				color.set( 0x584B19);
-			}
-			for(let j=0;j<12;j++){
-				colors.push( color.r, color.g, color.b );
-			}
-			count += 1
+          // define the new attribute
 
-		}
-		
-		// define the new attribute
-		
-		geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+          geometry.setAttribute(
+            "color",
+            new THREE.Float32BufferAttribute(colors, 3)
+          );
 
-		camera.position.set(camera_x, camera_y, camera_z);
-		camera.lookAt(0,0,0);
-		camera.up.set(0,1,0);
+          camera.position.set(camera_x, camera_y, camera_z);
+          camera.lookAt(0, 0, 0);
+          camera.up.set(0, 1, 0);
 
-		// output the text to the console
-		var jsonData = JSON.parse(data); 
-		var objects_num = Object.keys(jsonData).length;
-		var mouse = new THREE.Vector2();
+          // output the text to the console
+          var jsonData = JSON.parse(data);
+          var objects_num = Object.keys(jsonData).length;
+          var mouse = new THREE.Vector2();
 
-		for (var i = 0; i < objects_num; i++) {
+          for (var i = 0; i < objects_num; i++) {
+            var start_x = jsonData[i]["obj"]["start_x"];
+            var start_y = jsonData[i]["obj"]["start_y"];
+            var start_z = jsonData[i]["obj"]["start_z"];
 
-			var start_x = jsonData[i]["obj"]["start_x"];
-			var start_y = jsonData[i]["obj"]["start_y"];
-			var start_z = jsonData[i]["obj"]["start_z"];
+            var scale_x = jsonData[i]["obj"]["scale_x"];
+            var scale_y = jsonData[i]["obj"]["scale_y"];
+            var scale_z = jsonData[i]["obj"]["scale_z"];
 
-			var scale_x = jsonData[i]["obj"]["scale_x"];
-			var scale_y = jsonData[i]["obj"]["scale_y"];
-			var scale_z = jsonData[i]["obj"]["scale_z"];
+            var center_x = start_x + scale_x / 2;
+            var center_y = start_y + scale_y / 2;
+            var center_z = start_z + scale_z / 2;
 
-			var center_x = start_x + scale_x/2;
-			var center_y = start_y + scale_y/2;
-			var center_z = start_z + scale_z/2;
-			
-			const cube = new THREE.Mesh( geometry, material );
-            cube.position.set(center_x, center_y, center_z );
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set(center_x, center_y, center_z);
             cube.scale.set(scale_x, scale_y, scale_z);
 
-            scene.add( cube );
+            scene.add(cube);
+          }
 
-		}
+          window.addEventListener("resize", onWindowResize, false);
+          document.addEventListener("mousemove", onDocumentMouseMove, false);
+          document.addEventListener("mousedown", onDocumentMouseDown, false);
+          document.addEventListener("mouseup", onDocumentMouseUp, false);
 
-	window.addEventListener( 'resize', onWindowResize, false );    
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	document.addEventListener( 'mousedown', onDocumentMouseDown, false );    
-	document.addEventListener( 'mouseup', onDocumentMouseUp, false );   	      
+          function onDocumentMouseDown(event) {
+            mousePressed = true;
+            start_mouse_x = (event.clientX / window.innerWidth) * 2 - 1;
+            start_mouse_y = -(event.clientY / window.innerHeight) * 2 + 1;
+          }
+          function onDocumentMouseUp(event) {
+            mousePressed = false;
+          }
+          function onDocumentMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+          }
+          const textureLoader = new THREE.TextureLoader();
 
+          function animate() {
+            requestAnimationFrame(animate);
 
-	function onDocumentMouseDown( event ) { 
-		mousePressed = true; 
-		start_mouse_x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		start_mouse_y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-	
-	}
-	function onDocumentMouseUp( event ) { mousePressed = false}
-	function onDocumentMouseMove( event ) {
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+            if (mousePressed) {
+              var delta_x = mouse.x - start_mouse_x;
+              var delta_y = mouse.y - start_mouse_y;
 
-	}
-	const textureLoader = new THREE.TextureLoader();
+              camera_x -= delta_x;
+              camera_y -= delta_y;
+              camera_z = Math.sqrt(
+                75 - camera_x * camera_x - camera_y * camera_y
+              );
 
+              start_mouse_x = mouse.x;
+              start_mouse_y = mouse.y;
 
-	function animate() {
-		requestAnimationFrame( animate );
+              camera.position.set(camera_x, camera_y, camera_z);
+              camera.lookAt(0, 0, 0);
+            }
 
-		if(mousePressed){
-			var delta_x = mouse.x - start_mouse_x;
-			var delta_y = mouse.y - start_mouse_y;
+            renderer.render(scene, camera);
+          }
 
-			camera_x -= delta_x;
-			camera_y -= delta_y;
-			camera_z = Math.sqrt(75 - camera_x*camera_x - camera_y*camera_y);
+          animate();
+        },
 
-			start_mouse_x = mouse.x;
-			start_mouse_y = mouse.y;
+        // onProgress callback
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
 
-			camera.position.set(camera_x, camera_y, camera_z);
-			camera.lookAt(0,0,0);
+        // onError callback
+        function (err) {
+          console.error("An error happened");
+        }
+      );
 
-	}
-
-		renderer.render( scene, camera );
-	};
-
-
-animate();
-
-	},
-
-	// onProgress callback
-	function ( xhr ) {
-		console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-	},
-
-	// onError callback
-	function ( err ) {
-		console.error( 'An error happened' );
-	}
-);
-
-
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    renderer.setSize( window.innerWidth, window.innerHeight );
-}
-
-
-
-
-
-
-		</script>
-	</body>
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+    </script>
+  </body>
 </html>

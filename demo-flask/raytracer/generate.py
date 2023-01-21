@@ -1,16 +1,15 @@
 import taichi as ti
 import numpy as np
-import argparse
-import random
-import json
 
-import structure
-import gen_seed
-import connecting_comp
-import metrics
-import intersection
-import particle
-import perspective
+from . import (
+    structure,
+    gen_seed,
+    connecting_comp,
+    metrics,
+    intersection,
+    particle,
+    perspective,
+)
 
 ti.init(arch=ti.gpu)
 
@@ -22,36 +21,52 @@ PI = 3.14159265
 # image_height = int(image_width / aspect_ratio)
 # canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
 
+DEFAULT_CONFIG = {
+    "num_connections": 1,
+    "num_particles": 300,
+    "beam_mean": 6,
+    "beam_sd": 2,
+    "block_size": 0.05,
+    "X_freedom": False,
+    "Y_freedom": False,
+    "input_structure": [],
+    "use_pixel": False,
+}
 
-if __name__ == "__main__":
 
-    # gui = ti.GUI("Ray Tracing", res=(image_width, image_height))
-    # canvas.fill(0)
-    # cnt = 0
+def generate(layers, intersections):
+    config = DEFAULT_CONFIG
+    config["layer_index"] = []
+    config["intersection_pos"] = []
+    config["connection"] = []
+    config["num_blocks_per_layer"] = []
 
-    num_connections = 0
-    with open("config.json", "r") as config_file:
-        config_data = json.load(config_file)
-        connection = config_data["connection"]
-        layer_index = config_data["layer_index"]
-        num_connections = config_data["num_connections"]
-        intersection_pos = config_data["intersection_pos"]
-        block_size = config_data["block_size"]
-        beam_mean = config_data["beam_mean"]
-        beam_sd = config_data["beam_sd"]
-        num_blocks_per_layer = config_data["num_blocks_per_layer"]
-        num_particles = config_data["num_particles"]
-        Y_freedom = config_data["Y_freedom"]
-        use_pixel = config_data["use_pixel"]
+    for i, ixn in enumerate(intersections):
+        l1 = ixn["layer1"]
+        l2 = ixn["layer2"]
+        x = ixn["x"]
+        y = ixn["y"]
 
-    num_intersection = len(intersection_pos)
+        config["layer_index"].append(layers[l1]["z"])
+        config["layer_index"].append(layers[l2]["z"])
+        config["num_blocks_per_layer"].append(layers[l1]["num_blocks"])
+        config["num_blocks_per_layer"].append(layers[l2]["num_blocks"])
+        config["intersection_pos"].append([x, y])
+        config["connection"].append([2 * i + 1, 2 * i + 2])
+
+        if i < len(intersections) - 1:
+            config["connection"].append([2 * i + 2, 2 * i + 3])
+
+    num_intersection = len(config["intersection_pos"])
     max_score = -1000
     result_particle = None
     intersections = []
 
-    foreground_index = int(layer_index[0])
-    background_index = int(layer_index[1])
-    startPos = np.array([intersection_pos[0][0], intersection_pos[0][1]])
+    foreground_index = int(config["layer_index"][0])
+    background_index = int(config["layer_index"][1])
+    startPos = np.array(
+        [config["intersection_pos"][0][0], config["intersection_pos"][0][1]]
+    )
     basic_scene = intersection.Scene(startPos)
 
     foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
@@ -63,20 +78,24 @@ if __name__ == "__main__":
     intersections.append(foreground_intersection)
     intersections.append(background_intersection)
 
+    extra_foreground_index = []
+    extra_background_index = []
     extra_foreground_intersection = []
     extra_background_intersection = []
     extra_backPortion = []
 
     for i in range(1, num_intersection):
-        e_foreground_index = int(layer_index[2 * i])
-        e_background_index = int(layer_index[2 * i + 1])
+        e_foreground_index = int(config["layer_index"][2 * i])
+        e_background_index = int(config["layer_index"][2 * i + 1])
         dforeground_intersection = basic_scene.get_possible_intersects(
             e_foreground_index
         )
         dbackground_intersection = basic_scene.get_possible_intersects(
             e_background_index
         )
-        e_startPos = np.array([intersection_pos[i][0], intersection_pos[i][1]])
+        e_startPos = np.array(
+            [config["intersection_pos"][i][0], config["intersection_pos"][i][1]]
+        )
         e_foreground_intersection = basic_scene.get_intersection_t(
             e_startPos, dforeground_intersection
         )
@@ -84,6 +103,8 @@ if __name__ == "__main__":
             e_startPos, dbackground_intersection
         )
         back_portion = e_background_index / e_foreground_index
+        extra_foreground_index.append(e_foreground_index)
+        extra_background_index.append(e_background_index)
         extra_foreground_intersection.append(e_foreground_intersection)
         extra_background_intersection.append(e_background_intersection)
         intersections.append(e_foreground_intersection)
@@ -93,28 +114,32 @@ if __name__ == "__main__":
     particle_list = []
     score_list = []
     # initialize particles
-    for i in range(num_particles):
+    for i in range(config["num_particles"]):
         # print("initializing particle: ", i)
         tempt_particle = particle.Particle(
+            foreground_index,
+            background_index,
             foreground_intersection,
             background_intersection,
             portion,
-            num_connections,
-            block_size,
-            Y_freedom,
-            use_pixel,
+            config["num_connections"],
+            config["block_size"],
+            config["Y_freedom"],
+            config["use_pixel"],
         )
         tempt_particle.generate_structures()
 
         for j in range(num_intersection - 1):
             tempt_particle.set_intersections(
+                extra_foreground_index[j],
+                extra_background_index[j],
                 extra_foreground_intersection[j],
                 extra_background_intersection[j],
                 1.0,
                 extra_backPortion[j],
             )
 
-        tempt_particle.get_connecting_comp(connection)
+        tempt_particle.get_connecting_comp(config["connection"])
         tempt_score = tempt_particle.total_score()
         particle_list.append(tempt_particle)
         score_list.append(tempt_score)
@@ -123,28 +148,30 @@ if __name__ == "__main__":
 
     for i in range(num_intersection * 2):
         layer = 2 * num_intersection - i
-        blocks = num_blocks_per_layer[layer - 1]
+        blocks = config["num_blocks_per_layer"][layer - 1]
 
         cc = 0
-        for i in connection:
+        for i in config["connection"]:
             if i[0] == layer or i[1] == layer:
                 cc += 1
 
-        extra_block = max(0, blocks - cc * beam_mean)
-        steps = int(extra_block / beam_mean)
-        print("layer: ", layer, "extra block: ", extra_block)
+        extra_block = max(0, blocks - cc * config["beam_mean"])
+        steps = int(extra_block / config["beam_mean"])
+        # print("layer: ", layer, "extra block: ", extra_block)
         for s in range(steps):
             score_list = []
             for i in range(len(particle_list)):
-                particle_list[i].structures[layer].generate(1, beam_mean, beam_sd)
+                particle_list[i].structures[layer].generate(
+                    1, config["beam_mean"], config["beam_sd"]
+                )
                 score_list.append(particle_list[i].total_score())
 
             particle_list = particle.resample(particle_list, score_list)
 
-    print("finishing process")
+    # print("finishing process")
     # finish the process
     for s in range(2):
-        print("finishing step: ", s)
+        # print("finishing step: ", s)
         for i in range(len(particle_list)):
             particle_list[i].finish(s)
             score_list[i] = particle_list[i].total_score()
@@ -152,13 +179,28 @@ if __name__ == "__main__":
         particle_list = particle.resample(particle_list, score_list)
         result_particle = particle_list[0]
 
-    # create a json file, and write the result
-    with open("../demo-react/src/result.json", "w") as f:
-        result = []
-        for cc in result_particle.connecting_comp:
-            i = cc.get_object()
+    # Write the result
+    result = []
+    for cc in result_particle.connecting_comp:
+        i = cc.get_object()
+        data = {
+            "type": "beam",
+            "obj": {
+                "start_x": i.start_x,
+                "start_y": i.start_y,
+                "start_z": i.start_z,
+                "scale_x": i.scale_x,
+                "scale_y": i.scale_y,
+                "scale_z": i.scale_z,
+            },
+        }
+        result.append(data)
+
+    for structure in result_particle.structures:
+        for i in structure.rect:
             data = {
                 "type": "beam",
+                "layer": structure.layer,
                 "obj": {
                     "start_x": i.start_x,
                     "start_y": i.start_y,
@@ -170,28 +212,13 @@ if __name__ == "__main__":
             }
             result.append(data)
 
-        for structure in result_particle.structures:
-            for i in structure.rect:
-                data = {
-                    "type": "beam",
-                    "obj": {
-                        "start_x": i.start_x,
-                        "start_y": i.start_y,
-                        "start_z": i.start_z,
-                        "scale_x": i.scale_x,
-                        "scale_y": i.scale_y,
-                        "scale_z": i.scale_z,
-                    },
-                }
-                result.append(data)
+    camera_pos = np.array([5, 5, 5])
+    for ixn in intersections:
+        ixn = (ixn - camera_pos) * 0.985 + camera_pos
+        data = {
+            "type": "intersection",
+            "obj": {"x": ixn[0], "y": ixn[1], "z": ixn[2]},
+        }
+        result.append(data)
 
-        camera_pos = np.array([5, 5, 5])
-        for ixn in intersections:
-            ixn = (ixn - camera_pos) * 0.985 + camera_pos
-            data = {
-                "type": "intersection",
-                "obj": {"x": ixn[0], "y": ixn[1], "z": ixn[2]},
-            }
-            result.append(data)
-
-        json.dump(result, f, indent=2)
+    return result

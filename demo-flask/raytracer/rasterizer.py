@@ -2,18 +2,26 @@
 # pyglet.options['shadow_window'] = False
 import os
 import numpy as np
-import trimesh
+
+# import trimesh
 import math
 
-import perspective
+import raytracer.perspective
 
-from pyrender import PerspectiveCamera,\
-                     Primitive, Mesh, Node, Scene,\
-                     Viewer, OffscreenRenderer, RenderFlags
+from pyrender import (
+    PerspectiveCamera,
+    Primitive,
+    Mesh,
+    Node,
+    Scene,
+    Viewer,
+    OffscreenRenderer,
+    RenderFlags,
+)
 
 
 cam = PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1.0)
-cam_pose = perspective.get_m_view()
+cam_pose = raytracer.perspective.get_m_view()
 
 
 def get_graph(rects):
@@ -23,13 +31,13 @@ def get_graph(rects):
     for i in rects:
         boxf_trimesh = trimesh.creation.box(np.array([i.scale_x, i.scale_y, i.scale_z]))
         boxf_mesh = Mesh.from_trimesh(boxf_trimesh, smooth=False)
-        boxf_node = Node(mesh=boxf_mesh, translation=np.array([i.start_x, i.start_y, i.start_z]))
-        
+        boxf_node = Node(
+            mesh=boxf_mesh, translation=np.array([i.start_x, i.start_y, i.start_z])
+        )
+
         scene.add_node(boxf_node)
-    
-    r = OffscreenRenderer(viewport_width=640*2, viewport_height=480*2)
+
+    r = OffscreenRenderer(viewport_width=640 * 2, viewport_height=480 * 2)
     _, depth = r.render(scene)
     r.delete()
     return depth
-
-

@@ -1,0 +1,31 @@
+.modal-content {
+  background-color: black;
+  color: white;
+}
+
+.modal-header .btn-close {
+  background: transparent url("./public/white-close-btn.svg") center/1em auto no-repeat;
+}
+
+.form-container {
+  margin: 0 1rem 0 1rem;
+}
+
+.form-control {
+  background-color: black;
+  border-color: gray;
+}
+
+.form-control:focus {
+  background-color: black;
+  border-color: white;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+}
