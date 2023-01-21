@@ -5,4 +5,5 @@ three/node_modules/*
 .DS_Store
 .vscode/*
 */__pycache__/*
+*/*/__pycache__/*
 */venv/*
