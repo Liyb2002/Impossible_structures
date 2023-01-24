@@ -4,7 +4,7 @@
 }
 
 .modal-header .btn-close {
-  background: transparent url("./public/white-close-btn.svg") center/1em auto no-repeat;
+  background: transparent url("./white-close-btn.svg") center/1em auto no-repeat;
 }
 
 .form-container {

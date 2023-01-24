@@ -44,8 +44,8 @@ def generate(layers, intersections):
     for i, ixn in enumerate(intersections):
         l1 = ixn["layer1"]
         l2 = ixn["layer2"]
-        x = ixn["x"]
-        y = ixn["y"]
+        x = round(ixn["u"] * 800)
+        y = round(ixn["v"] * 800)
 
         config["layer_index"].append(layers[l1]["z"])
         config["layer_index"].append(layers[l2]["z"])
@@ -64,14 +64,21 @@ def generate(layers, intersections):
 
     foreground_index = int(config["layer_index"][0])
     background_index = int(config["layer_index"][1])
+    basic_scene = intersection.Scene([400, 400])
+
     startPos = np.array(
         [config["intersection_pos"][0][0], config["intersection_pos"][0][1]]
     )
-    basic_scene = intersection.Scene(startPos)
-
-    foreground_intersection = basic_scene.get_possible_intersects(foreground_index)
-    background_intersection = basic_scene.get_possible_intersects(background_index)
+    dforeground_intersection = basic_scene.get_possible_intersects(foreground_index)
+    dbackground_intersection = basic_scene.get_possible_intersects(background_index)
     portion = background_index / foreground_index
+
+    foreground_intersection = basic_scene.get_intersection_t(
+        startPos, dforeground_intersection
+    )
+    background_intersection = basic_scene.get_intersection_t(
+        startPos, dbackground_intersection
+    )
 
     # print("foreground_intersection", foreground_intersection)
     # print("background_intersection", background_intersection)
@@ -110,6 +117,13 @@ def generate(layers, intersections):
         intersections.append(e_foreground_intersection)
         intersections.append(e_background_intersection)
         extra_backPortion.append(back_portion)
+
+    # print intersections positions
+    # print(foreground_intersection)
+    # print(background_intersection)
+    # print(extra_foreground_intersection[0])
+    # print(extra_background_intersection[0])
+    # print(len(extra_foreground_intersection))
 
     particle_list = []
     score_list = []
@@ -211,14 +225,5 @@ def generate(layers, intersections):
                 },
             }
             result.append(data)
-
-    camera_pos = np.array([5, 5, 5])
-    for ixn in intersections:
-        ixn = (ixn - camera_pos) * 0.985 + camera_pos
-        data = {
-            "type": "intersection",
-            "obj": {"x": ixn[0], "y": ixn[1], "z": ixn[2]},
-        }
-        result.append(data)
 
     return result

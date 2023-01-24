@@ -17,8 +17,8 @@ function IntersectionModal({
   const DEFAULT_INTERSECTION = {
     layer1: -1,
     layer2: -1,
-    x: 400,
-    y: 400,
+    u: 0.5,
+    v: 0.5,
   };
   const [intersection, setIntersection] = useState(DEFAULT_INTERSECTION);
   const [errors, setErrors] = useState({});
@@ -42,7 +42,7 @@ function IntersectionModal({
   };
 
   const validate = () => {
-    const { layer1, layer2, x, y } = intersection;
+    const { layer1, layer2, u, v } = intersection;
     const newErrors = {};
 
     // Check for layer selection
@@ -57,8 +57,8 @@ function IntersectionModal({
         (int, i) =>
           int.layer1 === layer1 &&
           int.layer2 === layer2 &&
-          int.x === x &&
-          int.y === y &&
+          int.u === u &&
+          int.v === v &&
           i !== selectedIntersection
       )
     )
@@ -140,29 +140,33 @@ function IntersectionModal({
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formIntersectionX">
-          <Form.Label>X-Intersect: {intersection.x}</Form.Label>
+          <Form.Label>
+            X-Intersect: {Math.round(intersection.u * 800)}
+          </Form.Label>
           <Form.Control
             type="range"
-            min={200}
-            max={600}
+            min={0}
+            max={800}
             step={1}
-            value={intersection.x}
+            value={intersection.u * 800}
             onChange={(e) => {
-              setField("x", e.target.value);
+              setField("u", e.target.value / 800);
             }}
             isInvalid={!!errors.xy}
           ></Form.Control>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formIntersectionY">
-          <Form.Label>Y-Intersect: {intersection.y}</Form.Label>
+          <Form.Label>
+            Y-Intersect: {Math.round(intersection.v * 800)}
+          </Form.Label>
           <Form.Control
             type="range"
-            min={200}
-            max={600}
+            min={0}
+            max={800}
             step={1}
-            value={intersection.y}
+            value={intersection.v * 800}
             onChange={(e) => {
-              setField("y", e.target.value);
+              setField("v", e.target.value / 800);
             }}
             isInvalid={!!errors.xy}
           ></Form.Control>

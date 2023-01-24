@@ -23,7 +23,10 @@ class Scene:
         u = (self.x_start) / self.image_width
         v = (self.y_start) / self.image_height
         camera_pos = self.camera.get_camera_origin()
-        ray = self.camera.get_ray(u, v)
+        ray = (
+            self.camera.get_ray(u, v)
+            / 0.7820639193332522157014273863508130241728603726131345995372781426
+        )
 
         ray_max = self.camera.get_ray(1, 1)
         ray_min = self.camera.get_ray(0, 0)

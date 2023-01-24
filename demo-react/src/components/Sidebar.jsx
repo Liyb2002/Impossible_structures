@@ -1,8 +1,5 @@
 import "./Sidebar.css";
 
-import LayerModal from "./LayerModal";
-import IntersectionModal from "./IntersectionModal";
-
 import ListGroup from "react-bootstrap/ListGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
@@ -10,6 +7,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useState } from "react";
+
+import { BsTrash, BsPlus } from "react-icons/bs";
 
 function SideBar({
   showIntersections,
@@ -26,41 +25,33 @@ function SideBar({
   intersectionColors,
   screenshotToggle,
   setScreenshotToggle,
+  intersections,
+  setIntersections,
+  layers,
+  setLayers,
+  handleDefault,
+  setBeams,
 }) {
-  const DEFAULT_LAYERS = [
-    { z: 8, num_blocks: 10 },
-    { z: 12, num_blocks: 10 },
-  ];
-  const [layers, setLayers] = useState(DEFAULT_LAYERS);
-
-  const DEFAULT_INTERSECTIONS = [
-    { layer1: 0, layer2: 1, x: 500, y: 500 },
-    { layer1: 0, layer2: 1, x: 400, y: 400 },
-  ];
-  const [intersections, setIntersections] = useState(DEFAULT_INTERSECTIONS);
-
-  const [showLayerModal, setShowLayerModal] = useState(false);
-  const [selectedLayer, setSelectedLayer] = useState();
-  const handleEditLayer = (index) => {
-    setSelectedLayer(index);
-    setShowLayerModal(true);
+  const DEFAULT_LAYER = { z: 12, num_blocks: 10 };
+  const handleAddLayer = () => {
+    if (layers.length < 3) setLayers([...layers, DEFAULT_LAYER]);
   };
 
-  const [showIntersectionModal, setShowIntersectionModal] = useState(false);
-  const [selectedIntersection, setSelectedIntersection] = useState();
-  const handleEditIntersection = (index) => {
-    setSelectedIntersection(index);
-    setShowIntersectionModal(true);
+  const DEFAULT_INTERSECTION = {
+    layer1: -1,
+    layer2: -1,
+    u: 0.5,
+    v: 0.5,
+  };
+  const handleAddIntersection = () => {
+    if (layers.length > 1 && intersections.length < 3)
+      setIntersections([...intersections, DEFAULT_INTERSECTION]);
   };
 
   const handleReset = () => {
     setLayers([]);
     setIntersections([]);
-  };
-
-  const handleDefault = () => {
-    setLayers(DEFAULT_LAYERS);
-    setIntersections(DEFAULT_INTERSECTIONS);
+    setBeams([]);
   };
 
   const handleEditColor = (index, e) => {
@@ -84,49 +75,96 @@ function SideBar({
     setScreenshotToggle(!screenshotToggle);
   };
 
+  const setLayerField = (index, field, value) => {
+    setLayers(
+      layers.map((l, i) => {
+        if (i === index) {
+          return { ...l, [field]: Number(value) };
+        } else {
+          return l;
+        }
+      })
+    );
+  };
+
+  const handleDeleteLayer = (index) => {
+    // Update affected intersections
+    if (layers.length < 3) setIntersections([]);
+    else
+      setIntersections(
+        intersections
+          .filter((int) => int.layer1 != index && int.layer2 != index)
+          .map((int) => {
+            let newLayer1 = int.layer1 > index ? int.layer1 - 1 : int.layer1;
+            let newLayer2 = int.layer2 > index ? int.layer2 - 1 : int.layer2;
+            return { ...int, layer1: newLayer1, layer2: newLayer2 };
+          })
+      );
+
+    setLayers(layers.filter((l, i) => i !== index));
+  };
+
+  const handleDeleteIntersection = (index) => {
+    setIntersections(intersections.filter((l, i) => i !== index));
+  };
+
+  const setIntersectionField = (index, field, value) => {
+    setIntersections(
+      intersections.map((int, i) => {
+        if (i === index) {
+          return { ...int, [field]: Number(value) };
+        } else {
+          return int;
+        }
+      })
+    );
+  };
+
   return (
     <>
       <Col className="sidebar">
         <div className="section">
           <h3 className="label">Display</h3>
-          <Form className="my-3">
-            <Form.Label>Preset Color</Form.Label>
-            <Dropdown onSelect={selectColors}>
-              <Dropdown.Toggle variant="outline-light">
-                Select Theme
-              </Dropdown.Toggle>
-              <Dropdown.Menu
-                style={{ maxHeight: "175px", overflowY: "scroll" }}
-              >
-                <Dropdown.Item eventKey={"default"}>Default</Dropdown.Item>
-                <Dropdown.Item eventKey={"blue"}>Blue</Dropdown.Item>
-                <Dropdown.Item eventKey={"green"}>Green</Dropdown.Item>
-                <Dropdown.Item eventKey={"purple"}>Purple</Dropdown.Item>
-                <Dropdown.Item eventKey={"orange"}>Orange</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Form>
-          <Form className="my-3">
-            <Form.Label>Color Palette</Form.Label>
-            <Row style={{ margin: "0" }}>
-              <Form.Control
-                type="color"
-                value={colors[0]}
-                onChange={(e) => handleEditColor(0, e)}
-              />
-              <Form.Control
-                type="color"
-                value={colors[1]}
-                onChange={(e) => handleEditColor(1, e)}
-              />
-              <Form.Control
-                type="color"
-                value={colors[2]}
-                onChange={(e) => handleEditColor(2, e)}
-              />
-            </Row>
-          </Form>
-          <Form className="my-3">
+          <Row>
+            <Form className="my-3 col-5">
+              <Form.Label>Preset Color</Form.Label>
+              <Dropdown onSelect={selectColors}>
+                <Dropdown.Toggle variant="outline-light">
+                  Select
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  style={{ maxHeight: "175px", overflowY: "scroll" }}
+                >
+                  <Dropdown.Item eventKey={"default"}>Default</Dropdown.Item>
+                  <Dropdown.Item eventKey={"blue"}>Blue</Dropdown.Item>
+                  <Dropdown.Item eventKey={"green"}>Green</Dropdown.Item>
+                  <Dropdown.Item eventKey={"purple"}>Purple</Dropdown.Item>
+                  <Dropdown.Item eventKey={"orange"}>Orange</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Form>
+            <Form className="my-3 col-7 pl-3">
+              <Form.Label>Color Palette</Form.Label>
+              <Row style={{ margin: "0" }}>
+                <Form.Control
+                  type="color"
+                  value={colors[0]}
+                  onChange={(e) => handleEditColor(0, e)}
+                />
+                <Form.Control
+                  type="color"
+                  value={colors[1]}
+                  onChange={(e) => handleEditColor(1, e)}
+                />
+                <Form.Control
+                  type="color"
+                  value={colors[2]}
+                  onChange={(e) => handleEditColor(2, e)}
+                />
+              </Row>
+            </Form>
+          </Row>
+          <Form className="mt-2 mb-3">
             <Form.Label>Show Intersections</Form.Label>
             <Form.Check
               type="switch"
@@ -163,56 +201,133 @@ function SideBar({
         </div>
         <div className="divider" />
         <div className="section">
-          <h3 className="label">Layers</h3>
+          <h3 className="label prevent-select">
+            Layers
+            <BsPlus className="add" onClick={handleAddLayer} />
+          </h3>
           <ListGroup variant="flush">
             {layers.map((l, i) => {
               return (
                 <ListGroup.Item
                   action
                   key={"layer-" + i}
-                  onClick={() => handleEditLayer(i)}
                   style={{ color: showLayers ? layerColors[i][0] : "inherit" }}
                 >
-                  {"Layer " + (i + 1)}
+                  <Row className="mb-1">
+                    <div className="col-6">
+                      {"Layer " + (i + 1)}
+                      <BsTrash
+                        className="trash"
+                        onClick={() => {
+                          handleDeleteLayer(i);
+                        }}
+                      />
+                    </div>
+                    <div className="col-6" style={{ textAlign: "right" }}>
+                      {" (depth = " + layers[i].z + ")"}
+                    </div>
+                  </Row>
+                  <Form.Group className="mb-3" controlId="formLayerZ">
+                    {/* <Form.Label>Z-Index: {layers[i].z}</Form.Label> */}
+                    <Form.Control
+                      type="range"
+                      min={4}
+                      max={20}
+                      step={1}
+                      value={layers[i].z}
+                      onChange={(e) => {
+                        setLayerField(i, "z", e.target.value);
+                      }}
+                      // isInvalid={!!errors.z}
+                    ></Form.Control>
+                    {/* <Form.Control.Feedback type="invalid">
+                      {errors.z}
+                    </Form.Control.Feedback> */}
+                  </Form.Group>
                 </ListGroup.Item>
               );
             })}
-            {layers.length < 3 ? (
-              <ListGroup.Item action onClick={() => handleEditLayer(null)}>
-                Add Layer...
-              </ListGroup.Item>
-            ) : (
-              <></>
-            )}
           </ListGroup>
         </div>
         <div className="section">
-          <h3 className="label">Intersections</h3>
+          <h3 className="label prevent-select">
+            Intersections
+            <BsPlus className="add" onClick={handleAddIntersection} />
+          </h3>
           <ListGroup variant="flush">
-            {intersections.map((l, i) => {
+            {intersections.map((int, i) => {
               return (
                 <ListGroup.Item
                   action
                   key={"intersection-" + i}
-                  onClick={() => handleEditIntersection(i)}
+                  // onClick={() => handleEditIntersection(i)}
                   style={{
                     color: showIntersections
                       ? intersectionColors[i]
                       : "inherit",
                   }}
                 >
-                  {"Intersection " + (i + 1)}
+                  <div className="mb-1">
+                    {"Intersection " + (i + 1)}
+                    <BsTrash
+                      className="trash"
+                      onClick={() => {
+                        handleDeleteIntersection(i);
+                      }}
+                    />
+                  </div>
+                  <Row>
+                    <Form.Group
+                      className="mb-3 col-6"
+                      controlId="formIntersectionLayer1"
+                    >
+                      <Form.Label className="small">First Layer:</Form.Label>
+                      <Form.Select
+                        value={int.layer1}
+                        onChange={(e) =>
+                          setIntersectionField(i, "layer1", e.target.value)
+                        }
+                        // isInvalid={!!errors.layer1}
+                      >
+                        <option value={-1}>Select Layer</option>
+                        {layers.map((l, i) => (
+                          <option key={"layer1-option-" + i} value={i}>
+                            {"Layer " + (i + 1)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      {/* <Form.Control.Feedback type="invalid">
+                        {errors.layer1}
+                      </Form.Control.Feedback> */}
+                    </Form.Group>
+                    <Form.Group
+                      className="mb-3 col-6"
+                      controlId="formIntersectionLayer2"
+                    >
+                      <Form.Label className="small">Second Layer:</Form.Label>
+                      <Form.Select
+                        value={int.layer2}
+                        onChange={(e) =>
+                          setIntersectionField(i, "layer2", e.target.value)
+                        }
+                        // isInvalid={!!errors.layer2}
+                      >
+                        <option value={-1}>Select Layer</option>
+                        {layers.map((l, i) => (
+                          <option key={"layer2-option-" + i} value={i}>
+                            {"Layer " + (i + 1)}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      {/* <Form.Control.Feedback type="invalid">
+                        {errors.layer1}
+                      </Form.Control.Feedback> */}
+                    </Form.Group>
+                  </Row>
                 </ListGroup.Item>
               );
             })}
-            {layers.length > 1 && intersections.length < 3 ? (
-              <ListGroup.Item
-                action
-                onClick={() => handleEditIntersection(null)}
-              >
-                Add Intersection...
-              </ListGroup.Item>
-            ) : intersections.length < 3 ? (
+            {layers.length < 2 ? (
               <ListGroup.Item disabled>
                 {"<Need at least 2 layers to create an intersection>"}
               </ListGroup.Item>
@@ -238,7 +353,7 @@ function SideBar({
           </Button>
           <Button
             variant="outline-light"
-            className="col-12 mb-3"
+            className="col-12 mb-5"
             onClick={() => {
               handleGenerate(layers, intersections);
               resetCamera();
@@ -248,23 +363,6 @@ function SideBar({
           </Button>
         </Col>
       </Col>
-      <LayerModal
-        show={showLayerModal}
-        onHide={() => setShowLayerModal(false)}
-        selectedLayer={selectedLayer}
-        layers={layers}
-        setLayers={setLayers}
-        intersections={intersections}
-        setIntersections={setIntersections}
-      />
-      <IntersectionModal
-        show={showIntersectionModal}
-        onHide={() => setShowIntersectionModal(false)}
-        layers={layers}
-        selectedIntersection={selectedIntersection}
-        intersections={intersections}
-        setIntersections={setIntersections}
-      />
     </>
   );
 }

@@ -82,12 +82,26 @@ function App() {
   const comp = useRef();
   const [beams, setBeams] = useState([]);
   const [layerIndexMap, setLayerIndexMap] = useState({});
-  const [intersections, setIntersections] = useState([]);
-  const [showIntersections, setShowIntersections] = useState(false);
+  const [showIntersections, setShowIntersections] = useState(true);
   const [showLayers, setShowLayers] = useState(false);
   const [center, setCenter] = useState();
   const [showSideBar, setShowSideBar] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
+  const [enableOrbit, setEnableOrbit] = useState(true);
+
+  const DEFAULT_LAYERS = [
+    { z: 8, num_blocks: 10 },
+    { z: 12, num_blocks: 10 },
+  ];
+  const [layers, setLayers] = useState(DEFAULT_LAYERS);
+
+  const DEFAULT_INTERSECTIONS = [
+    { layer1: 0, layer2: 1, u: 0.625, v: 0.625 },
+    { layer1: 0, layer2: 1, u: 0.5, v: 0.5 },
+  ];
+  const [paramIntersections, setParamIntersections] = useState(
+    DEFAULT_INTERSECTIONS
+  );
 
   const DEFAULT_COLORS = ["#d88293", "#ecec51", "#584b19"];
   const COLOR_THEMES = {
@@ -169,19 +183,9 @@ function App() {
 
     setLayerIndexMap(newLayerIndexMap);
 
-    setIntersections(
-      json
-        .filter((data) => data["type"] === "intersection")
-        .map((obj) => {
-          return {
-            position: [obj["obj"]["x"], obj["obj"]["y"], obj["obj"]["z"]],
-          };
-        })
-    );
-
-    // let mid = (min_x + min_y + min_z + max_x + max_y + max_z) / 6;
-    // setCenter(mid, mid, mid);
-    setCenter([(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2]);
+    let mid = (min_x + min_y + min_z + max_x + max_y + max_z) / 6;
+    setCenter(mid, mid, mid);
+    // setCenter([(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2]);
   };
 
   useEffect(() => {
@@ -218,6 +222,12 @@ function App() {
     }, comp);
   }, [showSideBar]);
 
+  // TODO: Add form validation
+  // const validate = () => {
+  //   const newErrors = {layers: [], intersections: []};
+
+  // }
+
   const handleGenerate = async (ls, is) => {
     setShowLoading(true);
     await fetch("http://127.0.0.1:5000/", {
@@ -241,6 +251,12 @@ function App() {
         console.log(e);
       });
     setShowLoading(false);
+  };
+
+  const handleDefault = () => {
+    setLayers(DEFAULT_LAYERS);
+    setParamIntersections(DEFAULT_INTERSECTIONS);
+    setBeams([]);
   };
 
   return (
@@ -269,6 +285,12 @@ function App() {
         intersectionColors={INTERSECTION_COLORS}
         screenshotToggle={screenshotToggle}
         setScreenshotToggle={setScreenshotToggle}
+        intersections={paramIntersections}
+        setIntersections={setParamIntersections}
+        layers={layers}
+        setLayers={setLayers}
+        handleDefault={handleDefault}
+        setBeams={setBeams}
       ></SideBar>
       <Canvas camera={{ position: [5, 5, 5], fov: 60 }}>
         <ambientLight></ambientLight>
@@ -280,8 +302,12 @@ function App() {
         />
         {showIntersections ? (
           <Intersections
-            intersections={intersections}
+            layers={layers}
+            intersections={paramIntersections}
+            setIntersections={setParamIntersections}
             themes={INTERSECTION_COLORS}
+            setEnableOrbit={setEnableOrbit}
+            showIntersections={showIntersections}
           />
         ) : (
           <></>
@@ -291,7 +317,7 @@ function App() {
           resetCameraToggle={resetCameraToggle}
           screenshotToggle={screenshotToggle}
         />
-        <OrbitControls target={center} />
+        {enableOrbit ? <OrbitControls target={center} /> : <></>}
         {/* <Stats className="fixed-stats" /> */}
       </Canvas>
     </div>

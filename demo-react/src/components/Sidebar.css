@@ -3,7 +3,7 @@
   top: 0;
   left: -100%;
   height: 100vh;
-  width: 375px;
+  width: 400px;
   background-color: black;
   color: white;
   opacity: 0.9;
@@ -48,12 +48,12 @@
 }
 
 .form-check-input:focus {
-  background-image: url("./public/gray-toggle.svg") !important;
+  background-image: url("./gray-toggle.svg") !important;
   border-color: gray !important;
 }
 
 .form-check-input:checked {
-  background-image: url("./public/white-toggle.svg") !important;
+  background-image: url("./white-toggle.svg") !important;
   border-color: gray !important;
   background-color: gray !important;
 }
@@ -63,4 +63,55 @@
   height: 2rem;
   padding: 0.125rem;
   margin-right: 0.5rem;
+}
+
+.trash {
+  margin-left: 0.75rem;
+  opacity: 0.5;
+}
+
+.trash:hover {
+  opacity: 1;
+}
+
+.add {
+  margin-left: 0.25rem;
+  opacity: 0.5;
+}
+
+.add:hover {
+  opacity: 1;
+}
+
+.form-control {
+  background-color: black;
+  border-color: gray;
+}
+
+.form-control:focus {
+  background-color: black;
+  border-color: white;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+}
+
+.form-select {
+  background-color: black;
+  color: white;
+}
+
+.dropdown-menu {
+  background-color: rgb(12, 12, 12);
+  border-color: white;
+}
+
+.dropdown-item {
+  color:white;
 }
