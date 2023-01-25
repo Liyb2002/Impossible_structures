@@ -1,26 +1,11 @@
-import taichi as ti
 import numpy as np
 
 from . import (
-    structure,
-    gen_seed,
-    connecting_comp,
-    metrics,
     intersection,
     particle,
-    perspective,
 )
 
-ti.init(arch=ti.gpu)
-
 PI = 3.14159265
-
-# Canvas
-# aspect_ratio = 1.0
-# image_width = 800
-# image_height = int(image_width / aspect_ratio)
-# canvas = ti.Vector.field(3, dtype=ti.f32, shape=(image_width, image_height))
-
 DEFAULT_CONFIG = {
     "num_connections": 1,
     "num_particles": 300,
@@ -30,7 +15,6 @@ DEFAULT_CONFIG = {
     "X_freedom": False,
     "Y_freedom": False,
     "input_structure": [],
-    "use_pixel": False,
 }
 
 
@@ -139,7 +123,6 @@ def generate(layers, intersections):
             config["num_connections"],
             config["block_size"],
             config["Y_freedom"],
-            config["use_pixel"],
         )
         tempt_particle.generate_structures()
 

@@ -1,7 +1,6 @@
 import numpy as np
 
 from . import (
-    intersection,
     structure,
     connecting_comp,
     gen_seed,
@@ -12,7 +11,6 @@ from . import (
 
 import random
 from copy import deepcopy
-import math
 
 
 class Particle:
@@ -26,7 +24,6 @@ class Particle:
         num_cc,
         block_size,
         Y_freedom,
-        use_pixel,
     ):
 
         self.structures = []
@@ -42,7 +39,6 @@ class Particle:
         self.portion = portion
         self.num_cc = num_cc
         self.Y_freedom = Y_freedom
-        self.use_pixel = use_pixel
 
     def set_intersections(
         self,
@@ -208,12 +204,6 @@ class Particle:
         eye = np.array([5.0, 5.0, 5.0])
 
         raster_score = 0
-        if self.use_pixel:
-            for i in range(2, len(self.structures)):
-                raster_score += metrics.occlusion_raster(
-                    self.structures[i - 1], self.structures[i]
-                )
-
         critical_pts = []
 
         for i in self.connecting_comp:
