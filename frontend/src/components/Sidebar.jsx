@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useState } from "react";
 
 import { BsTrash, BsPlus } from "react-icons/bs";
 
@@ -357,6 +356,7 @@ function SideBar({
               handleGenerate(layers, intersections);
               resetCamera();
             }}
+            disabled
           >
             Generate Structure
           </Button>

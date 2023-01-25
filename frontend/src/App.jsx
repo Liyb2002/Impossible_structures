@@ -16,6 +16,8 @@ import Intersections from "./components/Intersections";
 import Structure from "./components/Structure";
 import SideBar from "./components/Sidebar";
 
+import example from "./example.json";
+
 function Loading() {
   return (
     <div
@@ -175,22 +177,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("./src/example.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Example file not found.");
-        }
-        return res.json();
-      })
-      .then((json) => parseJSON(json))
-      .catch((e) => {
-        console.log(e);
-      });
+    parseJSON(example);
     setShowLoading(false);
   }, []);
 
