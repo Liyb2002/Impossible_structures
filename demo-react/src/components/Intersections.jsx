@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 
@@ -10,7 +9,6 @@ function Intersections({
   setIntersections,
   themes,
   setEnableOrbit,
-  showIntersections,
 }) {
   const meshMatC = useRef();
   const meshMatM = useRef();
@@ -33,16 +31,12 @@ function Intersections({
 
   useFrame(({ clock }) => {
     const a = clock.getElapsedTime();
-    // if (hoverOn === 0) {
     meshMatC.current.opacity = 0.3 * (1 + Math.sin(a * 1.5)) + 0.2;
     planeMatC.current.opacity = 0.1 * (1 + Math.sin(a * 1.5));
-    // } else if (hoverOn === 1) {
     meshMatM.current.opacity = 0.3 * (1 + Math.sin(a * 1.5)) + 0.2;
     planeMatM.current.opacity = 0.1 * (1 + Math.sin(a * 1.5));
-    // } else if (hoverOn === 2) {
     meshMatY.current.opacity = 0.3 * (1 + Math.sin(a * 1.5)) + 0.2;
     planeMatY.current.opacity = 0.1 * (1 + Math.sin(a * 1.5));
-    // }
   });
 
   return (
@@ -63,7 +57,6 @@ function Intersections({
           material={materials[index]}
           planeMaterial={planeMaterials[index]}
           setEnableOrbit={setEnableOrbit}
-          hoverOn={hoverOn}
           setHoverOn={setHoverOn}
         />
       ))}

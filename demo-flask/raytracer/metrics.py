@@ -228,7 +228,6 @@ def size_score(structure_a, struct_b):
 
 def triangle_property_score(dist):
     coef = (dist - 0.618) ** 2
-    # return math.exp(coef)
     return coef
 
 

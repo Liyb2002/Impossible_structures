@@ -31,8 +31,9 @@ function SideBar({
   setLayers,
   handleDefault,
   setBeams,
+  errors,
 }) {
-  const DEFAULT_LAYER = { z: 12, num_blocks: 10 };
+  const DEFAULT_LAYER = { z: 10, num_blocks: 10 };
   const handleAddLayer = () => {
     if (layers.length < 3) setLayers([...layers, DEFAULT_LAYER]);
   };
@@ -228,21 +229,20 @@ function SideBar({
                     </div>
                   </Row>
                   <Form.Group className="mb-3" controlId="formLayerZ">
-                    {/* <Form.Label>Z-Index: {layers[i].z}</Form.Label> */}
                     <Form.Control
                       type="range"
-                      min={4}
-                      max={20}
+                      min={6}
+                      max={14}
                       step={1}
                       value={layers[i].z}
                       onChange={(e) => {
                         setLayerField(i, "z", e.target.value);
                       }}
-                      // isInvalid={!!errors.z}
+                      isInvalid={i in errors.layers}
                     ></Form.Control>
-                    {/* <Form.Control.Feedback type="invalid">
-                      {errors.z}
-                    </Form.Control.Feedback> */}
+                    <Form.Control.Feedback type="invalid">
+                      {errors.layers[i]}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </ListGroup.Item>
               );
@@ -260,7 +260,6 @@ function SideBar({
                 <ListGroup.Item
                   action
                   key={"intersection-" + i}
-                  // onClick={() => handleEditIntersection(i)}
                   style={{
                     color: showIntersections
                       ? intersectionColors[i]
@@ -287,18 +286,18 @@ function SideBar({
                         onChange={(e) =>
                           setIntersectionField(i, "layer1", e.target.value)
                         }
-                        // isInvalid={!!errors.layer1}
+                        isInvalid={i in errors.intersections.layer1}
                       >
-                        <option value={-1}>Select Layer</option>
+                        <option value={-1}>Select</option>
                         {layers.map((l, i) => (
                           <option key={"layer1-option-" + i} value={i}>
                             {"Layer " + (i + 1)}
                           </option>
                         ))}
                       </Form.Select>
-                      {/* <Form.Control.Feedback type="invalid">
-                        {errors.layer1}
-                      </Form.Control.Feedback> */}
+                      <Form.Control.Feedback type="invalid">
+                        {errors.intersections.layer1[i]}
+                      </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group
                       className="mb-3 col-6"
@@ -310,18 +309,18 @@ function SideBar({
                         onChange={(e) =>
                           setIntersectionField(i, "layer2", e.target.value)
                         }
-                        // isInvalid={!!errors.layer2}
+                        isInvalid={i in errors.intersections.layer2}
                       >
-                        <option value={-1}>Select Layer</option>
+                        <option value={-1}>Select</option>
                         {layers.map((l, i) => (
                           <option key={"layer2-option-" + i} value={i}>
                             {"Layer " + (i + 1)}
                           </option>
                         ))}
                       </Form.Select>
-                      {/* <Form.Control.Feedback type="invalid">
-                        {errors.layer1}
-                      </Form.Control.Feedback> */}
+                      <Form.Control.Feedback type="invalid">
+                        {errors.intersections.layer2[i]}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
                 </ListGroup.Item>

@@ -3,9 +3,7 @@ import "./App.css";
 
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, SSAO } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
-import { Stats, OrbitControls } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import NavBar from "react-bootstrap/NavBar";
 import Spinner from "react-bootstrap/Spinner";
@@ -17,19 +15,6 @@ import { gsap } from "gsap";
 import Intersections from "./components/Intersections";
 import Structure from "./components/Structure";
 import SideBar from "./components/Sidebar";
-
-function Effects() {
-  return (
-    <EffectComposer>
-      <SSAO
-        blendFunction={BlendFunction.MULTIPLY}
-        samples={31}
-        radius={5}
-        intensity={30}
-      />
-    </EffectComposer>
-  );
-}
 
 function Loading() {
   return (
@@ -81,13 +66,19 @@ function CameraControl({ resetCameraToggle, screenshotToggle }) {
 function App() {
   const comp = useRef();
   const [beams, setBeams] = useState([]);
-  const [layerIndexMap, setLayerIndexMap] = useState({});
   const [showIntersections, setShowIntersections] = useState(true);
   const [showLayers, setShowLayers] = useState(false);
   const [center, setCenter] = useState();
   const [showSideBar, setShowSideBar] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [enableOrbit, setEnableOrbit] = useState(true);
+
+  const DEFAULT_ERRORS = {
+    layers: {},
+    intersections: { layer1: {}, layer2: {} },
+    general: {},
+  };
+  const [errors, setErrors] = useState(DEFAULT_ERRORS);
 
   const DEFAULT_LAYERS = [
     { z: 8, num_blocks: 10 },
@@ -99,9 +90,7 @@ function App() {
     { layer1: 0, layer2: 1, u: 0.625, v: 0.625 },
     { layer1: 0, layer2: 1, u: 0.5, v: 0.5 },
   ];
-  const [paramIntersections, setParamIntersections] = useState(
-    DEFAULT_INTERSECTIONS
-  );
+  const [intersections, setIntersections] = useState(DEFAULT_INTERSECTIONS);
 
   const DEFAULT_COLORS = ["#d88293", "#ecec51", "#584b19"];
   const COLOR_THEMES = {
@@ -140,7 +129,7 @@ function App() {
     let min_z = Number.MAX_VALUE;
     let max_z = Number.MIN_VALUE;
 
-    let newLayerIndexMap = {};
+    let layerIndexMap = {};
 
     setBeams(
       json
@@ -168,24 +157,21 @@ function App() {
           let layer = obj["layer"];
 
           if (layer !== undefined) {
-            if (!(layer in newLayerIndexMap)) {
-              newLayerIndexMap[layer] = Object.keys(newLayerIndexMap).length;
+            if (!(layer in layerIndexMap)) {
+              layerIndexMap[layer] = Object.keys(layerIndexMap).length;
             }
           }
 
           return {
             position: [center_x, center_y, center_z],
             scale: [scale_x, scale_y, scale_z],
-            layer: newLayerIndexMap[layer],
+            layer: layerIndexMap[layer],
           };
         })
     );
 
-    setLayerIndexMap(newLayerIndexMap);
-
     let mid = (min_x + min_y + min_z + max_x + max_y + max_z) / 6;
     setCenter(mid, mid, mid);
-    // setCenter([(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2]);
   };
 
   useEffect(() => {
@@ -222,40 +208,96 @@ function App() {
     }, comp);
   }, [showSideBar]);
 
-  // TODO: Add form validation
-  // const validate = () => {
-  //   const newErrors = {layers: [], intersections: []};
+  const validate = () => {
+    const newErrors = DEFAULT_ERRORS;
 
-  // }
+    let zSet = new Set();
+    layers.forEach((layer, i) => {
+      if (zSet.has(layer.z)) {
+        newErrors.layers = {
+          ...newErrors.layers,
+          [i]: "Duplicated layer with the same depth.",
+        };
+      } else {
+        zSet.add(layer.z);
+      }
+    });
+
+    intersections.forEach((int, i) => {
+      if (int.layer1 === int.layer2) {
+        newErrors.intersections.layer2 = {
+          ...newErrors.intersections.layer2,
+          [i]: "Cannot choose the same layer.",
+        };
+      }
+      if (int.layer1 < 0) {
+        newErrors.intersections.layer1 = {
+          ...newErrors.intersections.layer1,
+          [i]: "Please choose a valid layer.",
+        };
+      }
+      if (int.layer2 < 0) {
+        newErrors.intersections.layer2 = {
+          ...newErrors.intersections.layer2,
+          [i]: "Please choose a valid layer.",
+        };
+      }
+      if (
+        !(i in newErrors.intersections.layer1) &&
+        !(i in newErrors.intersections.layer2) &&
+        layers[int.layer1].z > layers[int.layer2].z
+      ) {
+        newErrors.intersections.layer2 = {
+          ...newErrors.intersections.layer2,
+          [i]: "This should be in the front.",
+        };
+      }
+    });
+
+    if (intersections.length === 0) {
+      newErrors.general = "Please add at least one intersection.";
+    }
+
+    setErrors(newErrors);
+    return newErrors;
+  };
 
   const handleGenerate = async (ls, is) => {
-    setShowLoading(true);
-    await fetch("http://127.0.0.1:5000/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ layers: ls, intersections: is }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to generate structure.");
-        }
-        return res.json();
+    const newErrors = validate();
+    if (
+      Object.keys(newErrors.layers).length === 0 &&
+      Object.keys(newErrors.intersections.layer1).length === 0 &&
+      Object.keys(newErrors.intersections.layer2).length === 0 &&
+      Object.keys(newErrors.general).length === 0
+    ) {
+      setShowLoading(true);
+      await fetch("http://127.0.0.1:5000/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ layers: ls, intersections: is }),
       })
-      .then((json) => {
-        return parseJSON(json);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    setShowLoading(false);
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to generate structure.");
+          }
+          return res.json();
+        })
+        .then((json) => {
+          return parseJSON(json);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      setShowLoading(false);
+    }
   };
 
   const handleDefault = () => {
     setLayers(DEFAULT_LAYERS);
-    setParamIntersections(DEFAULT_INTERSECTIONS);
+    setIntersections(DEFAULT_INTERSECTIONS);
     setBeams([]);
   };
 
@@ -285,12 +327,13 @@ function App() {
         intersectionColors={INTERSECTION_COLORS}
         screenshotToggle={screenshotToggle}
         setScreenshotToggle={setScreenshotToggle}
-        intersections={paramIntersections}
-        setIntersections={setParamIntersections}
+        intersections={intersections}
+        setIntersections={setIntersections}
         layers={layers}
         setLayers={setLayers}
         handleDefault={handleDefault}
         setBeams={setBeams}
+        errors={errors}
       ></SideBar>
       <Canvas camera={{ position: [5, 5, 5], fov: 60 }}>
         <ambientLight></ambientLight>
@@ -303,22 +346,19 @@ function App() {
         {showIntersections ? (
           <Intersections
             layers={layers}
-            intersections={paramIntersections}
-            setIntersections={setParamIntersections}
+            intersections={intersections}
+            setIntersections={setIntersections}
             themes={INTERSECTION_COLORS}
             setEnableOrbit={setEnableOrbit}
-            showIntersections={showIntersections}
           />
         ) : (
           <></>
         )}
-        {/* <Effects /> */}
         <CameraControl
           resetCameraToggle={resetCameraToggle}
           screenshotToggle={screenshotToggle}
         />
         {enableOrbit ? <OrbitControls target={center} /> : <></>}
-        {/* <Stats className="fixed-stats" /> */}
       </Canvas>
     </div>
   );

@@ -1,6 +1,3 @@
-import * as THREE from "three";
-import { useEffect, useState } from "react";
-
 export default function Beam({ position, scale, colors }) {
   return (
     <mesh position={position} scale={scale}>

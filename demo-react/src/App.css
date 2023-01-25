@@ -12,13 +12,6 @@
   z-index: 5;
 }
 
-.fixed-stats {
-  top: auto !important;
-  left: auto !important;
-  right: 0.25rem !important;
-  bottom: 0.25rem !important;
-}
-
 .sidebar-toggle {
   height: 2rem;
   width: 2rem;

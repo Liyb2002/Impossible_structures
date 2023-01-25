@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDrag } from "@use-gesture/react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { useSpring, animated, config } from "@react-spring/three";
 
 const UV_MAX = 1;
 const UV_MIN = 0;
@@ -14,13 +13,9 @@ function Intersection({
   material,
   planeMaterial,
   setEnableOrbit,
-  showIntersections,
-  hoverOn,
   setHoverOn,
 }) {
   const [isActive, setIsActive] = useState(false);
-  const [firstCenter, setFirstCenter] = useState([0, 0, 0]);
-  const [secondCenter, setSecondCenter] = useState([0, 0, 0]);
   const [firstPos, setFirstPos] = useState([0, 0, 0]);
   const [secondPos, setSecondPos] = useState([0, 0, 0]);
   const [currentUV, setCurrentUV] = useState({ u: 0.5, v: 0.5 });
@@ -41,7 +36,6 @@ function Intersection({
   const add = (v1, v2) => [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]];
   const subtract = (v1, v2) => [v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]];
   const scalar = (v, c) => [v[0] * c, v[1] * c, v[2] * c];
-  const length = (v) => Math.sqrt(v[0] ** 2, v[1] ** 2, v[2] ** 2);
   const clamp = (v) => Math.max(Math.min(v, UV_MAX), UV_MIN);
 
   // Center
@@ -64,23 +58,16 @@ function Intersection({
     const { layer1, layer2, u, v } = intersections[index];
 
     if (layer1 >= 0 && layer2 >= 0) {
-      const new_firstCenter = Array(3).fill(
-        5 - layers[layer1].z * DISTANCE_COEF
-      );
-      const new_secondCenter = Array(3).fill(
-        5 - layers[layer2].z * DISTANCE_COEF
-      );
+      const firstCenter = Array(3).fill(5 - layers[layer1].z * DISTANCE_COEF);
+      const secondCenter = Array(3).fill(5 - layers[layer2].z * DISTANCE_COEF);
 
-      setFirstCenter(new_firstCenter);
-      setSecondCenter(new_secondCenter);
-
-      setFirstPos(getPos(u, v, new_firstCenter));
-      setSecondPos(getPos(u, v, new_secondCenter));
+      setFirstPos(getPos(u, v, firstCenter));
+      setSecondPos(getPos(u, v, secondCenter));
       setIsActive(true);
     } else {
       setIsActive(false);
     }
-  }, [intersections]);
+  }, [intersections, layers]);
 
   // Draggable
   const { size } = useThree();
@@ -102,20 +89,17 @@ function Intersection({
       let { x, y } = prevXY;
 
       if (first) {
-        // console.log("Start Drag");
         u = intersections[index].u;
         v = intersections[index].v;
         setCurrentUV({ u, v });
         setEnableOrbit(false);
       }
 
-      // console.log("Dragging");
       const new_u = clamp(u + (ox - x) / size.width);
       const new_v = clamp(v - (oy - y) / size.height);
       updateUV(new_u, new_v);
 
       if (last) {
-        // console.log("End Drag");
         setPrevXY({ x: ox, y: oy });
         setCurrentUV({ u: new_u, v: new_v });
         setEnableOrbit(true);
@@ -125,18 +109,12 @@ function Intersection({
   );
 
   const onIntersectionHover = (e) => {
-    // console.log("Enter");
     setHoverOn(index);
   };
 
   const onIntersectionUnhover = (e) => {
-    // console.log("Leave");
     setHoverOn(-1);
   };
-
-  useEffect(() => {
-    if (hoverOn === index) console.log("OnHover");
-  }, [hoverOn]);
 
   useFrame(({ clock }) => {
     if (isActive) {
