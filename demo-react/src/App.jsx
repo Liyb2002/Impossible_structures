@@ -16,6 +16,8 @@ import Intersections from "./components/Intersections";
 import Structure from "./components/Structure";
 import SideBar from "./components/Sidebar";
 
+import example from "./example.json";
+
 function Loading() {
   return (
     <div
@@ -175,22 +177,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("./src/example.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Example file not found.");
-        }
-        return res.json();
-      })
-      .then((json) => parseJSON(json))
-      .catch((e) => {
-        console.log(e);
-      });
+    parseJSON(example);
     setShowLoading(false);
   }, []);
 
@@ -270,6 +257,9 @@ function App() {
       Object.keys(newErrors.intersections.layer2).length === 0 &&
       Object.keys(newErrors.general).length === 0
     ) {
+      console.log(ls);
+      console.log(is);
+      return;
       setShowLoading(true);
       await fetch("http://127.0.0.1:5000/", {
         method: "POST",
