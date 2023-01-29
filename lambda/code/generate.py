@@ -195,12 +195,3 @@ def generate(layers, intersections):
             result.append(data)
 
     return result
-
-
-if __name__ == "__main__":
-    layers = [{"z": 8, "num_blocks": 10}, {"z": 12, "num_blocks": 10}]
-    intersections = [
-        {"layer1": 0, "layer2": 1, "u": 0.625, "v": 0.625},
-        {"layer1": 0, "layer2": 1, "u": 0.5, "v": 0.5},
-    ]
-    print(generate(layers, intersections))

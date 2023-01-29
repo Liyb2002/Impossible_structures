@@ -357,7 +357,6 @@ function SideBar({
               handleGenerate(layers, intersections);
               resetCamera();
             }}
-            // disabled
           >
             Generate Structure
           </Button>

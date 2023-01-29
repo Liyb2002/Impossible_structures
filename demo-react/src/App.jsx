@@ -257,18 +257,18 @@ function App() {
       Object.keys(newErrors.intersections.layer2).length === 0 &&
       Object.keys(newErrors.general).length === 0
     ) {
-      console.log(ls);
-      console.log(is);
-      return;
       setShowLoading(true);
-      await fetch("http://127.0.0.1:5000/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ layers: ls, intersections: is }),
-      })
+      await fetch(
+        "https://9yn664nl68.execute-api.us-east-1.amazonaws.com/generate-structure",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ layers: ls, intersections: is }),
+        }
+      )
         .then((res) => {
           if (!res.ok) {
             throw new Error("Failed to generate structure.");
