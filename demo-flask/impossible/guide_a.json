@@ -1,0 +1,27 @@
+[
+    {
+    "rect_id": 1,
+    "startPos": [400, 400],
+    "endPos": [500, 410]    
+    },
+    {
+    "rect_id": 2,
+    "startPos": [500, 300],
+    "endPos": [520, 400]    
+    },
+    {
+    "rect_id": 3,
+    "startPos": [400, 300],
+    "endPos": [500, 310]    
+    },
+    {
+    "rect_id": 4,
+    "startPos": [400, 300],
+    "endPos": [420, 400]    
+    },
+    {
+    "rect_id": 5,
+    "startPos": [500, 200],
+    "endPos": [520, 300]    
+    }
+]

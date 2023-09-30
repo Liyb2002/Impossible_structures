@@ -1,0 +1,198 @@
+[
+{
+"object_name": "footprint_1",
+"category":  "footprint",
+"structural_id": 1,
+"subdiv":[
+[1.0, "y direction", ["terminal", "1", 1.0]]
+]
+},
+{
+"object_name": "footprint_2",
+"category":  "footprint",
+"structural_id": 2,
+"subdiv":[
+[1.0, "y direction", ["terminal", "2", 1.0]] 
+]
+},
+{
+"object_name": "footprint_3",
+"category":  "footprint",
+"structural_id": 3,
+"subdiv":[
+[1.0, "y direction", ["terminal", "4", 0.5], ["terminal", "4", 0.5]]]
+},
+{
+"object_name": "footprint_4",
+"category":  "footprint",
+"structural_id": 4,
+"subdiv":[
+[1.0, "y direction", ["nonterminal", "2", 0.5], ["nonterminal", "0", 0.5]]   ]
+},
+{
+"object_name": "footprint_5",
+"category":  "footprint",
+"structural_id": 5,
+"subdiv":[
+[1.0, "y direction", ["nonterminal", "2", 0.5], ["nonterminal", "0", 0.5]]   ]
+},
+{
+"object_name": "footprint_6",
+"category":  "footprint",
+"structural_id": 6,
+"subdiv":[
+[1.0, "y direction", ["nonterminal", "3", 0.5], ["nonterminal", "1", 0.5]]   ]
+},
+{
+"object_name": "footprint_7",
+"category":  "footprint",
+"structural_id": 7,
+"subdiv":[
+[1.0, "y direction", ["nonterminal", "3", 0.5], ["nonterminal", "1", 0.5]]   ]
+},
+{
+"object_name": "footprint_8",
+"category":  "footprint",
+"structural_id": 8,
+"subdiv":[
+[1.0, "y direction", ["terminal", "4", 0.5], ["terminal", "4", 0.5]] 
+]
+},
+{
+"object_name": "footprint_9",
+"category":  "footprint",
+"structural_id": 9,
+"subdiv":[
+[1.0, "y direction", ["terminal","9", 1.0]]
+]
+},
+{
+"object_name": "footprint_10",
+"category":  "footprint",
+"structural_id": 10,
+"subdiv":[
+[1.0, "y direction", ["terminal","10", 1.0]]]
+},
+{
+"object_name": "footprint_11",
+"category":  "footprint",
+"structural_id": 11,
+"subdiv":[
+[0.6, "y direction", ["terminal","1", 0.35], ["terminal","5", 0.5]],
+[0.4, "y direction", ["terminal","1", 0.35]]
+]
+},
+{
+"object_name": "nonterminal_horizontalBranch_x direction upper_decorations",
+"category":  "nonterminal",
+"nonterminal_id": 0,
+"subdiv":[
+[0.3, "x direction", ["terminal", "6", 0.25]],
+[0.3, "x direction", ["terminal", "2", 0.3], ["terminal", "7", 0.4]],
+[0.4, "x direction", ["terminal", "6", 0.25], ["terminal", "2", 0.4], ["terminal", "6", 0.25]]
+]
+},
+{
+"object_name": "nonterminal_horizontalBranch_z direction upper_decorations",
+"category":  "nonterminal",
+"nonterminal_id": 1,
+"subdiv":[
+[0.3, "z direction", ["terminal", "2", 0.4],["terminal", "6", 0.25]],
+[0.3, "z direction", ["terminal", "2", 0.6], ["terminal", "8", 0.3]],
+[0.4, "z direction", ["terminal", "6", 0.25], ["terminal", "2", 0.3], ["terminal", "6", 0.25]]
+]
+},
+{
+"object_name": "nonterminal_horizontalBranch_x direction lower_decorations",
+"category":  "nonterminal",
+"nonterminal_id": 2,
+"subdiv":[
+[1.0, "x direction", ["terminal", "4", 0.33],["terminal", "4", 0.34], ["terminal", "4", 0.33]]
+]
+},
+{
+"object_name": "nonterminal_horizontalBranch_z direction lower_decorations",
+"category":  "nonterminal",
+"nonterminal_id": 3,
+"subdiv":[
+[1.0, "z direction", ["terminal", "4", 0.5],["terminal", "4", 0.5]]
+]
+},
+{
+"object_name": "terminal_spaceHolder",
+"category":  "terminal",
+"terminal_id": 0,
+"rule": "normal",
+"multiplier": [1,1,1]
+} ,
+{
+"object_name": "terminal_space",
+"category":  "terminal",
+"terminal_id": 1,
+"rule": "normal",
+"multiplier": [1.0,1.0,1.0]
+},
+{
+"object_name": "terminal_void",
+"category":  "terminal",
+"terminal_id": 2,
+"rule": "normal",
+"multiplier": [0.0,0.0,0.0]
+},
+{
+"object_name": "terminal_branch, y_direction",
+"category":  "terminal",
+"terminal_id": 3,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_branch, x_direction",
+"category":  "terminal",
+"terminal_id": 4,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_pyramid",
+"category":  "terminal",
+"terminal_id": 5,
+"rule": "normal",
+"multiplier": [1,1,1]
+}  ,
+{
+"object_name": "terminal_tree",
+"category":  "terminal",
+"terminal_id": 6,
+"rule": "normal",
+"multiplier": [1,1,1]
+} ,
+{
+"object_name": "terminal_arch x direction",
+"category":  "terminal",
+"terminal_id": 7,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_arch z direction",
+"category":  "terminal",
+"terminal_id": 8,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_stairs",
+"category":  "terminal",
+"terminal_id": 9,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_largeSphere",
+"category":  "terminal",
+"terminal_id": 10,
+"rule": "normal",
+"multiplier": [0,0,0]
+}
+]

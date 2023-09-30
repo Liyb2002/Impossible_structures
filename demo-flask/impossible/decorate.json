@@ -1,0 +1,236 @@
+[
+  {
+  "object_name": "footprint_1",
+  "category":  "footprint",
+  "structural_id": 1,
+  "subdiv":[
+  [1.0, "y direction", ["terminal", "14", 1.0]]  ]
+  },
+  {
+  "object_name": "footprint_2",
+  "category":  "footprint",
+  "structural_id": 2,
+  "subdiv":[
+  [0.5, "y direction", ["terminal","1", 1.0]],
+  [0.5, "y direction", ["terminal","15", 1.0]]
+
+  ]
+  },
+  {
+  "object_name": "footprint_3",
+  "category":  "footprint",
+  "structural_id": 3,
+  "subdiv":[
+  [0.5, "y direction", ["terminal","1", 1.0]],
+  [0.5, "y direction", ["terminal","9", 1.0]]
+
+  ]
+  },
+  {
+  "object_name": "footprint_4",
+  "category":  "footprint",
+  "structural_id": 4,
+  "subdiv":[
+  [1.0, "y direction", ["terminal","4", 0.2]]
+  ]
+  },
+  {
+  "object_name": "footprint_5",
+  "category":  "footprint",
+  "structural_id": 5,
+  "subdiv":[
+  [1.0, "y direction", ["terminal","4", 0.2]]
+  ]
+  },
+  {
+  "object_name": "footprint_6",
+  "category":  "footprint",
+  "structural_id": 6,
+  "subdiv":[
+  [1.0, "y direction", ["terminal","12", 0.2], ["terminal","5", 0.8]]
+  ]
+  },
+  {
+  "object_name": "footprint_7",
+  "category":  "footprint",
+  "structural_id": 7,
+  "subdiv":[
+  [1.0, "y direction", ["terminal","12", 0.2], ["terminal","5", 0.8]]
+  ]
+  },
+  {
+  "object_name": "footprint_8",
+  "category":  "footprint",
+  "structural_id": 8,
+  "subdiv":[
+  [1.0, "y direction", ["terminal","1", 1.0]]
+  ]
+  },
+  {
+  "object_name": "footprint_9",
+  "category":  "footprint",
+  "structural_id": 9,
+  "subdiv":[
+  [1.0, "y direction", ["nonterminal", "2", 1.0]]
+
+  ]
+  },
+  {
+  "object_name": "footprint_10",
+  "category":  "footprint",
+  "structural_id": 10,
+  "subdiv":[
+  [1.0, "y direction", ["terminal", "16", 1.0]]
+
+  ]
+  },
+  {
+  "object_name": "nonterminal_floor",
+  "category":  "nonterminal",
+  "nonterminal_id": 0,
+  "subdiv":[
+  [1.0, "y direction", ["terminal", "0", 1]]
+  ]
+  },
+  {
+  "object_name": "nonterminal_ladder",
+  "category":  "nonterminal",
+  "nonterminal_id": 1,
+  "subdiv":[
+  [1.0, "y direction", ["terminal", "1", 1]]
+  ]
+  },
+  {
+    "object_name": "tower",
+    "category":  "nonterminal",
+    "nonterminal_id": 2,
+    "subdiv":[
+    [0.6, "y direction", ["terminal", "13", 0.08], ["terminal", "9", 0.62], ["terminal", "10", 0.15], ["terminal", "11", 0.15]],
+    [0.4, "y direction", ["terminal", "13", 0.08], ["terminal", "9", 0.62], ["terminal", "10", 0.15], ["terminal", "11", 0.15]]
+  
+  ]
+    },
+  {
+  "object_name": "terminal_floor",
+  "category":  "terminal",
+  "terminal_id": 0,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  } ,
+  {
+  "object_name": "terminal_ladder",
+  "category":  "terminal",
+  "terminal_id": 1,
+  "rule": "normal",
+  "multiplier": [0.6,1,0.4]
+  } ,
+  {
+  "object_name": "terminal_spike",
+  "category":  "terminal",
+  "terminal_id": 2,
+  "rule": "four_corners",
+  "multiplier": [0.1,1,0.1]
+  },
+  {
+  "object_name": "terminal_roofTop",
+  "category":  "terminal",
+  "terminal_id": 3,
+  "rule": "normal",
+  "multiplier": [0.8,1,0.8]
+  },
+  {
+  "object_name": "terminal_bridge_XDir",
+  "category":  "terminal",
+  "terminal_id": 4,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  },
+  {
+  "object_name": "terminal_void",
+  "category":  "terminal",
+  "terminal_id": 5,
+  "rule": "normal",
+  "multiplier": [0.001,0.001,0.001]
+  },
+  {
+  "object_name": "terminal_fourCorner_pillar",
+  "category":  "terminal",
+  "terminal_id": 6,
+  "rule": "four_corners",
+  "multiplier": [0.15,1,0.15]
+  },
+  {
+  "object_name": "terminal_solid",
+  "category":  "terminal",
+  "terminal_id": 7,
+  "rule": "normal",
+  "multiplier": [1.0,1.0,1.0]
+  }
+  ,
+  {
+  "object_name": "terminal_sphere",
+  "category":  "terminal",
+  "terminal_id": 8,
+  "rule": "normal",
+  "multiplier": [0.5,0.5,0.5]
+  }
+  ,
+  {
+  "object_name": "terminal_bridgeHole",
+  "category":  "terminal",
+  "terminal_id": 9,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  }
+  ,
+  {
+  "object_name": "terminal_towerTop",
+  "category":  "terminal",
+  "terminal_id": 10,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  }
+  ,
+  {
+  "object_name": "terminal_hemisSphere",
+  "category":  "terminal",
+  "terminal_id": 11,
+  "rule": "normal",
+  "multiplier": [0.5,1,0.5]
+  },
+  {
+  "object_name": "terminal_bridge_ZDir",
+  "category":  "terminal",
+  "terminal_id": 12,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  },
+  {
+  "object_name": "tower_base",
+  "category":  "terminal",
+  "terminal_id": 13,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  },
+  {
+  "object_name": "valve",
+  "category":  "terminal",
+  "terminal_id": 14,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  },
+  {
+  "object_name": "water_fall",
+  "category":  "terminal",
+  "terminal_id": 15,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  },
+  {
+  "object_name": "stairs",
+  "category":  "terminal",
+  "terminal_id": 16,
+  "rule": "normal",
+  "multiplier": [1,1,1]
+  }
+  ]

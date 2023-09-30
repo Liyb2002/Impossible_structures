@@ -5,7 +5,8 @@ three/node_modules/*
 .vscode/*
 */__pycache__/*
 */*/__pycache__/*
-*/venv/*
+*/venv
+*/.venv
 
 # serverless
 lambda/.python-version

@@ -1,0 +1,13 @@
+1 -> space
+2 -> /
+3 -> pillar, -y direction
+4 -> bridge, -x direction
+5 -> bridge, +x direction
+6 -> bridge, -z direction
+7 -> bridge, +z direction
+8 -> pillar, +y direction
+
+
+Assign type:
+9 -> temple
+10 -> when (1) has nothing above it, it become 10. 

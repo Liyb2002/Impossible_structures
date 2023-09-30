@@ -1,0 +1,29 @@
+1 -> space
+2 -> /
+3 -> pillar, -y direction
+4 -> bridge, -x direction
+5 -> bridge, +x direction
+6 -> bridge, -z direction
+7 -> bridge, +z direction
+8 -> pillar, +y direction
+9 -> stairs
+10 -> tower
+
+
+Decorations:
+nonterminal:
+0 -> nonterminal_horizontalBranch_x direction upper_decorations
+1 -> nonterminal_horizontalBranch_z direction upper_decorations
+2 -> nonterminal_horizontalBranch_x direction lower_decorations
+3 -> nonterminal_horizontalBranch_z direction lower_decorations
+10 -> tower
+
+terminal:
+1 -> bot for tower
+3 -> terminal_branch, y direction
+4 -> terminal_branch, x direction
+5 -> terminal_pyramid
+6 -> terminal_tree
+7 -> terminal_arch x direction
+8 -> terminal_arch z direction
+9 -> stairs
