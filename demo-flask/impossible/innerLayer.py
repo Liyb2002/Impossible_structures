@@ -55,7 +55,7 @@ def produce_innerLayer(matryoshka_path, decorate_path):
             )
             result_list += class_generate.smc_process(
                 foreground_intersection, background_intersection
-            )
+            )[0]
 
     for obj in result_list:
         obj.type = int(obj.type) + 100
