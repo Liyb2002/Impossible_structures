@@ -46,8 +46,11 @@ function Loading() {
   );
 }
 
-function CameraControl({ screenshotToggle }) {
+function CanvasControl({ screenshotToggle, bgColor }) {
   const { gl, scene, camera } = useThree();
+  useEffect(() => {
+    gl.setClearColor(bgColor);
+  }, [bgColor]);
   useEffect(() => {
     if (screenshotToggle) {
       gl.render(scene, camera);
@@ -70,6 +73,7 @@ function App() {
   const [showSideBar, setShowSideBar] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [intersections, setIntersections] = useState();
+  const [bgColor, setBgColor] = useState('#ffffff');
   const [scene, setScene] = useState('za');
   const [center, setCenter] = useState([0, 0, 0]);
   const [objects, setObjects] = useState([]);
@@ -228,6 +232,8 @@ function App() {
         screenshotToggle={screenshotToggle}
         setScreenshotToggle={setScreenshotToggle}
         setScene={setScene}
+        bgColor={bgColor}
+        setBgColor={setBgColor}
       ></SideBar>
       <Canvas shadows>
         <OrthographicCamera
@@ -257,7 +263,7 @@ function App() {
         ) : (
           <></>
         )}
-        <CameraControl screenshotToggle={screenshotToggle} center={center} />
+        <CanvasControl screenshotToggle={screenshotToggle} bgColor={bgColor} />
         <OrbitControls ref={controlRef} />
       </Canvas>
     </div>

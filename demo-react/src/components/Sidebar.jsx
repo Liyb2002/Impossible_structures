@@ -14,6 +14,8 @@ function SideBar({
   screenshotToggle,
   setScreenshotToggle,
   setScene,
+  bgColor,
+  setBgColor,
 }) {
   const [complexity, setComplexity] = useState(1);
 
@@ -24,9 +26,17 @@ function SideBar({
 
   return (
     <>
-      <Col className="sidebar">
+      <Col className="sidebar prevent-select">
         <div className="section">
-          <h3 className="label prevent-select">Display</h3>
+          <h3 className="label">Display</h3>
+          <Form className="my-3 col-7 pl-3">
+            <Form.Label>Background Color</Form.Label>
+            <Form.Control
+              type="color"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+            />
+          </Form>
           <Form className="mt-2 mb-3">
             <Form.Label>Show Intersections</Form.Label>
             <Form.Check
