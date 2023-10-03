@@ -5,13 +5,14 @@ from . import read_file
 from . import initLSystem
 from . import complexity
 
-MIN_C = 0
-MAX_C = 7
+MIN_C = 1
+MAX_C = 3
 
 
 def run(file_path, decorate_path, c: 0, matryoshka_path=None):
     if c < MIN_C or c > MAX_C:
         return {"Error": "invalid complexity parameter"}
+    c += 4
 
     # read the inputs
     generic_object_list = []

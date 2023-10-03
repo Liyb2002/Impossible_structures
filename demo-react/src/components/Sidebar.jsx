@@ -73,7 +73,7 @@ function SideBar({
             <Form.Control
               type="range"
               min={1}
-              max={7}
+              max={3}
               step={1}
               value={complexity}
               onChange={(e) => {
