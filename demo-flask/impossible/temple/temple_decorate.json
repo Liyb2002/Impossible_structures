@@ -1,0 +1,124 @@
+[
+{
+"object_name": "footprint_1",
+"category":  "footprint",
+"structural_id": 1,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]]  ]
+},
+{
+"object_name": "footprint_2",
+"category":  "footprint",
+"structural_id": 2,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]] 
+]
+},
+{
+"object_name": "footprint_3",
+"category":  "footprint",
+"structural_id": 3,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]] 
+]
+},
+{
+"object_name": "footprint_4",
+"category":  "footprint",
+"structural_id": 4,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]]   ]
+},
+{
+"object_name": "footprint_5",
+"category":  "footprint",
+"structural_id": 5,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]]   ]
+},
+{
+"object_name": "footprint_6",
+"category":  "footprint",
+"structural_id": 6,
+"subdiv":[
+[1.0, "y direction", ["terminal","2", 0.7],["terminal","1", 0.02], ["terminal","0", 0.28]]
+]
+},
+{
+"object_name": "footprint_7",
+"category":  "footprint",
+"structural_id": 7,
+"subdiv":[
+[1.0, "y direction", ["terminal", "5", 1.0]]   ]
+},
+{
+"object_name": "footprint_8",
+"category":  "footprint",
+"structural_id": 8,
+"subdiv":[
+[1.0, "y direction", ["terminal", "3", 1.0]] 
+]
+},
+{
+"object_name": "footprint_9",
+"category":  "footprint",
+"structural_id": 9,
+"subdiv":[
+[1.0, "y direction", ["terminal", "0", 1.0]]  ]
+},
+{
+"object_name": "terminal_spaceHolder",
+"category":  "terminal",
+"terminal_id": 0,
+"rule": "normal",
+"multiplier": [1,1,1]
+} ,
+{
+"object_name": "terminal_void",
+"category":  "terminal",
+"terminal_id": 1,
+"rule": "normal",
+"multiplier": [0.01,0.01,0.01]
+} ,
+{
+"object_name": "terminal_UnderBreaking_Pillar",
+"category":  "terminal",
+"terminal_id": 2,
+"rule": "normal",
+"multiplier": [1,1,1]
+} ,
+{
+"object_name": "terminal_floorStairs",
+"category":  "terminal",
+"terminal_id": 3,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_leftRoofTop",
+"category":  "terminal",
+"terminal_id": 4,
+"rule": "normal",
+"multiplier": [0.8,0.8,0.8]
+},
+{
+"object_name": "terminal_RoofTop",
+"category":  "terminal",
+"terminal_id": 5,
+"rule": "normal",
+"multiplier": [1,1,1]
+},
+{
+"object_name": "terminal_rightRoofTop",
+"category":  "terminal",
+"terminal_id": 6,
+"rule": "normal",
+"multiplier": [0.8,0.8,0.8]
+}, {
+"object_name": "terminal_rightRoofMid",
+"category":  "terminal",
+"terminal_id": 7,
+"rule": "normal",
+"multiplier": [1,1,1]
+}
+]

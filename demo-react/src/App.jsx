@@ -16,7 +16,9 @@ import Intersections from './components/Intersections';
 import Structure from './components/Structure';
 import SideBar from './components/Sidebar';
 
-import example from './json/extended_example.json';
+import za_example from './json/za_example.json';
+import mt_example from './json/mt_example.json';
+import tp_example from './json/tp_example.json';
 
 function Loading() {
   return (
@@ -67,23 +69,13 @@ function App() {
   const [showIntersections, setShowIntersections] = useState(false);
   const [showSideBar, setShowSideBar] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
+  const [intersections, setIntersections] = useState();
+  const [scene, setScene] = useState('za');
   const [center, setCenter] = useState([0, 0, 0]);
-  const [beams, setBeams] = useState([]);
+  const [objects, setObjects] = useState([]);
   const controlRef = useRef();
   const cameraRef = useRef();
   const comp = useRef();
-
-  const DEFAULT_INTERSECTIONS = [
-    { layer1: 0, layer2: 1, u: 0.625, v: 0.625 },
-    { layer1: 0, layer2: 1, u: 0.5, v: 0.5 },
-  ];
-  const [intersections, setIntersections] = useState(DEFAULT_INTERSECTIONS);
-
-  const LAYER_COLORS = [
-    ['#0077b6', '#00b4d8', '#03045e'], // blue
-    ['#e85d04', '#ffea00', '#6a040f'], // orange
-    ['#9d4edd', '#e0aaff', '#3c096c'], // purple
-  ];
 
   const INTERSECTION_COLORS = [
     '#00ffff', // cyan
@@ -101,36 +93,44 @@ function App() {
     let min_z = Number.MAX_VALUE;
     let max_z = Number.MIN_VALUE;
 
-    setBeams(
-      json.map((obj) => {
-        let type = obj['obj']['type'];
+    setIntersections(
+      json
+        .filter((e) => 'intersection' in e)
+        .map((e) => e['intersection']['position'])
+    );
 
-        let start_x = obj['obj']['start_x'];
-        let start_y = obj['obj']['start_y'];
-        let start_z = obj['obj']['start_z'];
+    setObjects(
+      json
+        .filter((entry) => 'obj' in entry)
+        .map((obj) => {
+          let type = obj['obj']['type'];
 
-        let scale_x = obj['obj']['scale_x'];
-        let scale_y = obj['obj']['scale_y'];
-        let scale_z = obj['obj']['scale_z'];
+          let start_x = obj['obj']['start_x'];
+          let start_y = obj['obj']['start_y'];
+          let start_z = obj['obj']['start_z'];
 
-        let rotation_x = obj['obj']['rotation_x'];
-        let rotation_y = obj['obj']['rotation_y'];
-        let rotation_z = obj['obj']['rotation_z'];
+          let scale_x = obj['obj']['scale_x'];
+          let scale_y = obj['obj']['scale_y'];
+          let scale_z = obj['obj']['scale_z'];
 
-        min_x = Math.min(min_x, start_x);
-        max_x = Math.max(max_x, start_x + scale_x);
-        min_y = Math.min(min_y, start_y);
-        max_y = Math.max(max_y, start_y + scale_y);
-        min_z = Math.min(min_z, start_z);
-        max_z = Math.max(max_z, start_z + scale_z);
+          let rotation_x = obj['obj']['rotation_x'];
+          let rotation_y = obj['obj']['rotation_y'];
+          let rotation_z = obj['obj']['rotation_z'];
 
-        return {
-          type: type,
-          position: [start_x, start_y, start_z],
-          scale: [scale_x, scale_y, scale_z],
-          rotation: [rotation_x, rotation_y, rotation_z],
-        };
-      })
+          min_x = Math.min(min_x, start_x);
+          max_x = Math.max(max_x, start_x + scale_x);
+          min_y = Math.min(min_y, start_y);
+          max_y = Math.max(max_y, start_y + scale_y);
+          min_z = Math.min(min_z, start_z);
+          max_z = Math.max(max_z, start_z + scale_z);
+
+          return {
+            type: type,
+            position: [start_x, start_y, start_z],
+            scale: [scale_x, scale_y, scale_z],
+            rotation: [rotation_x, rotation_y, rotation_z],
+          };
+        })
     );
 
     let mid_x = (min_x + max_x) / 2;
@@ -140,9 +140,21 @@ function App() {
   };
 
   useEffect(() => {
-    parseJSON(example);
+    switch (scene) {
+      case 'za':
+        parseJSON(za_example);
+        break;
+      case 'mt':
+        parseJSON(mt_example);
+        break;
+      case 'tp':
+        parseJSON(tp_example);
+        break;
+      default:
+        return;
+    }
     setShowLoading(false);
-  }, []);
+  }, [scene]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -178,7 +190,7 @@ function App() {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({ complexity: c }),
+      body: JSON.stringify({ complexity: c, scene: scene }),
     })
       .then((res) => {
         if (!res.ok) {
@@ -215,6 +227,7 @@ function App() {
         handleGenerate={handleGenerate}
         screenshotToggle={screenshotToggle}
         setScreenshotToggle={setScreenshotToggle}
+        setScene={setScene}
       ></SideBar>
       <Canvas shadows>
         <OrthographicCamera
@@ -235,14 +248,11 @@ function App() {
           intensity={3.0}
           position={[-3.25, 3, 3.25]}
         />
-        <Structure beams={beams} />
-        {showIntersections ? (
+        <Structure objects={objects} scene={scene} />
+        {showIntersections && intersections != undefined ? (
           <Intersections
-            layers={layers}
             intersections={intersections}
-            setIntersections={setIntersections}
             themes={INTERSECTION_COLORS}
-            setEnableOrbit={setEnableOrbit}
           />
         ) : (
           <></>

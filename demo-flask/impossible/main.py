@@ -39,7 +39,7 @@ def run(file_path, decorate_path, c: 0, matryoshka_path=None):
             visual_bridge_info,
             decorate_path,
         )
-        result_list = class_generate.smc_process()
+        result_list, intersections = class_generate.smc_process()
 
         print("impossible structure success!")
     if matryoshka_path:
@@ -47,4 +47,4 @@ def run(file_path, decorate_path, c: 0, matryoshka_path=None):
 
     print("success!")
     output_writer = write2JSON.output()
-    return output_writer.write_result(result_list)
+    return output_writer.write_result(result_list, intersections)

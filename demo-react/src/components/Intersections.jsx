@@ -1,15 +1,9 @@
-import { useRef, useState, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useRef, useState, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 
-import Intersection from "./Intersection";
+import Intersection from './Intersection';
 
-function Intersections({
-  layers,
-  intersections,
-  setIntersections,
-  themes,
-  setEnableOrbit,
-}) {
+function Intersections({ intersections, themes }) {
   const meshMatC = useRef();
   const meshMatM = useRef();
   const meshMatY = useRef();
@@ -18,7 +12,6 @@ function Intersections({
   const planeMatY = useRef();
   const [materials, setMaterials] = useState([]);
   const [planeMaterials, setPlaneMaterials] = useState([]);
-  const [hoverOn, setHoverOn] = useState(-1);
 
   useEffect(() => {
     setMaterials([meshMatC.current, meshMatM.current, meshMatY.current]);
@@ -47,19 +40,17 @@ function Intersections({
       <meshStandardMaterial ref={planeMatC} color={themes[0]} transparent />
       <meshStandardMaterial ref={planeMatM} color={themes[1]} transparent />
       <meshStandardMaterial ref={planeMatY} color={themes[2]} transparent />
-      {intersections.map((_, index) => (
+      {intersections != undefined && intersections.length == 2 ? (
         <Intersection
-          key={"intersection-" + index}
-          layers={layers}
-          intersections={intersections}
-          setIntersections={setIntersections}
-          index={index}
-          material={materials[index]}
-          planeMaterial={planeMaterials[index]}
-          setEnableOrbit={setEnableOrbit}
-          setHoverOn={setHoverOn}
+          key={'intersection'}
+          material={materials[0]}
+          planeMaterial={planeMaterials[0]}
+          firstPos={intersections[0]}
+          secondPos={intersections[1]}
         />
-      ))}
+      ) : (
+        <></>
+      )}
     </group>
   );
 }

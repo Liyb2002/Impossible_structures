@@ -1,0 +1,10 @@
+1 -> pillar
+2 -> beam, +x direction
+3 -> beam, -x direction
+4 -> beam, +z direction
+5 -> beam, -z direction
+
+
+6 -> pillar broken into pieces
+7 -> ceiling
+8 -> floor

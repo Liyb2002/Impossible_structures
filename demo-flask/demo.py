@@ -14,8 +14,22 @@ def hello_world():
     except ValueError:
         return {"Error": "the complexity parameter should be an integer"}
 
-    return run(
-        "impossible/ZA_Extended/ZA_monumentValley.json",
-        "impossible/ZA_Extended/ZA_monumentValley_decorate.json",
-        complexity,
-    )
+    if request.json["scene"] == "za":
+        return run(
+            "impossible/ZA_Extended/ZA_monumentValley.json",
+            "impossible/ZA_Extended/ZA_monumentValley_decorate.json",
+            complexity,
+        )
+    elif request.json["scene"] == "mt":
+        return run(
+            "impossible/matryoshka/matryoshka.json",
+            "impossible/matryoshka/matryoshka_decorate.json",
+            complexity,
+            "impossible/matryoshka/matryoshka_inner.json",
+        )
+    elif request.json["scene"] == "tp":
+        return run(
+            "impossible/temple/temple.json",
+            "impossible/temple/temple_decorate.json",
+            complexity,
+        )
