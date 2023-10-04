@@ -18,7 +18,7 @@ import SideBar from './components/Sidebar';
 
 import za_example from './json/za_example.json';
 import mt_example from './json/mt_example.json';
-import tp_example from './json/tp_example.json';
+import tr_example from './json/tr_example.json';
 
 function Loading() {
   return (
@@ -151,8 +151,8 @@ function App() {
       case 'mt':
         parseJSON(mt_example);
         break;
-      case 'tp':
-        parseJSON(tp_example);
+      case 'tr':
+        parseJSON(tr_example);
         break;
       default:
         return;

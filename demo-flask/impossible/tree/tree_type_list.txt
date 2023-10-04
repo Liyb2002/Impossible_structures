@@ -1,0 +1,25 @@
+1 -> random growing branch
+2 -> nest
+3 -> branch, -x direction
+4 -> branch, +x direction
+5 -> branch, -y direction
+6 -> branch, +y direction
+7 -> branch, -z direction
+8 -> branch, +z direction
+
+global:
+9 -> main branch
+10 -> light
+
+11 -> larger branch
+12 -> smaller branch
+13 -> leaf
+
+Notes:
+to create the effect of very strong branches (overlapping), comment the rotation checkings + 
+procedural_objects's transition rules (add the rotation conditions)
+
+Uncomment " def overlapping_check_obj(self, obj_A):
+        if obj_A.rotation[0] != 0 or obj_A.rotation[1] != 0 or obj_A.rotation[2] != 0:
+            return True"
+if not work

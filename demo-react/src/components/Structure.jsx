@@ -39,20 +39,33 @@ const MT_GLBS = [
   'y_0',
 ];
 
-const TP_GLBS = ['0', '2', '3', 'top', 'mid'];
+const TR_GLBS = [
+  '3',
+  '9',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  'x_1',
+  'x',
+  'y_1',
+  'y',
+  'z',
+];
 
 function Structure({ objects, scene }) {
   const [models, setModels] = useState([]);
   const baseModels = useMemo(() => {
-    var bms = { za: {}, mt: {}, tp: {} };
+    var bms = { za: {}, mt: {}, tr: {} };
     ZA_GLBS.forEach(
       (f) => (bms['za'][f] = useGLTF('./glb/za/' + f + '.glb').scene)
     );
     MT_GLBS.forEach(
       (f) => (bms['mt'][f] = useGLTF('./glb/mt/' + f + '.glb').scene)
     );
-    TP_GLBS.forEach(
-      (f) => (bms['tp'][f] = useGLTF('./glb/tp/' + f + '.glb').scene)
+    TR_GLBS.forEach(
+      (f) => (bms['tr'][f] = useGLTF('./glb/tr/' + f + '.glb').scene)
     );
     return bms;
   }, []);
@@ -122,18 +135,31 @@ function Structure({ objects, scene }) {
     }
   };
 
-  const getTpModelName = (type) => {
+  const getTrModelName = (type) => {
+    var rand = Math.random();
     switch (type) {
-      case '0':
-        return '0';
-      case '2':
-        return '2';
-      case '3':
-        return '3';
+      case '9':
+        return '9';
+      case '10':
+        return '10';
+      case '11':
+        return '11';
+      case '12':
+        return '12';
+      case '13':
+        return '13';
+      case '14':
+        return '14';
       case '5':
-        return 'top';
+      case '6':
+        if (rand < 0.5) return 'y';
+        else return 'y_1';
+      case '3':
+      case '4':
+        return 'x_1';
       case '7':
-        return 'mid';
+      case '8':
+        return 'z';
     }
   };
 
@@ -147,8 +173,8 @@ function Structure({ objects, scene }) {
       case 'mt':
         getModelName = getMtModelName;
         break;
-      case 'tp':
-        getModelName = getTpModelName;
+      case 'tr':
+        getModelName = getTrModelName;
         break;
       default:
         return;

@@ -72,9 +72,9 @@ function SideBar({
               <Dropdown.Menu
                 style={{ maxHeight: '175px', overflowY: 'scroll' }}
               >
-                <Dropdown.Item eventKey={'za'}>ZA Extended</Dropdown.Item>
-                <Dropdown.Item eventKey={'mt'}>Matryoshka</Dropdown.Item>
-                <Dropdown.Item eventKey={'tp'}>Temple</Dropdown.Item>
+                <Dropdown.Item eventKey={'za'}>Ruins</Dropdown.Item>
+                <Dropdown.Item eventKey={'mt'}>Factory</Dropdown.Item>
+                <Dropdown.Item eventKey={'tr'}>Branches</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Form>

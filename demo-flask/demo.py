@@ -15,6 +15,7 @@ def hello_world():
         return {"Error": "the complexity parameter should be an integer"}
 
     if request.json["scene"] == "za":
+        complexity = max(complexity, 2)
         return run(
             "impossible/ZA_Extended/ZA_monumentValley.json",
             "impossible/ZA_Extended/ZA_monumentValley_decorate.json",
@@ -27,9 +28,9 @@ def hello_world():
             complexity,
             "impossible/matryoshka/matryoshka_inner.json",
         )
-    elif request.json["scene"] == "tp":
+    elif request.json["scene"] == "tr":
         return run(
-            "impossible/temple/temple.json",
-            "impossible/temple/temple_decorate.json",
+            "impossible/tree/tree.json",
+            "impossible/tree/tree_decorate.json",
             complexity,
         )
