@@ -301,7 +301,7 @@ class generate_helper:
 
         for s in range(steps):
             cur_step = steps - s - 1
-            print("cur_step", cur_step)
+            # print("cur_step", cur_step)
 
             score_list = []
             for i in range(len(self.particle_list)):
@@ -321,7 +321,7 @@ class generate_helper:
                     success_connect_list.append(self.particle_list[i])
 
             self.particle_list = success_connect_list
-        print("generation complete")
+        # print("generation complete")
 
     def multiple_intersections(self, start_types, connect_directions, intersection_pos):
         success_connect_list = []
@@ -359,7 +359,7 @@ class generate_helper:
 
     def connect(self):
         success_connect_list = []
-        print("len(self.particle_list)", len(self.particle_list))
+        # print("len(self.particle_list)", len(self.particle_list))
         for i in range(len(self.particle_list)):
             self.particle_list[i].run_connect()
             if self.particle_list[i].success and self.particle_list[i].score > 0:
@@ -368,7 +368,7 @@ class generate_helper:
         self.particle_list = success_connect_list
         success_connect_list = []
 
-        print("successful connected particle list", len(self.particle_list))
+        # print("successful connected particle list", len(self.particle_list))
 
     def select_result_particle(self):
         highest_score = self.particle_list[0].score
@@ -403,8 +403,8 @@ class generate_helper:
         decorator = decorations.decoration_operator(self.decorate_path)
         decoration_list = decorator.decorate(procedural_objects)
 
-        print("len procedural_objects", len(procedural_objects))
-        print("len decoration_list", len(decoration_list))
+        # print("len procedural_objects", len(procedural_objects))
+        # print("len decoration_list", len(decoration_list))
 
         return decoration_list
 
@@ -443,7 +443,7 @@ class generate_helper:
 
         decorator = decorations.decoration_operator()
         while success != True:
-            print("-----------------")
+            # print("-----------------")
             cur_particle = particle.Particle(self.generic_object_list)
             cur_particle.prepare_particle(
                 foreground_intersection,
@@ -466,7 +466,7 @@ class generate_helper:
             )
             for s in range(steps):
                 cur_step = steps - s - 1
-                print("cur_step", cur_step)
+                # print("cur_step", cur_step)
 
                 cur_particle.run_step(cur_step, False)
             if cur_particle.score == 0:
@@ -494,7 +494,7 @@ class generate_helper:
     ):
         for s in range(steps):
             cur_step = steps - s - 1
-            print("cur_step", cur_step)
+            # print("cur_step", cur_step)
 
             score_list = []
             for i in range(len(self.particle_list)):

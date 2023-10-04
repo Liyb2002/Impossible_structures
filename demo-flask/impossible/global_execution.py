@@ -64,9 +64,9 @@ def action_assign(procedural_objects_list, global_object):
             obj.length += np.array([offset_x, offset_y, offset_z])
             obj.type = global_object["object_id"]
 
-    for obj in procedural_objects_list:
-        if obj.type == 6:
-            print("broken")
+    # for obj in procedural_objects_list:
+    #     if obj.type == 6:
+    #         print("broken")
 
     return procedural_objects_list
 

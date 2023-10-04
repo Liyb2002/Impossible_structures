@@ -16,8 +16,6 @@ def hello_world():
     except ValueError:
         return {"Error": "invalid complexity parameter"}
 
-    print(complexity)
-
     if request.json["scene"] == "za":
         return run(
             "impossible/ZA_Extended/ZA_monumentValley.json",

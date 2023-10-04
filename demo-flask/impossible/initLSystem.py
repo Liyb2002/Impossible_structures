@@ -7,8 +7,6 @@ import copy
 
 
 def initSystem(decorate_path):
-    print("hello")
-
     start_pos = np.array([0, 0, 0])
     rotation = np.array([0, 0, 0])
     group_count = 1
