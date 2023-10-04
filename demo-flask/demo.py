@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
 
-from impossible.main import run
 from impossible.main import run, scale_complexity
 
 app = Flask(__name__)
