@@ -6,14 +6,20 @@ from . import initLSystem
 from . import complexity
 
 MIN_C = 1
-MAX_C = 3
+MAX_C = 12
+
+
+def scale_complexity(c, scene):
+    c = max(min(c, MAX_C), MIN_C) / MAX_C
+    if scene == "za":
+        return int(c * 2 + 6)
+    elif scene == "mt":
+        return int(c * 2 + 5)
+    elif scene == "tr":
+        return int(c * 1 + 5)
 
 
 def run(file_path, decorate_path, c: 0, matryoshka_path=None):
-    if c < MIN_C or c > MAX_C:
-        return {"Error": "invalid complexity parameter"}
-    c += 4
-
     # read the inputs
     generic_object_list = []
     global__object_list = []

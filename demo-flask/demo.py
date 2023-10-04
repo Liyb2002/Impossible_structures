@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from impossible.main import run
+from impossible.main import run, scale_complexity
 
 app = Flask(__name__)
 CORS(app)
@@ -10,12 +11,15 @@ CORS(app)
 @app.post("/")
 def hello_world():
     try:
-        complexity = int(request.json["complexity"])
+        complexity = scale_complexity(
+            int(request.json["complexity"]), request.json["scene"]
+        )
     except ValueError:
-        return {"Error": "the complexity parameter should be an integer"}
+        return {"Error": "invalid complexity parameter"}
+
+    print(complexity)
 
     if request.json["scene"] == "za":
-        complexity = max(complexity, 2)
         return run(
             "impossible/ZA_Extended/ZA_monumentValley.json",
             "impossible/ZA_Extended/ZA_monumentValley_decorate.json",
