@@ -80,7 +80,7 @@ function SideBar({
           </Form>
           <Form className="mt-2 mb-3">
             <Form.Label>Complexity ({complexity})</Form.Label>
-            {/* <Form.Control
+            <Form.Control
               type="range"
               min={1}
               max={12}
@@ -89,12 +89,7 @@ function SideBar({
               onChange={(e) => {
                 setComplexity(e.target.value);
               }}
-            ></Form.Control> */}
-            <Form.Text style={{ width: '100%', display: 'block' }}>
-              Using the default complexity setting for demo purposes due to
-              limited computing resources. To unlock all levels of complexity,
-              please use the local build version.
-            </Form.Text>
+            ></Form.Control>
           </Form>
         </div>
         <Col className="justify-content-around">
