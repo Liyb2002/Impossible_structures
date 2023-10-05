@@ -17,7 +17,7 @@ function SideBar({
   bgColor,
   setBgColor,
 }) {
-  const [complexity, setComplexity] = useState(1);
+  const [complexity, setComplexity] = useState(4);
 
   const handleScreenshot = () => {
     setScreenshotToggle(!screenshotToggle);
@@ -92,7 +92,7 @@ function SideBar({
             ></Form.Control> */}
             <Form.Text style={{ width: '100%', display: 'block' }}>
               Using the default complexity setting for demo purposes due to
-              limited computing resources. To unlock all levels of difficulty,
+              limited computing resources. To unlock all levels of complexity,
               please use the local build version.
             </Form.Text>
           </Form>
