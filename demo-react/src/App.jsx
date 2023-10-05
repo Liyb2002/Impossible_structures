@@ -188,14 +188,17 @@ function App() {
 
   const handleGenerate = async (c) => {
     setShowLoading(true);
-    await fetch('http://127.0.0.1:5000', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ complexity: c, scene: scene }),
-    })
+    await fetch(
+      'https://9yn664nl68.execute-api.us-east-1.amazonaws.com/generate-structure',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ complexity: c, scene: scene }),
+      }
+    )
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to generate structure.');

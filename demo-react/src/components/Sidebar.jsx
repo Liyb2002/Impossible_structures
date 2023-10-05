@@ -38,7 +38,7 @@ function SideBar({
             />
           </Form>
           <Form className="mt-2 mb-3">
-            <Form.Label>Show Intersections</Form.Label>
+            <Form.Label>Show Visual Bridges</Form.Label>
             <Form.Check
               type="switch"
               checked={showIntersections}
@@ -80,7 +80,7 @@ function SideBar({
           </Form>
           <Form className="mt-2 mb-3">
             <Form.Label>Complexity ({complexity})</Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="range"
               min={1}
               max={12}
@@ -89,7 +89,12 @@ function SideBar({
               onChange={(e) => {
                 setComplexity(e.target.value);
               }}
-            ></Form.Control>
+            ></Form.Control> */}
+            <Form.Text style={{ width: '100%', display: 'block' }}>
+              Using the default complexity setting for demo purposes due to
+              limited computing resources. To unlock all levels of difficulty,
+              please use the local build version.
+            </Form.Text>
           </Form>
         </div>
         <Col className="justify-content-around">

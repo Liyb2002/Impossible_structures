@@ -12,11 +12,11 @@ MAX_C = 12
 def scale_complexity(c, scene):
     c = max(min(c, MAX_C), MIN_C) / MAX_C
     if scene == "za":
-        return int(c * 2 + 6)
+        return int(c * 6 + 6)
     elif scene == "mt":
-        return int(c * 2 + 5)
+        return int(c * 7 + 5)
     elif scene == "tr":
-        return int(c * 1 + 5)
+        return int(c * 7 + 5)
 
 
 def run(file_path, decorate_path, c: 0, matryoshka_path=None):

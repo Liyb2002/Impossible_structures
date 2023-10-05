@@ -194,8 +194,6 @@ function Structure({ objects, scene }) {
             <meshStandardMaterial toneMapped={false} />
           </group>
         );
-      } else {
-        console.log(obj.type);
       }
     });
     setModels(newModels);
