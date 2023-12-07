@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, OrthographicCamera } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import NavBar from 'react-bootstrap/NavBar';
-import Spinner from 'react-bootstrap/Spinner';
 import { BsFillGearFill } from 'react-icons/bs';
 import { useThree } from '@react-three/fiber';
+import ReactLoading from 'react-loading';
 
 import { gsap } from 'gsap';
 
@@ -27,21 +27,13 @@ function Loading() {
         position: 'fixed',
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'black',
-        opacity: '0.8',
         zIndex: '100',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      <Spinner
-        animation="border"
-        role="status"
-        style={{ width: '3rem', height: '3rem' }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+      <ReactLoading type={'cubes'} color={'#000000'} />
     </div>
   );
 }
@@ -188,7 +180,7 @@ function App() {
 
   const handleGenerate = async (c) => {
     setShowLoading(true);
-    await fetch('http://localhost:5000', {
+    await fetch('http://127.0.0.1:5000', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -235,37 +227,38 @@ function App() {
         bgColor={bgColor}
         setBgColor={setBgColor}
       ></SideBar>
-      <Canvas shadows>
-        <OrthographicCamera
-          makeDefault
-          ref={cameraRef}
-          zoom={150}
-          left={-5.2}
-          right={5.2}
-          top={3.9}
-          bottom={-3.9}
-          near={0.01}
-          far={100}
-          position={[5, 5, 5]}
-        />
-        <ambientLight></ambientLight>
-        <directionalLight
-          color={0xffffff}
-          intensity={3.0}
-          position={[-3.25, 3, 3.25]}
-        />
-        <Structure objects={objects} scene={scene} />
-        {showIntersections && intersections != undefined ? (
-          <Intersections
-            intersections={intersections}
-            themes={INTERSECTION_COLORS}
+      <Suspense fallback={<Loading />}>
+        <Canvas shadows>
+          <OrthographicCamera
+            makeDefault
+            ref={cameraRef}
+            zoom={150}
+            near={0.01}
+            far={100}
+            position={[5, 5, 5]}
           />
-        ) : (
-          <></>
-        )}
-        <CanvasControl screenshotToggle={screenshotToggle} bgColor={bgColor} />
-        <OrbitControls ref={controlRef} />
-      </Canvas>
+          <ambientLight></ambientLight>
+          <directionalLight
+            color={0xffffff}
+            intensity={3.0}
+            position={[-3.25, 3, 3.25]}
+          />
+          <Structure objects={objects} scene={scene} />
+          {showIntersections && intersections != undefined ? (
+            <Intersections
+              intersections={intersections}
+              themes={INTERSECTION_COLORS}
+            />
+          ) : (
+            <></>
+          )}
+          <CanvasControl
+            screenshotToggle={screenshotToggle}
+            bgColor={bgColor}
+          />
+          <OrbitControls ref={controlRef} />
+        </Canvas>
+      </Suspense>
     </div>
   );
 }
