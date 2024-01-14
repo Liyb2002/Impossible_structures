@@ -1,19 +1,12 @@
 from copy import deepcopy
+import numpy as np
 
 def resample_particles(particle_list, score_list):
-    new_particle_list = []
+    total_score = sum(score_list)
+    probabilities = [score / total_score for score in score_list]
 
-    for particle in particle_list:
-        if particle.get_score() > 0:
-            new_particle_list.append(particle)
-    
-    target_add = len(particle_list) - len(new_particle_list)
-    sorted_index = sorted(range(len(score_list)), key=lambda k: score_list[k])
-    sorted_index.reverse()
+    resampled_indices = np.random.choice(len(particle_list), size=len(particle_list), p=probabilities)
 
-    for i in range(target_add):
-        add_index = sorted_index[i]
-        new_particle_list.append(particle_list[add_index])
-
+    new_particle_list = [deepcopy(particle_list[i]) for i in resampled_indices]
 
     return new_particle_list

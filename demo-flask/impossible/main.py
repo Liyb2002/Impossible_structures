@@ -5,21 +5,8 @@ from . import read_file
 from . import initLSystem
 from . import complexity
 
-MIN_C = 1
-MAX_C = 12
 
-
-def scale_complexity(c, scene):
-    c = max(min(c, MAX_C), MIN_C) / MAX_C
-    if scene == "za":
-        return int(c * 6 + 6)
-    elif scene == "mt":
-        return int(c * 7 + 5)
-    elif scene == "tr":
-        return int(c * 7 + 5)
-
-
-def run(file_path, decorate_path, c: 0, matryoshka_path=None):
+def run(file_path, decorate_path, matryoshka_path=None):
     # read the inputs
     generic_object_list = []
     global__object_list = []
@@ -32,7 +19,6 @@ def run(file_path, decorate_path, c: 0, matryoshka_path=None):
         global__object_list,
         extra_system_list,
     ) = read_file.read_object_file(file_path)
-    visual_bridge_info["complexity"] = c
 
     if visual_bridge_info is None:
         # print("L-System backbone")

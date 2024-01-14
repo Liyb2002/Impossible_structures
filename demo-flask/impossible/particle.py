@@ -275,7 +275,7 @@ class Particle:
     def density_score(self):
         added_object = self.procedural_objects[-1]
         k = 1.0
-        alpha, beta, alpha_dash, beta_dash = 0.5, 0.5, 0.5, 0.5
+        alpha, beta, alpha_dash, beta_dash = 0.2, 0.8, 0.5, 1.5
         D = 0.0
         S_de = 0.0
 
@@ -368,7 +368,7 @@ def check_occlusion(front_obj, back_obj, eye):
 
     pt0 = back_obj.position
     pt1 = front_obj.position
-    alpha = 0.5
+    alpha = 0.2
     val = math.exp(-alpha * ((pt0[0] - pt1[0]) ** 2 + (pt0[1] - pt1[1])))
 
     return val

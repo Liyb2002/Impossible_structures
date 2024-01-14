@@ -20,6 +20,7 @@ def calc_complexity(visual_bridge_info):
     d = dist_by_level(c) + random.random()
     background_index = foreground_index + d
     s = int((c * c + 10 - 2 * d * d) / 2)
+    s = max(1, s)
 
     visual_bridge_info["foreground_index"] = foreground_index * 4
     visual_bridge_info["background_index"] = background_index * 4

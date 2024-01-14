@@ -1,12 +1,12 @@
 [{
 "object_id": -1,
 "startPos" : [400, 400],
-"foreground_type": [1],
+"foreground_type": [8],
 "foreground_connect": "-y",
-"foreground_index" : 2,
+"foreground_index" : 3,
 "background_type": 3,
 "background_connect": "+y",
-"background_index" : 7,
+"background_index" : 8,
 "num_visual_bridge" : 1,
 "steps" : 9,
 "complexity":0
