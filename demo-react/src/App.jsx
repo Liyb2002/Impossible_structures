@@ -73,6 +73,11 @@ function App() {
   const cameraRef = useRef();
   const comp = useRef();
 
+  const DEFAULT_ERRORS = {
+    bgi: '',
+  };
+  const [errors, setErrors] = useState(DEFAULT_ERRORS);
+
   const INTERSECTION_COLORS = [
     '#00ffff', // cyan
     '#ff00ff', // magenta
@@ -178,29 +183,46 @@ function App() {
     }
   }, [resetCameraToggle, center]);
 
-  const handleGenerate = async (c) => {
-    setShowLoading(true);
-    await fetch('http://127.0.0.1:5000', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ complexity: c, scene: scene }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to generate structure.');
-        }
-        return res.json();
+  const handleGenerate = async (sx, sy, fgi, bgi, numvb, s) => {
+    // Simple form validation
+    const newErrors = DEFAULT_ERRORS;
+    if (fgi >= bgi) {
+      newErrors.bgi = 'Background Index should be greater than forground.';
+    }
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors.bgi).length === 0) {
+      setShowLoading(true);
+      await fetch('http://127.0.0.1:5000', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          scene: scene,
+          startPos_x: sx,
+          startPos_y: sy,
+          foreground_index: fgi,
+          background_index: bgi,
+          num_visual_bridge: numvb,
+          steps: s,
+        }),
       })
-      .then((json) => {
-        return parseJSON(json);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    setShowLoading(false);
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to generate structure.');
+          }
+          return res.json();
+        })
+        .then((json) => {
+          return parseJSON(json);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      setShowLoading(false);
+    }
   };
 
   return (
@@ -226,6 +248,7 @@ function App() {
         setScene={setScene}
         bgColor={bgColor}
         setBgColor={setBgColor}
+        errors={errors}
       ></SideBar>
       <Suspense fallback={<Loading />}>
         <Canvas shadows>

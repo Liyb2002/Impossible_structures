@@ -16,8 +16,14 @@ function SideBar({
   setScene,
   bgColor,
   setBgColor,
+  errors,
 }) {
-  const [complexity, setComplexity] = useState(4);
+  const [startX, setStartX] = useState(400);
+  const [startY, setStartY] = useState(400);
+  const [fgI, setFgI] = useState(3);
+  const [bgI, setBgI] = useState(6);
+  const [numVB, setNumVB] = useState(1);
+  const [numStep, setNumStep] = useState(3);
 
   const handleScreenshot = () => {
     setScreenshotToggle(!screenshotToggle);
@@ -79,24 +85,86 @@ function SideBar({
             </Dropdown>
           </Form>
           <Form className="mt-2 mb-3">
-            <Form.Label>Complexity ({complexity})</Form.Label>
-            {/* <Form.Control
+            <Form.Label>Start Position - X ({startX})</Form.Label>
+            <Form.Control
+              type="range"
+              min={100}
+              max={600}
+              step={1}
+              value={startX}
+              onChange={(e) => {
+                setStartX(e.target.value);
+              }}
+            ></Form.Control>
+          </Form>
+          <Form className="mt-2 mb-3">
+            <Form.Label>Start Position - Y ({startY})</Form.Label>
+            <Form.Control
+              type="range"
+              min={100}
+              max={600}
+              step={1}
+              value={startY}
+              onChange={(e) => {
+                setStartY(e.target.value);
+              }}
+            ></Form.Control>
+          </Form>
+          <Form className="mt-2 mb-3">
+            <Form.Label>Foreground Index ({fgI})</Form.Label>
+            <Form.Control
               type="range"
               min={1}
-              max={12}
-              step={1}
-              value={complexity}
+              max={4}
+              step={0.1}
+              value={fgI}
               onChange={(e) => {
-                setComplexity(e.target.value);
+                setFgI(e.target.value);
               }}
-            ></Form.Control> */}
-            <Form.Text
-              style={{ width: '100%', display: 'block', color: '#6c757d' }}
-            >
-              Using the default complexity setting for demo purposes due to
-              limited computing resources. To unlock all levels of complexity,
-              please use the local build version.
-            </Form.Text>
+            ></Form.Control>
+          </Form>
+          <Form className="mt-2 mb-3">
+            <Form.Label>Background Index ({bgI})</Form.Label>
+            <Form.Control
+              type="range"
+              min={1}
+              max={6}
+              step={0.1}
+              value={bgI}
+              onChange={(e) => {
+                setBgI(e.target.value);
+              }}
+              isInvalid={errors.bgi !== ''}
+            ></Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {errors.bgi}
+            </Form.Control.Feedback>
+          </Form>
+          <Form className="mt-2 mb-3">
+            <Form.Label>Number of Visual Bridges ({numVB})</Form.Label>
+            <Form.Control
+              type="range"
+              min={1}
+              max={4}
+              step={1}
+              value={numVB}
+              onChange={(e) => {
+                setNumVB(e.target.value);
+              }}
+            ></Form.Control>
+          </Form>
+          <Form className="mt-2 mb-3">
+            <Form.Label>Number of Steps ({numStep})</Form.Label>
+            <Form.Control
+              type="range"
+              min={3}
+              max={50}
+              step={1}
+              value={numStep}
+              onChange={(e) => {
+                setNumStep(e.target.value);
+              }}
+            ></Form.Control>
           </Form>
         </div>
         <Col className="justify-content-around">
@@ -104,7 +172,7 @@ function SideBar({
             variant="outline-light"
             className="col-12 mb-5"
             onClick={() => {
-              handleGenerate(complexity);
+              handleGenerate(startX, startY, fgI, bgI, numVB, numStep);
             }}
           >
             Generate Structure
