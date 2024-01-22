@@ -161,13 +161,15 @@ function App() {
   useEffect(() => {
     let ctx = gsap.context(() => {
       if (showSideBar) {
+        gsap.to('.nav-backplate', { left: '0', display: 'block' });
         gsap.to('.sidebar', { left: '0', display: 'block' });
         gsap.to('.sidebar-toggle', { color: 'white', rotate: '90deg' });
-        gsap.to('.sidebar-title', { display: 'block' });
+        gsap.to('.sidebar-title', { opacity: '1' });
       } else {
+        gsap.to('.nav-backplate', { left: '-100%', display: 'none' });
         gsap.to('.sidebar', { left: '-100%', display: 'none' });
         gsap.to('.sidebar-toggle', { color: 'black', rotate: '0' });
-        gsap.to('.sidebar-title', { display: 'none' });
+        gsap.to('.sidebar-title', { opacity: '0' });
       }
     }, comp);
   }, [showSideBar]);

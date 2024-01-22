@@ -32,6 +32,7 @@ function SideBar({
 
   return (
     <>
+      <div className="nav-backplate" />
       <Col className="sidebar prevent-select">
         <div className="section">
           <h3 className="label">Display</h3>

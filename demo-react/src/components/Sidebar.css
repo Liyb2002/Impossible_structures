@@ -1,3 +1,13 @@
+.nav-backplate {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  height: 5.5rem;
+  width: 400px;
+  background-image: linear-gradient(to bottom, black, transparent);
+  z-index: 3;
+}
+
 .sidebar {
   position: fixed;
   top: 0;
