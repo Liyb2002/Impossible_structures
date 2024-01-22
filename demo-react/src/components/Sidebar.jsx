@@ -151,7 +151,11 @@ function SideBar({
               onChange={(e) => {
                 setNumVB(e.target.value);
               }}
+              isInvalid={errors.numVB !== ''}
             ></Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {errors.numVB}
+            </Form.Control.Feedback>
           </Form>
           <Form className="mt-2 mb-3">
             <Form.Label>Number of Steps ({numStep})</Form.Label>

@@ -75,6 +75,7 @@ function App() {
 
   const DEFAULT_ERRORS = {
     bgi: '',
+    numVB: '',
   };
   const [errors, setErrors] = useState(DEFAULT_ERRORS);
 
@@ -188,6 +189,10 @@ function App() {
     const newErrors = DEFAULT_ERRORS;
     if (fgi >= bgi) {
       newErrors.bgi = 'Background Index should be greater than forground.';
+    }
+    if (numvb > 1 && scene != 'za') {
+      newErrors.numVB =
+        'Currently only the scene "Ruins" supports multiple visual bridges.';
     }
     setErrors(newErrors);
 
