@@ -15,7 +15,8 @@
         "background_index": 8,
         "num_visual_bridge": 1,
         "steps": 9,
-        "complexity": 0
+        "complexity": 0,
+        "branching": "False"
     },
     {
         "object_id": 1,
